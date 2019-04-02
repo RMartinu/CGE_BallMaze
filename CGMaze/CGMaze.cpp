@@ -3,10 +3,12 @@
 
 #include "pch.h"
 #include <iostream>
+#include "ppm.h"
 
 int main()
 {
     std::cout << "Hello World!\n"; 
+	
 }
 
 // Programm ausführen: STRG+F5 oder "Debuggen" > Menü "Ohne Debuggen starten"
