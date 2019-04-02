@@ -2,15 +2,23 @@
 
 
 ppmImage::ppmImage(String name)
-{}
+{
+
+}
 ppmImage::~ppmImage()
-{}
+{
+	delete pixelField;
+}
 
 int ppmImage::getHeight()
-{}
+{
+	return height;
+}
 
 int ppmImage::getWidth()
-{}
+{
+	return width;
+}
 
 pixel ppmImage::getPixel(int x, int y)
 {
