@@ -1,6 +1,9 @@
 #pragma once
 /**This represents a Image file*/
 
+#include <string>
+
+#define readBuffer 10
 
 class pixel
 {
@@ -14,7 +17,7 @@ class ppmImage
 	int colorDepth;
 	pixel pixelField[];
 
-	ppmImage(String name);
+	ppmImage(string name);
 	pixel getPixel(int x, int y);
 	int getWidth();
 	int getHeight();

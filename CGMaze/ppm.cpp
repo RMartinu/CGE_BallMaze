@@ -1,8 +1,56 @@
 #include "ppm.h"
+#include<string>
+#include<cstdio>
 
-
-ppmImage::ppmImage(String name)
+ppmImage::ppmImage(string fileName)
 {
+	FILE *fp;
+
+	//open a file
+	fp = fopen(fileName.c_str(), "r");
+	//check if successfull
+	if (fp == nullptr)
+	{
+		puts("Error opening file");
+	}
+	char buffer[readBuffer];
+	int bytesRead = 0;
+
+	//read the magic number
+	bytesRead = fscanf(fp, "%8s", buffer);
+	if (buffer[0] == 'P' && buffer[1] == '6' && (0 != isblank(buffer[2])))
+	{
+		//the magic number is ok, lets continue
+
+		//reading width
+		bytesRead = fscanf(fp, "%d", &width);
+		if (bytesRead == 0)
+		{
+			//throw, break
+		}
+		bytesRead = fscanf(fp, "%d", &height);
+		if (bytesRead == 0)
+		{
+			//throw, break
+		}
+		bytesRead = fscanf(fp, "%d", &colorDepth);
+		if (bytesRead == 0)
+		{
+			//throw, break
+		}
+
+		//We have the basic metadata; construct the pixel buffer
+
+		int totalPixels = width * height;
+		pixelField = new pixel[totalPixels];
+	}
+	else
+	{
+		//throw if so inclined
+	}
+
+
+	fclose(fp);
 
 }
 ppmImage::~ppmImage()
