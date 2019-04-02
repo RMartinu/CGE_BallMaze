@@ -43,6 +43,30 @@ ppmImage::ppmImage(string fileName)
 
 		int totalPixels = width * height;
 		pixelField = new pixel[totalPixels];
+
+		int r, g, b;
+		for (int i = 0; i < totalPixels; ++i)
+		{
+			bytesRead = fscanf(fp, "%d", &r);
+			if (bytesRead == 0)
+			{
+				//throw, break
+			}
+			bytesRead = fscanf(fp, "%d", &g);
+			if (bytesRead == 0)
+			{
+				//throw, break
+			}
+			bytesRead = fscanf(fp, "%d", &b);
+			if (bytesRead == 0)
+			{
+				//throw, break
+			}
+
+			pixel p(r,g,b);
+			pixelField[i] = p;
+
+		}
 	}
 	else
 	{
