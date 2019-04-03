@@ -8,6 +8,8 @@
 int main()
 {
     std::cout << "Hello World!\n"; 
+	ppmImage levelImage = new ppmImage();
+
 	
 }
 
