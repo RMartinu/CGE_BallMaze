@@ -16,7 +16,7 @@ class ppmImage
 	int height, width;
 	int colorDepth;
 	pixel pixelField[];
-
+public:
 	ppmImage(string name);
 	pixel getPixel(int x, int y);
 	int getWidth();

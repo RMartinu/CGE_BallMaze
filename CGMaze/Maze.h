@@ -10,12 +10,23 @@ Header file for Maze.cpp
 #define gravity 9.81
 #define ballRadius 1
 #define ballMass 1
+#define maxPitch 30
+#define maxRoll 30
+
+#define way 0
+#define start 1
+#define wall 2
+#define hole 3
+#define finish 4
+
+#define untouching -1
 
 using namespace std;
 class Maze
 {
+private:
 	int width, height;
-	double ball_x, ball_y,ball_z;
+	double ball_x, ball_y, ball_z;
 	int ballStart_x, ballStart_y;
 	double pitch, roll, prevPitch, prevRoll;
 	double rollFlag,pitchFlag;
@@ -30,12 +41,13 @@ class Maze
 	public void pitch(int speed);
 	public void resetMaze();
 	public void advance(time_t deltaTime);
-	private bool checkCollision();
+	private int checkCollision();
 	private void handleCollision();
 	private void rotateField(time_t deltaTime);
 	private void moveBall(time_t deltaTime);
 	public void getRotations(); //returns struct with rotation infos
-	private 
+	private int[4][4] getTouchedGround();
+	private int getFloorAt(double width, double height);
 };
 
 class Mesh
