@@ -119,6 +119,11 @@ int Maze::checkCollision()
 	return false;
 }
 
+void Maze::handleCollision()
+{
+
+}
+
 void Maze::rotateField(time_t deltaTime)
 {
 	prev_Pitch = pitch;

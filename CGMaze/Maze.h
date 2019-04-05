@@ -24,15 +24,15 @@ Header file for Maze.cpp
 using namespace std;
 class Maze
 {
-private:
-	int width, height;
-	double ball_x, ball_y, ball_z;
-	int ballStart_x, ballStart_y;
-	double pitch, roll, prevPitch, prevRoll;
-	double rollFlag,pitchFlag;
-	double ballVelocity_x, ballVelocity_y, ballVelocity_z;
-	vector<Mesh> meshes;
-	int[] mazeGrid;
+
+	private int width, height;
+	private double ball_x, ball_y, ball_z;
+	private int ballStart_x, ballStart_y;
+	private double pitch, roll, prevPitch, prevRoll;
+	private double rollFlag,pitchFlag;
+	private double ballVelocity_x, ballVelocity_y, ballVelocity_z;
+	private vector<Mesh> meshes;
+	private int[] mazeGrid;
 
 	public Maze(ppmImage floorplan);
 	public ~Maze();
