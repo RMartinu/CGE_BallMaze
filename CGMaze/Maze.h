@@ -21,6 +21,10 @@ Header file for Maze.cpp
 
 #define untouching -1
 
+#define gameFinished 1
+#define gameRunning 0
+#define gameLost 2
+
 using namespace std;
 class Maze
 {
@@ -32,7 +36,8 @@ class Maze
 	private double rollFlag,pitchFlag;
 	private double ballVelocity_x, ballVelocity_y, ballVelocity_z;
 	private vector<Mesh> meshes;
-	private int[] mazeGrid;
+	private int mazeGrid[];
+	private int gameState;
 
 	public Maze(ppmImage floorplan);
 	public ~Maze();
@@ -58,6 +63,8 @@ class Mesh
 
 	public bool intersectsWithSphere(double pos_x, double pos_y, double pos_z, double radius);
 	public vector<Vertex> getVertices();
+	public Mesh();
+	public ~Mesh();
 
 
 };

@@ -52,15 +52,16 @@ Maze::Maze(ppmImage floorplan)
 	floorplan.getPixel()
 }
 
-public Maze::~Maze()
+ Maze::~Maze()
 {
-		
+	 delete mazeGrid;
 }
 
 void Maze::roll(int speed)
 {
 	prevRoll = roll;
 	rollFlag = speed*rollRate;
+	
 
 }
 
@@ -121,6 +122,62 @@ int Maze::checkCollision()
 
 void Maze::handleCollision()
 {
+	int candidates[4][4] = getTouchedGround();
+	
+	
+	for (int h = ball_y-2; h < ball_y+2; ++h)
+	{
+		for (int w = ball_x-2; w < ball_x+2; ++w)
+		{
+			switch (mazeGrid[h][w])
+			{
+			case finish:
+			{
+
+				if (ball_x<w + 1 && ball_x>w && ball_y<h + 1 && ball_y>h)
+				{
+					gameState = gameFinished;
+				}
+				
+				break; }
+			case wall:
+			{
+
+				if (ball_x > (w + 1) && ball_x - ballRadius < (w + 1))
+				{
+					//On the rights side and colliding
+
+					ballVelocity_x *= -1;
+				}
+				if (ball_y < (h && ball_y + ballRadius > h))
+				{
+					//below and colliding
+					ballVelocity_y *= -1;
+				}
+				if (ball_x <w && ball_x + ballRadius>w)
+				{
+					//left and coliding
+					ballVelocity_x *= -1;
+				}
+				if (ball_y > h + 1 && ball_ < -ballRadius < h + 1)
+				{
+					//above and colliding
+					ballVelocity_y *= -1;
+				}
+				
+				break; }
+			case hole:
+			{
+				if (ball_x<w + 1 && ball_x>w && ball_y<h + 1 && ball_y>h)
+				{
+					gameState = gameLost;
+				}
+				break; }
+			default: {break; }
+
+			}
+		}
+	}
 
 }
 
