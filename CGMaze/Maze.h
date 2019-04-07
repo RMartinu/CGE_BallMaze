@@ -64,6 +64,8 @@ class Mesh
 	public bool intersectsWithSphere(double pos_x, double pos_y, double pos_z, double radius);
 	public vector<Vertex> getVertices();
 	public Mesh();
+	public Mesh(double pos_x, double pos_y, double width, double depth,  double height);
+	public Mesh(double pos_X, double pos_y);
 	public ~Mesh();
 
 

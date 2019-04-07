@@ -238,3 +238,19 @@ int Maze::getFloorAt(double w, double h)
 	return mazeGrid[h*width + width];
 
 }
+
+Mesh::Mesh()
+{
+	//Creates a blank Mesh; used for arbitrary geometry, needs to set all parameters post construction
+}
+
+Mesh::Mesh(double pos_x, double pos_y, double width, double depth, double height)
+{
+	//Creates a cubical Mesh with specified dimensions; used to create the floor plate
+
+}
+
+Mesh::Mesh(double pos_X, double pos_y)
+{
+	//creates a unity cube at the specified xy-coordinates and at height zero
+}
