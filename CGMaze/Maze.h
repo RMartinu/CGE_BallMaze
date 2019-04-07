@@ -51,7 +51,7 @@ class Maze
 	private void rotateField(time_t deltaTime);
 	private void moveBall(time_t deltaTime);
 	public void getRotations(); //returns struct with rotation infos
-	private int[4][4] getTouchedGround();
+	private int** getTouchedGround();
 	private int getFloorAt(double width, double height);
 };
 

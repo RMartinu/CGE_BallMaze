@@ -212,9 +212,9 @@ void Maze::moveBall(time_t deltaTime)
 	ball_y += ballVelocity_y * (deltaTime / (float)1000);
 }
 
-int[4][4] Maze::getTouchedGround()
+int** Maze::getTouchedGround()
 {
-	int[4][4] fp;
+	int** fp = new int[4][4];
 	fp[0][0] = getFloorAt(ball_x - 2, ball_y - 2);
 	fp[0][1] = getFloorAt(ball_x - 1, ball_y - 2);
 	fp[0][2] = getFloorAt(ball_x, ball_y - 2);
@@ -242,11 +242,15 @@ int Maze::getFloorAt(double w, double h)
 Mesh::Mesh()
 {
 	//Creates a blank Mesh; used for arbitrary geometry, needs to set all parameters post construction
+	
 }
 
 Mesh::Mesh(double pos_x, double pos_y, double width, double depth, double height)
 {
 	//Creates a cubical Mesh with specified dimensions; used to create the floor plate
+	Vertex v;
+	v.x = 1; v.y = 2; //...
+	vertexList.push_back(v);
 
 }
 
