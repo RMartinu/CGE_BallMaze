@@ -13,16 +13,16 @@ class pixel
 };
 class ppmImage
 {
-	int height, width;
-	int colorDepth;
-	pixel pixelField[];
-public:
-	ppmImage(string name);
-	pixel getPixel(int x, int y);
-	int getWidth();
-	int getHeight();
+	private int height, width;
+	privateint colorDepth;
+	private pixel pixelField[];
 
-	~ppmImage();
+	public ppmImage(string name);
+	public pixel getPixel(int x, int y);
+	public int getWidth();
+	public int getHeight();
+
+	public ~ppmImage();
 
 
 };
