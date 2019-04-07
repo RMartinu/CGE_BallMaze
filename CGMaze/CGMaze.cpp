@@ -5,6 +5,7 @@
 #include <iostream>
 #include "ppm.h"
 #include "CGMaze.h"
+#include <glad\glad.h>
 
 int main()
 {
