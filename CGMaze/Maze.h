@@ -29,31 +29,32 @@ using namespace std;
 class Maze
 {
 
-	private int width, height;
-	private double ball_x, ball_y, ball_z;
-	private int ballStart_x, ballStart_y;
-	private double pitch, roll, prevPitch, prevRoll;
-	private double rollFlag,pitchFlag;
-	private double ballVelocity_x, ballVelocity_y, ballVelocity_z;
-	private vector<Mesh> meshes;
-	private int mazeGrid[];
-	private int gameState;
+private :
+	int width, height;
+	 double ball_x, ball_y, ball_z;
+	 int ballStart_x, ballStart_y;
+	 double pitch, roll, prevPitch, prevRoll;
+	 double rollFlag,pitchFlag;
+	 double ballVelocity_x, ballVelocity_y, ballVelocity_z;
+	 vector<Mesh> meshes;
+	 int *mazeGrid;
+	 int gameState;
 
-	public Maze(ppmImage floorplan);
-	public ~Maze();
-	public vector<Mesh> getMeshes();
-	public Mesh getBall();
-	public void roll(int speed);
-	public void pitch(int speed);
-	public void resetMaze();
-	public void advance(time_t deltaTime);
-	private int checkCollision();
-	private void handleCollision();
-	private void rotateField(time_t deltaTime);
-	private void moveBall(time_t deltaTime);
-	public void getRotations(); //returns struct with rotation infos
-	private int** getTouchedGround();
-	private int getFloorAt(double width, double height);
+public: Maze(ppmImage floorplan);
+	 ~Maze();
+	 vector<Mesh> getMeshes();
+	 Mesh getBall();
+	 void roll(int speed);
+	 void pitch(int speed);
+	 void resetMaze();
+	 void advance(time_t deltaTime);
+	 int checkCollision();
+	 void handleCollision();
+	 void rotateField(time_t deltaTime);
+	 void moveBall(time_t deltaTime);
+	 void getRotations(); //returns struct with rotation infos
+	 int** getTouchedGround();
+	 int getFloorAt(double width, double height);
 };
 
 class Mesh
@@ -74,5 +75,6 @@ class Mesh
 };
 class Vertex
 {
-	public double x, y, z, u, v;
+public:
+	double x, y, z, u, v;
 };

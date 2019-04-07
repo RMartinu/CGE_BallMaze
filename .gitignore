@@ -328,3 +328,7 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+/CppProperties.json
+/CGMaze/CGBallMaze.vcxproj.filters
+/CGMaze/CGBallMaze.vcxproj
+/CGMaze/CGBallMaze.sln
