@@ -14,7 +14,7 @@ Maze::Maze(ppmImage floorplan)
 	this->height = floorplan.getHeight();
 	mazeGrid = new int[width*height];
 	
-	Mesh floor(0, 0, this->width, this.height, -1);
+	Mesh floor(0, 0, this->width, this->height, -1);
 	meshes.push_back(floor);
 
 	for(int h = 0; h<height; ++h)
@@ -77,7 +77,7 @@ Maze::Maze(ppmImage floorplan)
 
  void Maze::roll(int speed)
 {
-	prevRoll = roll;
+	prev = roll;
 	rollFlag = speed*rollRate;
 	
 
@@ -105,7 +105,7 @@ void Maze::resetMaze()
 	ballVelocity_x = ballVelocity_y = ballVelocity_z = 0;
 }
 
-void Maze::advance(time_t deltaTime)
+void Maze::advance(int deltaTime)
 {
 	rotateField(deltaTime);
 	moveBall(deltaTime);
@@ -199,7 +199,7 @@ void Maze::handleCollision()
 
 }
 
-void Maze::rotateField(time_t deltaTime)
+void Maze::rotateField(int deltaTime)
 {
 	prev_Pitch = pitch;
 	prev_Roll = roll;
@@ -224,7 +224,7 @@ void Maze::rotateField(time_t deltaTime)
 }
 
 
-void Maze::moveBall(time_t deltaTime)
+void Maze::moveBall(int deltaTime)
 {
 	ball_x += ballVelocity_x * (deltaTime/(float)1000);
 	ball_y += ballVelocity_y * (deltaTime / (float)1000);
@@ -312,4 +312,8 @@ Mesh::Mesh(double pos_x, double pos_y)
 	v[7].x = pos_x+1; v[7].y = pos_y+1; v[7].z = 3;
 	vertexList.push_back(v[7]);
 
+}
+
+Mesh::~Mesh()
+{
 }

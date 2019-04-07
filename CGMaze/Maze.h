@@ -31,14 +31,14 @@ class Maze
 
 private :
 	int width, height;
-	 double ball_x, ball_y, ball_z;
-	 int ballStart_x, ballStart_y;
-	 double pitch, roll, prevPitch, prevRoll;
-	 double rollFlag,pitchFlag;
-	 double ballVelocity_x, ballVelocity_y, ballVelocity_z;
-	 vector<Mesh> meshes;
-	 int *mazeGrid;
-	 int gameState;
+	double ball_x, ball_y, ball_z;
+	int ballStart_x, ballStart_y;
+	double pitch, roll, prevPitch, prevRoll;
+	double rollFlag,pitchFlag;
+	double ballVelocity_x, ballVelocity_y, ballVelocity_z;
+	vector<Mesh> meshes;
+	int *mazeGrid;
+	int gameState;
 
 public: Maze(ppmImage floorplan);
 	 ~Maze();
@@ -47,11 +47,11 @@ public: Maze(ppmImage floorplan);
 	 void roll(int speed);
 	 void pitch(int speed);
 	 void resetMaze();
-	 void advance(time_t deltaTime);
+	 void advance(int deltaTime);
 	 int checkCollision();
 	 void handleCollision();
-	 void rotateField(time_t deltaTime);
-	 void moveBall(time_t deltaTime);
+	 void rotateField(int deltaTime);
+	 void moveBall(int deltaTime);
 	 void getRotations(); //returns struct with rotation infos
 	 int** getTouchedGround();
 	 int getFloorAt(double width, double height);
@@ -64,12 +64,13 @@ class Mesh
 	vector<Vertex> vertexList;
 
 
-	public bool intersectsWithSphere(double pos_x, double pos_y, double pos_z, double radius);
-	public vector<Vertex> getVertices();
-	public Mesh();
-	public Mesh(double pos_x, double pos_y, double width, double depth,  double height);
-	public Mesh(double pos_x, double pos_y);
-	public ~Mesh();
+public:
+	bool intersectsWithSphere(double pos_x, double pos_y, double pos_z, double radius);
+	 vector<Vertex> getVertices();
+	 Mesh();
+	 Mesh(double pos_x, double pos_y, double width, double depth,  double height);
+	 Mesh(double pos_x, double pos_y);
+	 ~Mesh();
 
 
 };
