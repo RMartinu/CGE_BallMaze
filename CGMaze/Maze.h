@@ -29,7 +29,7 @@ using namespace std;
 class Maze
 {
 
-private :
+private:
 	int width, height;
 	double ball_x, ball_y, ball_z;
 	int ballStart_x, ballStart_y;
@@ -44,8 +44,8 @@ public: Maze(ppmImage floorplan);
 	 ~Maze();
 	 vector<Mesh> getMeshes();
 	 Mesh getBall();
-	 void roll(int speed);
-	 void pitch(int speed);
+	 void updateRoll(int speed);
+	 void updatePitch(int speed);
 	 void resetMaze();
 	 void advance(int deltaTime);
 	 int checkCollision();
@@ -59,6 +59,7 @@ public: Maze(ppmImage floorplan);
 
 class Mesh
 {
+private:
 	double pos_x, pos_y, pos_z;
 	double width, height, depth;
 	vector<Vertex> vertexList;

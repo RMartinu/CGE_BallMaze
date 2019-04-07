@@ -57,7 +57,7 @@ Maze::Maze(ppmImage floorplan)
 
 		}
 	}
-	floorplan.getPixel()
+	//floorplan.getPixel();
 }
 
  Maze::~Maze()
@@ -75,15 +75,15 @@ Maze::Maze(ppmImage floorplan)
 	 return Mesh();
  }
 
- void Maze::roll(int speed)
+ void Maze::updateRoll(int speed)
 {
-	prev = roll;
+	prevRoll = roll;
 	rollFlag = speed*rollRate;
 	
 
 }
 
-void Maze::pitch(int speed)
+void Maze::updatePitch(int speed)
 {
 
 	prevPitch = pitch;
@@ -118,7 +118,7 @@ void Maze::advance(int deltaTime)
 int Maze::checkCollision()
 {
 	int status = 0;
-	int[4][4] area = getTouchedGround();
+	int **area = getTouchedGround();
 	for (int h = 0; h<4; ++h)
 	{
 		for (int w = 0; w < 4; ++w)
@@ -140,14 +140,14 @@ int Maze::checkCollision()
 
 void Maze::handleCollision()
 {
-	int candidates[4][4] = getTouchedGround();
+	int **candidates=getTouchedGround();
 	
 	
 	for (int h = ball_y-2; h < ball_y+2; ++h)
 	{
 		for (int w = ball_x-2; w < ball_x+2; ++w)
 		{
-			switch (mazeGrid[h][w])
+			switch (mazeGrid[h*width+w])
 			{
 			case finish:
 			{
@@ -177,7 +177,7 @@ void Maze::handleCollision()
 					//left and coliding
 					ballVelocity_x *= -1;
 				}
-				if (ball_y > h + 1 && ball_ < -ballRadius < h + 1)
+				if (ball_y > h + 1 && ball_y < -ballRadius < h + 1)
 				{
 					//above and colliding
 					ballVelocity_y *= -1;
@@ -201,8 +201,8 @@ void Maze::handleCollision()
 
 void Maze::rotateField(int deltaTime)
 {
-	prev_Pitch = pitch;
-	prev_Roll = roll;
+	prevPitch = pitch;
+	prevRoll = roll;
 	pitch += (pitchFlag * pitchRate) * (deltaTime / (float)1000);
 	roll += (rollFlag * rollRate) * (deltaTime / (float)1000);
 	if (pitch > maxPitch)
@@ -237,7 +237,11 @@ void Maze::getRotations()
 
 int** Maze::getTouchedGround()
 {
-	int** fp = new int[4][4];
+	int** fp = new int*[4];
+	for (int i = 0; i < 4; ++i)
+	{
+		fp[i] = new int[4];
+	}
 	fp[0][0] = getFloorAt(ball_x - 2, ball_y - 2);
 	fp[0][1] = getFloorAt(ball_x - 1, ball_y - 2);
 	fp[0][2] = getFloorAt(ball_x, ball_y - 2);
@@ -258,7 +262,7 @@ int** Maze::getTouchedGround()
 }
 int Maze::getFloorAt(double w, double h)
 {
-	return mazeGrid[h*width + width];
+	return mazeGrid[(int)h*width + width];
 
 }
 

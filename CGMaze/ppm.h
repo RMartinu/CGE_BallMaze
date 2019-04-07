@@ -4,7 +4,7 @@
 #include <string>
 
 #define readBuffer 10
-
+using namespace std;
 class pixel
 {
 public:

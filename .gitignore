@@ -332,3 +332,6 @@ ASALocalRun/
 /CGMaze/CGBallMaze.vcxproj.filters
 /CGMaze/CGBallMaze.vcxproj
 /CGMaze/CGBallMaze.sln
+*.sln
+*.vcxproj
+*.filters
