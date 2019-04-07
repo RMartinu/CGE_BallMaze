@@ -4,11 +4,12 @@
 #include "pch.h"
 #include <iostream>
 #include "ppm.h"
+#include "CGMaze.h"
 
 int main()
 {
     std::cout << "Hello World!\n"; 
-	ppmImage levelImage = new ppmImage();
+	
 
 	
 }

@@ -26,6 +26,34 @@ Header file for Maze.cpp
 #define gameLost 2
 
 using namespace std;
+
+class Vertex
+{
+public:
+	double x, y, z, u, v;
+};
+
+
+
+class Mesh
+{
+private:
+	double pos_x, pos_y, pos_z;
+	double width, height, depth;
+	vector<Vertex> vertexList;
+
+
+public:
+	bool intersectsWithSphere(double pos_x, double pos_y, double pos_z, double radius);
+	vector<Vertex> getVertices();
+	Mesh();
+	Mesh(double pos_x, double pos_y, double width, double depth, double height);
+	Mesh(double pos_x, double pos_y);
+	~Mesh();
+
+
+};
+
 class Maze
 {
 
@@ -52,31 +80,11 @@ public: Maze(ppmImage floorplan);
 	 void handleCollision();
 	 void rotateField(int deltaTime);
 	 void moveBall(int deltaTime);
+	 //Mesh getBall();
 	 void getRotations(); //returns struct with rotation infos
 	 int** getTouchedGround();
 	 int getFloorAt(double width, double height);
 };
 
-class Mesh
-{
-private:
-	double pos_x, pos_y, pos_z;
-	double width, height, depth;
-	vector<Vertex> vertexList;
 
 
-public:
-	bool intersectsWithSphere(double pos_x, double pos_y, double pos_z, double radius);
-	 vector<Vertex> getVertices();
-	 Mesh();
-	 Mesh(double pos_x, double pos_y, double width, double depth,  double height);
-	 Mesh(double pos_x, double pos_y);
-	 ~Mesh();
-
-
-};
-class Vertex
-{
-public:
-	double x, y, z, u, v;
-};

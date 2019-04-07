@@ -10,6 +10,7 @@ class pixel
 public:
 	char r, g, b;
 	pixel(int ir, int ig, int ib);
+	pixel();
 
 };
 class ppmImage

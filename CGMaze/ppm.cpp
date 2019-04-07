@@ -103,3 +103,15 @@ pixel ppmImage::getPixel(int x, int y)
 
 	return pixelField[arrayIndex];
 }
+
+pixel::pixel(int ir, int ig, int ib)
+{
+	r = ir;
+	g = ig;
+	b = ib;
+}
+
+pixel::pixel()
+{
+	r = g = b = 0;
+}

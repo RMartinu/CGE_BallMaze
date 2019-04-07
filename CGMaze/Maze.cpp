@@ -109,7 +109,7 @@ void Maze::advance(int deltaTime)
 {
 	rotateField(deltaTime);
 	moveBall(deltaTime);
-	if (checkCollision)
+	if (checkCollision())
 	{
 		handleCollision();
 	}
@@ -167,7 +167,7 @@ void Maze::handleCollision()
 
 					ballVelocity_x *= -1;
 				}
-				if (ball_y < (h && ball_y + ballRadius > h))
+				if (ball_y < h && (ball_y + ballRadius) > h)
 				{
 					//below and colliding
 					ballVelocity_y *= -1;
@@ -177,7 +177,7 @@ void Maze::handleCollision()
 					//left and coliding
 					ballVelocity_x *= -1;
 				}
-				if (ball_y > h + 1 && ball_y < -ballRadius < h + 1)
+				if (ball_y > (h + 1) && ball_y < (-ballRadius) < (h + 1))
 				{
 					//above and colliding
 					ballVelocity_y *= -1;
