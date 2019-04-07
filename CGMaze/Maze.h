@@ -42,6 +42,7 @@ class Maze
 	public Maze(ppmImage floorplan);
 	public ~Maze();
 	public vector<Mesh> getMeshes();
+	public Mesh getBall();
 	public void roll(int speed);
 	public void pitch(int speed);
 	public void resetMaze();
@@ -61,11 +62,12 @@ class Mesh
 	double width, height, depth;
 	vector<Vertex> vertexList;
 
+
 	public bool intersectsWithSphere(double pos_x, double pos_y, double pos_z, double radius);
 	public vector<Vertex> getVertices();
 	public Mesh();
 	public Mesh(double pos_x, double pos_y, double width, double depth,  double height);
-	public Mesh(double pos_X, double pos_y);
+	public Mesh(double pos_x, double pos_y);
 	public ~Mesh();
 
 

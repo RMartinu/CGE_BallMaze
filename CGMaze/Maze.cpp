@@ -13,6 +13,10 @@ Maze::Maze(ppmImage floorplan)
 	this->width = floorplan.getWidth();
 	this->height = floorplan.getHeight();
 	mazeGrid = new int[width*height];
+	
+	Mesh floor(0, 0, this->width, this.height, -1);
+	meshes.push_back(floor);
+
 	for(int h = 0; h<height; ++h)
 	{
 		for (int w = 0; w < width; ++w)
@@ -26,6 +30,8 @@ Maze::Maze(ppmImage floorplan)
 			if (floorplan.getPixel(w, h).r == 0 && floorplan.getPixel(w, h).g == 0 && floorplan.getPixel(w, h).b == 0)
 			{
 				mazeGrid[h*width + w] = wall;
+				Mesh newWall(w, h);
+				meshes.push_back(newWall);
 				continue;
 			}
 			if (floorplan.getPixel(w, h).r == 0 && floorplan.getPixel(w, h).g == 255 && floorplan.getPixel(w, h).b == 0)
@@ -38,6 +44,8 @@ Maze::Maze(ppmImage floorplan)
 			if (floorplan.getPixel(w, h).r == 255 && floorplan.getPixel(w, h).g == 0 && floorplan.getPixel(w, h).b == 0)
 			{
 				mazeGrid[h*width + w] = finish;
+				Mesh newFinish(w, h, 1, 1, 0.1);
+				meshes.push_back(newFinish);
 				continue;
 			}
 			if (floorplan.getPixel(w, h).r == 0 && floorplan.getPixel(w, h).g == 0 && floorplan.getPixel(w, h).b == 255)
@@ -57,7 +65,17 @@ Maze::Maze(ppmImage floorplan)
 	 delete mazeGrid;
 }
 
-void Maze::roll(int speed)
+ vector<Mesh> Maze::getMeshes()
+ {
+	 return meshes;
+ }
+
+ Mesh Maze::getBall()
+ {
+	 return Mesh();
+ }
+
+ void Maze::roll(int speed)
 {
 	prevRoll = roll;
 	rollFlag = speed*rollRate;
@@ -212,6 +230,11 @@ void Maze::moveBall(time_t deltaTime)
 	ball_y += ballVelocity_y * (deltaTime / (float)1000);
 }
 
+void Maze::getRotations()
+{
+
+}
+
 int** Maze::getTouchedGround()
 {
 	int** fp = new int[4][4];
@@ -248,13 +271,45 @@ Mesh::Mesh()
 Mesh::Mesh(double pos_x, double pos_y, double width, double depth, double height)
 {
 	//Creates a cubical Mesh with specified dimensions; used to create the floor plate
-	Vertex v;
-	v.x = 1; v.y = 2; //...
-	vertexList.push_back(v);
+	Vertex v[8];
+	v[0].x = pos_x; v[0].y = pos_y; v[0].z = 0;
+	vertexList.push_back(v[0]);
+	v[1].x = pos_x + width; v[1].y = pos_y; v[1].z = 0;
+	vertexList.push_back(v[1]);
+	v[2].x = pos_x; v[2].y = pos_y + depth; v[2].z = 0;
+	vertexList.push_back(v[2]);
+	v[3].x = pos_x; v[3].y = pos_y; v[3].z = height;
+	vertexList.push_back(v[3]);
+	v[4].x = pos_x + width; v[4].y = pos_y + depth; v[4].z = 0;
+	vertexList.push_back(v[4]);
+	v[5].x = pos_x + width; v[5].y = pos_y; v[5].z = height;
+	vertexList.push_back(v[5]);
+	v[6].x = pos_x; v[6].y = pos_y + depth; v[6].z = height;
+	vertexList.push_back(v[6]);
+	v[7].x = pos_x + width; v[7].y = pos_y + depth; v[7].z = height;
+	vertexList.push_back(v[7]);
 
 }
 
-Mesh::Mesh(double pos_X, double pos_y)
+Mesh::Mesh(double pos_x, double pos_y)
 {
 	//creates a unity cube at the specified xy-coordinates and at height zero
+	Vertex v[8];
+	v[0].x = pos_x; v[0].y = pos_y; v[0].z = 0;
+	vertexList.push_back(v[0]);
+	v[1].x = pos_x+1; v[1].y = pos_y; v[1].z = 0;
+	vertexList.push_back(v[1]);
+	v[2].x = pos_x; v[2].y = pos_y+1; v[2].z = 0;
+	vertexList.push_back(v[2]);
+	v[3].x = pos_x; v[3].y = pos_y; v[3].z = 3;
+	vertexList.push_back(v[3]);
+	v[4].x = pos_x+1; v[4].y = pos_y+1; v[4].z = 0;
+	vertexList.push_back(v[4]);
+	v[5].x = pos_x+1; v[5].y = pos_y; v[5].z = 3;
+	vertexList.push_back(v[5]);
+	v[6].x = pos_x; v[6].y = pos_y+1; v[6].z = 3;
+	vertexList.push_back(v[6]);
+	v[7].x = pos_x+1; v[7].y = pos_y+1; v[7].z = 3;
+	vertexList.push_back(v[7]);
+
 }
