@@ -25,6 +25,10 @@ Header file for Maze.cpp
 #define gameRunning 0
 #define gameLost 2
 
+#define vertexCoordinates 0
+#define vertexColor 1
+#define UVCoordinates 2
+
 using namespace std;
 
 class Vertex
@@ -53,6 +57,37 @@ public:
 
 
 };
+
+
+class VertexList
+{
+private:
+	int* indizes;
+	int numberOfIndizes;
+	float* vertexData;
+	int numberOfVertices;
+	int maxEntries;
+	int maxEdges;
+	bool containsCoordinates;
+	bool containsVertexColor;
+	bool containsUVCoordinates;
+
+public:
+	VertexList(int formatDescriptor);
+	VertexList(int formatDescriptor, int numberOfEntries);
+	~VertexList();
+	bool addVertex(float x, float y, float z);
+	bool addVertex(float x, float y, float z, float r, float g, float b);
+	bool addVertex(float x, float y, float z, float r, float g, float b, float u, float v);
+	bool addVertex(float x, float y, float z, float u, float v);
+	int* getIndizes();
+	int getIndexCount();
+	float* getVertexData();
+	int getVertexCount();
+
+
+};
+
 
 class Maze
 {

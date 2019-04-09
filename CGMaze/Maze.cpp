@@ -321,3 +321,72 @@ Mesh::Mesh(double pos_x, double pos_y)
 Mesh::~Mesh()
 {
 }
+
+VertexList::VertexList(int formatDescriptor)
+{
+	VertexList(formatDescriptor, 8);
+}
+
+VertexList::VertexList(int formatDescriptor, int numberOfEntries)
+{
+	this->containsCoordinates = formatDescriptor & (1 << vertexCoordinates);
+	this->containsVertexColor = formatDescriptor & (1 << vertexColor);
+	this->containsUVCoordinates = formatDescriptor & (1 << UVCoordinates);
+
+}
+
+bool VertexList::addVertex(float x, float y, float z)
+{
+	if (!containsCoordinates || containsVertexColor || containsUVCoordinates)
+	{
+		return false;
+	}
+	return true;
+}
+
+bool VertexList::addVertex(float x, float y, float z, float r, float g, float b)
+{
+	if (!containsCoordinates || !containsVertexColor || containsUVCoordinates)
+	{
+		return false;
+	}
+	return true;
+}
+
+bool VertexList::addVertex(float x, float y, float z, float r, float g, float b, float u, float v)
+{
+	if (!containsCoordinates || !containsVertexColor || !containsUVCoordinates)
+	{
+		return false;
+	}
+	return true;
+}
+
+bool VertexList::addVertex(float x, float y, float z, float u, float v)
+{
+	if (!containsCoordinates || containsVertexColor || !containsUVCoordinates)
+	{
+		return false;
+	}
+	return true;
+}
+
+int * VertexList::getIndizes()
+{
+	return indizes;
+}
+
+int VertexList::getIndexCount()
+{
+	return numberOfIndizes;
+}
+
+float * VertexList::getVertexData()
+{
+	return vertexData;
+}
+
+int VertexList::getVertexCount()
+{
+	return numberOfVertices;
+}
