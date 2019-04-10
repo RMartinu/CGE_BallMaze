@@ -88,6 +88,16 @@ int main()
 	printf("r: %d, g: %d, b: %d\n", p.r, p.g, p.b);
 	 p = myImage.getPixel(155, 190);
 	printf("r: %d, g: %d, b: %d\n", p.r, p.g, p.b);
+
+	//Level Load Test
+	ppmImage theLevel("Resource//minLevel.ppm");
+	Maze theGame(theLevel);
+
+	puts("if computer not on fire the level is loaded");
+
+	//done
+
+
 	/*Vector Excersise here; remove at appropriete time*/
 	glm::vec4 vec(1.0f,0.0f,0.0f,1.0f);
 	glm::mat4 trans = glm::mat4(1.0f);

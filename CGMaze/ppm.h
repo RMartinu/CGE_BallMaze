@@ -19,12 +19,15 @@ private:
 		int height, width;
 	 int colorDepth;
 	 pixel *pixelField;
+	 unsigned char *t;
 
 public:
 	ppmImage(string name);
 	 pixel getPixel(int x, int y);
 	 int getWidth();
 	 int getHeight();
+
+	 unsigned char* imageDataAsCharArray();
 
 	 ~ppmImage();
 

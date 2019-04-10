@@ -38,6 +38,7 @@ Maze::Maze(ppmImage &floorplan)
 				if (floorplan.getPixel(w, h).r == 255 && floorplan.getPixel(w, h).g == 255 && floorplan.getPixel(w, h).b == 255)
 				{
 					mazeGrid[h*width + w] = way;
+					printf("x: %d, y: %d, type: way\n", w,h);
 					continue;
 				}
 				if (floorplan.getPixel(w, h).r == 0 && floorplan.getPixel(w, h).g == 0 && floorplan.getPixel(w, h).b == 0)
@@ -45,6 +46,7 @@ Maze::Maze(ppmImage &floorplan)
 					mazeGrid[h*width + w] = wall;
 					Mesh newWall(w, h);
 					meshes.push_back(newWall);
+					printf("x: %d, y: %d, type: wall\n", w, h);
 					continue;
 				}
 				if (floorplan.getPixel(w, h).r == 0 && floorplan.getPixel(w, h).g == 255 && floorplan.getPixel(w, h).b == 0)
@@ -52,6 +54,7 @@ Maze::Maze(ppmImage &floorplan)
 					mazeGrid[h*width + w] = ballstart;
 					ballStart_x = w;
 					ballStart_y = h;
+					printf("x: %d, y: %d, type: start\n", w, h);
 					continue;
 				}
 				if (floorplan.getPixel(w, h).r == 255 && floorplan.getPixel(w, h).g == 0 && floorplan.getPixel(w, h).b == 0)
@@ -59,11 +62,13 @@ Maze::Maze(ppmImage &floorplan)
 					mazeGrid[h*width + w] = finish;
 					Mesh newFinish(w, h, 1, 1, 0.1);
 					meshes.push_back(newFinish);
+					printf("x: %d, y: %d, type: finish\n", w, h);
 					continue;
 				}
 				if (floorplan.getPixel(w, h).r == 0 && floorplan.getPixel(w, h).g == 0 && floorplan.getPixel(w, h).b == 255)
 				{
 					mazeGrid[h*width + w] = hole;
+					printf("x: %d, y: %d, type: pit\n", w, h);
 					continue;
 				}
 
