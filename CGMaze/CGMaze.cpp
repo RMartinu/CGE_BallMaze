@@ -5,6 +5,7 @@
 #include <iostream>
 #include "ppm.h"
 #include "CGMaze.h"
+#include "Maze.h"
 #include <glad\glad.h>
 #include <GLFW/glfw3.h>
 
@@ -72,6 +73,10 @@ void framebuffer_size_callback(GLFWwindow* window, int w, int h)
 int main()
 {
     std::cout << "Hello World!\n"; 
+
+	ppmImage thePlan("insert Path here");
+	Maze theGame(thePlan);
+
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);

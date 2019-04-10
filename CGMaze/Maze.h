@@ -62,7 +62,7 @@ public:
 class VertexList
 {
 private:
-	int* indizes;
+	unsigned int* indizes;
 	int numberOfIndizes;
 	float* vertexData;
 	int stride;
@@ -89,7 +89,7 @@ public:
 	bool extendIndizes();
 	bool addTriangle(Vertex v1, Vertex v2, Vertex v3);
 	int findVertex(Vertex v);
-	int* getIndizes();
+	unsigned int* getIndizes();
 	int getIndexCount();
 	float* getVertexData();
 	int getVertexCount();
@@ -110,7 +110,7 @@ private:
 	int *mazeGrid;
 	int gameState;
 
-public: Maze(ppmImage floorplan);
+public: Maze(ppmImage &floorplan);
 	 ~Maze();
 	 vector<Mesh> getMeshes();
 

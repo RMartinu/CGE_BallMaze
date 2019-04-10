@@ -12,6 +12,11 @@ ppmImage::ppmImage(string fileName)
 	if (fp == nullptr)
 	{
 		puts("Error opening file");
+		this->colorDepth = 0;
+		this->height = 0;
+		this->width = 0;
+		this->pixelField = nullptr;
+		return;
 	}
 	char buffer[readBuffer];
 	int bytesRead = 0;

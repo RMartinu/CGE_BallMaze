@@ -8,7 +8,7 @@
 
 
 
-Maze::Maze(ppmImage floorplan)
+Maze::Maze(ppmImage &floorplan)
 {
 	this->width = floorplan.getWidth();
 	this->height = floorplan.getHeight();
@@ -370,7 +370,7 @@ VertexList::VertexList(int formatDescriptor, int numberOfEntries)
 	currEntries = 0;
 	currEdges = 0;
 	maxEdges = maxEntries * 1.5;
-	indizes = new int[maxEdges];
+	indizes = new unsigned int[maxEdges];
 	stride = 0;
 	if (this->containsCoordinates == true)
 	{
@@ -540,7 +540,7 @@ bool VertexList::extendIndizes()
 	}
 
 	int* newArray;
-	newArray = new int[maxEdges + 5];
+	newArray = new unsigned int[maxEdges + 5];
 	if (newArray == nullptr)
 	{
 		printf("Error: allocation failed.");
@@ -634,7 +634,7 @@ int VertexList::findVertex(Vertex v)
 	return -1;
 }
 
-int * VertexList::getIndizes()
+unsigned int * VertexList::getIndizes()
 {
 	return indizes;
 }
