@@ -128,6 +128,8 @@ pixel ppmImage::getPixel(int x, int y)
 	if (x > width || y > height)
 	{
 		//Throw exception
+		printf("Access to %d %d illegal\n", width, height);
+		return pixel();
 	}
 
 	int arrayIndex = y * width + x;
