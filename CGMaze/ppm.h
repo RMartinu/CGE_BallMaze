@@ -8,7 +8,7 @@ using namespace std;
 class pixel
 {
 public:
-	char r, g, b;
+	unsigned char r, g, b;
 	pixel(int ir, int ig, int ib);
 	pixel();
 

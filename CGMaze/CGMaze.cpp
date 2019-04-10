@@ -79,8 +79,15 @@ int main()
 
 	//ppmImage thePlan("insert Path here");
 	//Maze theGame(thePlan);
+	ppmImage myImage("Resource\\smiley.ppm");
+	pixel p = myImage.getPixel(155,190);
 
+	printf("r: %d, g: %d, b: %d\n", p.r,p.g,p.b);
 
+	 p = myImage.getPixel(64, 144);
+	printf("r: %d, g: %d, b: %d\n", p.r, p.g, p.b);
+	 p = myImage.getPixel(155, 190);
+	printf("r: %d, g: %d, b: %d\n", p.r, p.g, p.b);
 	/*Vector Excersise here; remove at appropriete time*/
 	glm::vec4 vec(1.0f,0.0f,0.0f,1.0f);
 	glm::mat4 trans = glm::mat4(1.0f);

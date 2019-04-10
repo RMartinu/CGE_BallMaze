@@ -5,7 +5,7 @@
 ppmImage::ppmImage(string fileName)
 {
 	FILE *fp;
-
+	puts("Reading File");
 	//open a file
 	fp = fopen(fileName.c_str(), "r");
 	//check if successfull
@@ -20,15 +20,22 @@ ppmImage::ppmImage(string fileName)
 	}
 	char buffer[readBuffer];
 	int bytesRead = 0;
-
+	puts("go first base");
 	//read the magic number
 	bytesRead = fscanf(fp, "%8s", buffer);
-	if (buffer[0] == 'P' && buffer[1] == '6' && (0 != isblank(buffer[2])))
+	printf("read: %5s", buffer);
+	while (fgetc(fp) != '\n');
+	while (fgetc(fp) != '\n');
+
+	
+	if (buffer[0] == 'P' && buffer[1] == '3' )
 	{
 		//the magic number is ok, lets continue
-
+		printf("First line length: %d \nMagic number: %3s", bytesRead, buffer );
 		//reading width
-		bytesRead = fscanf(fp, "%d", &width);
+		bytesRead = fscanf(fp, "%7s", buffer);
+		printf("buffer contains: %7s", buffer);
+		width = strtol(buffer, nullptr,10);
 		if (bytesRead == 0)
 		{
 			//throw, break
@@ -43,9 +50,10 @@ ppmImage::ppmImage(string fileName)
 		{
 			//throw, break
 		}
-
+		printf("Color: %d, w: %d, h%d", this->colorDepth, this->width, this->height);
 		//We have the basic metadata; construct the pixel buffer
 
+		pixelField = nullptr;
 		int totalPixels = width * height;
 		pixelField = new pixel[totalPixels];
 
@@ -67,8 +75,9 @@ ppmImage::ppmImage(string fileName)
 			{
 				//throw, break
 			}
-
+			
 			pixel p(r,g,b);
+			printf("r: %d, g: %d, b: %d\t", p.r, p.g, p.b);
 			pixelField[i] = p;
 
 		}
@@ -77,14 +86,16 @@ ppmImage::ppmImage(string fileName)
 	{
 		//throw if so inclined
 	}
-
+	puts("should be done");
 
 	fclose(fp);
 
 }
 ppmImage::~ppmImage()
 {
-	delete pixelField;
+	if (pixelField != nullptr) {
+		delete pixelField;
+	}
 }
 
 int ppmImage::getHeight()
