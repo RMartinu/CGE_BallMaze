@@ -93,8 +93,6 @@ public:
 	int getIndexCount();
 	float* getVertexData();
 	int getVertexCount();
-
-
 };
 
 
@@ -115,6 +113,9 @@ private:
 public: Maze(ppmImage floorplan);
 	 ~Maze();
 	 vector<Mesh> getMeshes();
+
+	 VertexList getVertexList();
+	 VertexList getBallVertices();
 	 Mesh getBall();
 	 void updateRoll(int speed);
 	 void updatePitch(int speed);

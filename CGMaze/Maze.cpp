@@ -70,6 +70,40 @@ Maze::Maze(ppmImage floorplan)
 	 return meshes;
  }
 
+ VertexList Maze::getVertexList()
+ {
+
+	 VertexList V(vertexCoordinates | UVCoordinates);
+
+	 vector<Mesh> Meshes = getMeshes();
+	 for each(Mesh t in Meshes)
+	 {
+
+		 vector<Vertex> mverts = t.getVertices();
+		 for (int i = 0; i < mverts.size; i += 3)
+		 {
+			 V.addTriangle(mverts.at(i), mverts.at(i + 1), mverts.at(i + 2));
+		 }
+
+
+	 }
+	 return V;
+ }
+
+ VertexList Maze::getBallVertices()
+ {
+	 VertexList V(vertexCoordinates|UVCoordinates);
+
+	 Mesh BallMesh = getBall();
+	 vector<Vertex> bverts = BallMesh.getVertices();
+	 for (int i = 0; i < bverts.size; i+=3)
+	 {
+		 V.addTriangle(bverts.at(i), bverts.at(i + 1), bverts.at(i + 2));
+	 }
+
+	 return VertexList();
+ }
+
  Mesh Maze::getBall()
  {
 	 return Mesh();
