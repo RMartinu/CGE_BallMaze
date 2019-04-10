@@ -8,6 +8,9 @@
 #include "Maze.h"
 #include <glad\glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include<glm/gtc/matrix_transform.hpp>
+#include<glm/gtc/type_ptr.hpp>
 
 
 const char *vertexShaderSource = "#version 330 core\n"
@@ -76,6 +79,15 @@ int main()
 
 	//ppmImage thePlan("insert Path here");
 	//Maze theGame(thePlan);
+
+
+	/*Vector Excersise here; remove at appropriete time*/
+	glm::vec4 vec(1.0f,0.0f,0.0f,1.0f);
+	glm::mat4 trans = glm::mat4(1.0f);
+	trans = glm::translate(trans, glm::vec3(1.0f,1.0f, 0.0f));
+	vec = trans * vec;
+	std::cout << vec.x <<" "<< vec.y <<" "<< vec.z << std::endl;
+	/**/
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
