@@ -10,51 +10,65 @@
 
 Maze::Maze(ppmImage &floorplan)
 {
-	this->width = floorplan.getWidth();
-	this->height = floorplan.getHeight();
+	if (floorplan.getWidth() == 0 || floorplan.getHeight() == 0)
+	{
+
+		this->width = 300;
+		this->height = 300;
+	}
+	else
+	{
+
+		this->width = floorplan.getWidth();
+		this->height = floorplan.getHeight();
+
+	}
 	mazeGrid = new int[width*height];
 	
 	Mesh floor(0, 0, this->width, this->height, -1);
 	meshes.push_back(floor);
 
-	for(int h = 0; h<height; ++h)
+	if (floorplan.getWidth() != 0 || floorplan.getHeight() != 0)
 	{
-		for (int w = 0; w < width; ++w)
+		for (int h = 0; h < height; ++h)
 		{
-			
-			if (floorplan.getPixel(w, h).r == 255 && floorplan.getPixel(w, h).g == 255 && floorplan.getPixel(w, h).b == 255)
+			for (int w = 0; w < width; ++w)
 			{
-				mazeGrid[h*width + w] = way;
-				continue;
-			}
-			if (floorplan.getPixel(w, h).r == 0 && floorplan.getPixel(w, h).g == 0 && floorplan.getPixel(w, h).b == 0)
-			{
-				mazeGrid[h*width + w] = wall;
-				Mesh newWall(w, h);
-				meshes.push_back(newWall);
-				continue;
-			}
-			if (floorplan.getPixel(w, h).r == 0 && floorplan.getPixel(w, h).g == 255 && floorplan.getPixel(w, h).b == 0)
-			{
-				mazeGrid[h*width + w] = start;
-				ballStart_x = w;
-				ballStart_y = h;
-				continue;
-			}
-			if (floorplan.getPixel(w, h).r == 255 && floorplan.getPixel(w, h).g == 0 && floorplan.getPixel(w, h).b == 0)
-			{
-				mazeGrid[h*width + w] = finish;
-				Mesh newFinish(w, h, 1, 1, 0.1);
-				meshes.push_back(newFinish);
-				continue;
-			}
-			if (floorplan.getPixel(w, h).r == 0 && floorplan.getPixel(w, h).g == 0 && floorplan.getPixel(w, h).b == 255)
-			{
-				mazeGrid[h*width + w] = hole;
-				continue;
-			}
+
+				if (floorplan.getPixel(w, h).r == 255 && floorplan.getPixel(w, h).g == 255 && floorplan.getPixel(w, h).b == 255)
+				{
+					mazeGrid[h*width + w] = way;
+					continue;
+				}
+				if (floorplan.getPixel(w, h).r == 0 && floorplan.getPixel(w, h).g == 0 && floorplan.getPixel(w, h).b == 0)
+				{
+					mazeGrid[h*width + w] = wall;
+					Mesh newWall(w, h);
+					meshes.push_back(newWall);
+					continue;
+				}
+				if (floorplan.getPixel(w, h).r == 0 && floorplan.getPixel(w, h).g == 255 && floorplan.getPixel(w, h).b == 0)
+				{
+					mazeGrid[h*width + w] = start;
+					ballStart_x = w;
+					ballStart_y = h;
+					continue;
+				}
+				if (floorplan.getPixel(w, h).r == 255 && floorplan.getPixel(w, h).g == 0 && floorplan.getPixel(w, h).b == 0)
+				{
+					mazeGrid[h*width + w] = finish;
+					Mesh newFinish(w, h, 1, 1, 0.1);
+					meshes.push_back(newFinish);
+					continue;
+				}
+				if (floorplan.getPixel(w, h).r == 0 && floorplan.getPixel(w, h).g == 0 && floorplan.getPixel(w, h).b == 255)
+				{
+					mazeGrid[h*width + w] = hole;
+					continue;
+				}
 
 
+			}
 		}
 	}
 	//floorplan.getPixel();
