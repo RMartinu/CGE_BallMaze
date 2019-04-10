@@ -34,7 +34,7 @@ using namespace std;
 class Vertex
 {
 public:
-	double x, y, z, u, v;
+	double x, y, z, u, v, r, g, b;
 };
 
 
@@ -65,9 +65,12 @@ private:
 	int* indizes;
 	int numberOfIndizes;
 	float* vertexData;
+	int stride;
 	int numberOfVertices;
 	int maxEntries;
+	int currEntries;
 	int maxEdges;
+	int currEdges;
 	bool containsCoordinates;
 	bool containsVertexColor;
 	bool containsUVCoordinates;
@@ -80,6 +83,12 @@ public:
 	bool addVertex(float x, float y, float z, float r, float g, float b);
 	bool addVertex(float x, float y, float z, float r, float g, float b, float u, float v);
 	bool addVertex(float x, float y, float z, float u, float v);
+	bool addVertex(Vertex v);
+	bool addIndex(int vertex1, int vertex2, int vertex3);
+	bool extendVertexData();
+	bool extendIndizes();
+	bool addTriangle(Vertex v1, Vertex v2, Vertex v3);
+	int findVertex(Vertex v);
 	int* getIndizes();
 	int getIndexCount();
 	float* getVertexData();

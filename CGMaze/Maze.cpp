@@ -332,7 +332,33 @@ VertexList::VertexList(int formatDescriptor, int numberOfEntries)
 	this->containsCoordinates = formatDescriptor & (1 << vertexCoordinates);
 	this->containsVertexColor = formatDescriptor & (1 << vertexColor);
 	this->containsUVCoordinates = formatDescriptor & (1 << UVCoordinates);
+	maxEntries = numberOfEntries;
+	currEntries = 0;
+	currEdges = 0;
+	maxEdges = maxEntries * 1.5;
+	indizes = new int[maxEdges];
+	stride = 0;
+	if (this->containsCoordinates == true)
+	{
+		stride += 3;
+	}
+	if (this->containsVertexColor == true)
+	{
+		stride += 3;
+	}
 
+	if (this->containsUVCoordinates == true)
+	{
+		stride += 2;
+	}
+	vertexData = new float[maxEntries*stride];
+
+}
+
+VertexList::~VertexList()
+{
+	delete indizes;
+	delete vertexData;
 }
 
 bool VertexList::addVertex(float x, float y, float z)
@@ -341,6 +367,15 @@ bool VertexList::addVertex(float x, float y, float z)
 	{
 		return false;
 	}
+	if (currEntries >= maxEntries)
+	{
+		extendVertexData();
+	}
+	vertexData[currEntries*stride] = x;
+	vertexData[currEntries*stride+1] = y;
+	vertexData[currEntries*stride+2] = z;
+	++currEntries;
+
 	return true;
 }
 
@@ -350,6 +385,18 @@ bool VertexList::addVertex(float x, float y, float z, float r, float g, float b)
 	{
 		return false;
 	}
+	if (currEntries >= maxEntries)
+	{
+		extendVertexData();
+	}
+	vertexData[currEntries*stride] = x;
+	vertexData[currEntries*stride + 1] = y;
+	vertexData[currEntries*stride + 2] = z;
+	vertexData[currEntries*stride + 3] = r;
+	vertexData[currEntries*stride + 4] = g;
+	vertexData[currEntries*stride + 5] = b;
+	++currEntries;
+
 	return true;
 }
 
@@ -359,6 +406,19 @@ bool VertexList::addVertex(float x, float y, float z, float r, float g, float b,
 	{
 		return false;
 	}
+	if (currEntries >= maxEntries)
+	{
+		extendVertexData();
+	}
+	vertexData[currEntries*stride] = x;
+	vertexData[currEntries*stride + 1] = y;
+	vertexData[currEntries*stride + 2] = z;
+	vertexData[currEntries*stride + 3] = r;
+	vertexData[currEntries*stride + 4] = g;
+	vertexData[currEntries*stride + 5] = b;
+	vertexData[currEntries*stride + 6] = u;
+	vertexData[currEntries*stride + 7] = v;
+	++currEntries;
 	return true;
 }
 
@@ -368,7 +428,176 @@ bool VertexList::addVertex(float x, float y, float z, float u, float v)
 	{
 		return false;
 	}
+	if (currEntries >= maxEntries)
+	{
+		extendVertexData();
+	}
+	vertexData[currEntries*stride] = x;
+	vertexData[currEntries*stride + 1] = y;
+	vertexData[currEntries*stride + 2] = z;
+	vertexData[currEntries*stride + 3] = u;
+	vertexData[currEntries*stride + 4] = v;
+	++currEntries;
 	return true;
+}
+
+bool VertexList::addVertex(Vertex v)
+{
+	if (containsCoordinates && !containsVertexColor && !containsUVCoordinates)
+	{
+		return addVertex(v.x, v.y, v.z);
+	}
+	if (containsCoordinates && containsVertexColor && !containsUVCoordinates)
+	{
+		return addVertex(v.x, v.y, v.z, v.r, v.g, v.b);
+	}
+	if (containsCoordinates && !containsVertexColor && containsUVCoordinates)
+	{
+		return addVertex(v.x, v.y, v.z, v.u, v.v);
+	}
+	if (containsCoordinates && containsVertexColor && containsUVCoordinates)
+	{
+		return addVertex(v.x, v.y, v.z, v.r, v.g, v.b, v.u, v.v);
+	}
+	return false;
+}
+bool VertexList::addIndex(int vertex1, int vertex2, int vertex3)
+{
+	if (currEdges>=maxEdges)
+	{
+		if (!extendIndizes())
+		{
+			return false;
+		}
+	}
+	indizes[currEdges*3] = vertex1;
+	indizes[currEdges * 3 + 1] = vertex2;
+	indizes[currEdges * 3 + 2] = vertex3;
+	++currEdges;
+	return true;
+}
+
+bool VertexList::extendVertexData()
+{
+	float* newArray;
+	newArray = new float[maxEntries + 3 * stride];
+	if (newArray == nullptr)
+	{
+		printf("Error: allocation failed.");
+		return false;
+	}
+	for (int i = 0; currEntries*stride>i; ++i)
+	{
+		newArray[i] = vertexData[i];
+	}
+
+	delete vertexData;
+	vertexData = newArray;
+	maxEntries += 3;
+	extendIndizes();
+	return true;
+}
+
+bool VertexList::extendIndizes()
+{
+	if (currEdges+5 < maxEdges)
+	{
+		return true;
+	}
+
+	int* newArray;
+	newArray = new int[maxEdges + 5];
+	if (newArray == nullptr)
+	{
+		printf("Error: allocation failed.");
+		return false;
+	}
+	for (int i = 0; currEdges > i; ++i)
+	{
+		newArray[i] = indizes[i];
+	}
+
+	delete indizes;
+	indizes = newArray;
+	maxEdges += 5;
+	return true;
+}
+
+bool VertexList::addTriangle(Vertex v1, Vertex v2, Vertex v3)
+{
+	int vi1 = findVertex(v1);
+	int vi2 = findVertex(v2);
+	int vi3 = findVertex(v3);
+
+	if (vi1 == -1)
+	{
+		addVertex(v1);
+		vi1 = findVertex(v1);
+	}
+	if (vi2 == -1)
+	{
+		addVertex(v2);
+		vi2 = findVertex(v2);
+	}
+	if (vi3 == -1)
+	{
+		addVertex(v3);
+		vi3 = findVertex(v3);
+	}
+	if (vi1 == -1 || vi2 == -1 || vi3 == -1)
+	{
+		return false;
+	}
+	return addIndex(vi1, vi2, vi3);
+	
+}
+
+int VertexList::findVertex(Vertex v)
+{
+	for (int i = 0; i < maxEntries*stride; i+=stride)
+	{
+		if (vertexData[i]==v.x && vertexData[i+1] == v.y && vertexData[i + 2] == v.z)
+		{
+			if (containsUVCoordinates && containsVertexColor)
+			{
+				if (vertexData[i+3] == v.r && vertexData[i + 4] == v.g && vertexData[i + 5] == v.b && vertexData[i + 6] == v.u && vertexData[i + 7] == v.v)
+				{
+					return i / stride;
+				}
+				else
+				{
+					continue;
+				}
+			}
+			else if (containsUVCoordinates && !containsVertexColor)
+			{
+				if (vertexData[i + 3] == v.u && vertexData[i + 4] == v.v)
+				{
+					return i / stride;
+				}
+				else
+				{
+					continue;
+				}
+			}
+			else if (!containsUVCoordinates && containsVertexColor)
+			{
+				if (vertexData[i + 3] == v.r && vertexData[i + 4] == v.g && vertexData[i + 5] == v.b)
+				{
+					return i / stride;
+				}
+				else
+				{
+					continue;
+				}
+			}
+			else
+			{
+				return i / stride;
+			}
+		}
+	}
+	return -1;
 }
 
 int * VertexList::getIndizes()
