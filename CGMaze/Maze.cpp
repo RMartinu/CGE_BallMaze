@@ -49,7 +49,7 @@ Maze::Maze(ppmImage &floorplan)
 				}
 				if (floorplan.getPixel(w, h).r == 0 && floorplan.getPixel(w, h).g == 255 && floorplan.getPixel(w, h).b == 0)
 				{
-					mazeGrid[h*width + w] = start;
+					mazeGrid[h*width + w] = ballstart;
 					ballStart_x = w;
 					ballStart_y = h;
 					continue;
@@ -94,7 +94,7 @@ Maze::Maze(ppmImage &floorplan)
 	 {
 
 		 vector<Vertex> mverts = t.getVertices();
-		 for (int i = 0; i < mverts.size; i += 3)
+		 for (int i = 0; i < mverts.size(); i += 3)
 		 {
 			 V.addTriangle(mverts.at(i), mverts.at(i + 1), mverts.at(i + 2));
 		 }
@@ -110,12 +110,12 @@ Maze::Maze(ppmImage &floorplan)
 
 	 Mesh BallMesh = getBall();
 	 vector<Vertex> bverts = BallMesh.getVertices();
-	 for (int i = 0; i < bverts.size; i+=3)
+	 for (int i = 0; i < bverts.size(); i+=3)
 	 {
 		 V.addTriangle(bverts.at(i), bverts.at(i + 1), bverts.at(i + 2));
 	 }
 
-	 return VertexList();
+	 return V;
  }
 
  Mesh Maze::getBall()
@@ -312,6 +312,11 @@ int Maze::getFloorAt(double w, double h)
 {
 	return mazeGrid[(int)h*width + width];
 
+}
+
+vector<Vertex> Mesh::getVertices()
+{
+	return vector<Vertex>();
 }
 
 Mesh::Mesh()
@@ -553,7 +558,7 @@ bool VertexList::extendIndizes()
 		return true;
 	}
 
-	int* newArray;
+	unsigned int* newArray;
 	newArray = new unsigned int[maxEdges + 5];
 	if (newArray == nullptr)
 	{

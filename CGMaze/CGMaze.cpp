@@ -74,8 +74,8 @@ int main()
 {
     std::cout << "Hello World!\n"; 
 
-	ppmImage thePlan("insert Path here");
-	Maze theGame(thePlan);
+	//ppmImage thePlan("insert Path here");
+	//Maze theGame(thePlan);
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);

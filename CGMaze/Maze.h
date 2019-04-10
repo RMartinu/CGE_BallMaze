@@ -14,7 +14,7 @@ Header file for Maze.cpp
 #define maxRoll 30
 
 #define way 0
-#define start 1
+#define ballstart 1
 #define wall 2
 #define hole 3
 #define finish 4
