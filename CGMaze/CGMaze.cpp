@@ -79,6 +79,7 @@ int main()
 
 	//ppmImage thePlan("insert Path here");
 	//Maze theGame(thePlan);
+	
 	ppmImage myImage("Resource\\smiley.ppm");
 	pixel p = myImage.getPixel(155,190);
 

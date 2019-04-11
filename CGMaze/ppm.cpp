@@ -4,6 +4,7 @@
 
 ppmImage::ppmImage(string fileName)
 {
+	t = nullptr;
 	FILE *fp;
 	puts("Reading File");
 	//open a file
@@ -106,7 +107,10 @@ int ppmImage::getHeight()
 
 unsigned char * ppmImage::imageDataAsCharArray()
 {
-	if (t != nullptr) { delete t; }
+	if (t != nullptr) {
+		delete t;
+		t = nullptr;
+	}
 	 t= new unsigned char[width*height];
 
 	 for (int i = 0; i < width*height; i += 3)
