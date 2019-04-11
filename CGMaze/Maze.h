@@ -35,6 +35,8 @@ class Vertex
 {
 public:
 	double x, y, z, u, v, r, g, b;
+	Vertex(float ix, float iy, float iz);
+	Vertex();
 };
 
 
@@ -75,7 +77,8 @@ private:
 	bool containsVertexColor;
 	bool containsUVCoordinates;
 
-public:
+public:	
+
 	VertexList(int formatDescriptor);
 	VertexList(int formatDescriptor, int numberOfEntries);
 	~VertexList();
@@ -91,6 +94,7 @@ public:
 	int findVertex(Vertex v);
 	unsigned int* getIndizes();
 	int getIndexCount();
+	int getStride();
 	float* getVertexData();
 	int getVertexCount();
 };

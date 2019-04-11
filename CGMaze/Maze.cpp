@@ -91,19 +91,21 @@ Maze::Maze(ppmImage &floorplan)
 
  VertexList Maze::getVertexList()
  {
+	 puts("getting list");
+	 VertexList V(vertexCoordinates | UVCoordinates,8);
 
-	 VertexList V(vertexCoordinates | UVCoordinates);
-
+	 int  meshcount = 0;
 	 vector<Mesh> Meshes = getMeshes();
 	 for each(Mesh t in Meshes)
 	 {
-
+		 printf("Mesh no: %d with %d\n", ++meshcount, t.getVertices().size());
 		 vector<Vertex> mverts = t.getVertices();
 		 for (int i = 0; i < mverts.size(); i += 3)
 		 {
+			 printf("Adding triangle\n");
 			 V.addTriangle(mverts.at(i), mverts.at(i + 1), mverts.at(i + 2));
 		 }
-
+		 
 
 	 }
 	 return V;
@@ -111,7 +113,7 @@ Maze::Maze(ppmImage &floorplan)
 
  VertexList Maze::getBallVertices()
  {
-	 VertexList V(vertexCoordinates|UVCoordinates);
+	 VertexList V(vertexCoordinates|UVCoordinates,8);
 
 	 Mesh BallMesh = getBall();
 	 vector<Vertex> bverts = BallMesh.getVertices();
@@ -387,9 +389,13 @@ VertexList::VertexList(int formatDescriptor)
 
 VertexList::VertexList(int formatDescriptor, int numberOfEntries)
 {
-	this->containsCoordinates = formatDescriptor & (1 << vertexCoordinates);
-	this->containsVertexColor = formatDescriptor & (1 << vertexColor);
-	this->containsUVCoordinates = formatDescriptor & (1 << UVCoordinates);
+	vertexData = nullptr;
+	numberOfVertices = 0;
+	indizes = nullptr;
+	numberOfIndizes = 0;
+	this->containsCoordinates = (formatDescriptor & (1 << vertexCoordinates))!=0;
+	this->containsVertexColor = (formatDescriptor & (1 << vertexColor)) != 0;
+	this->containsUVCoordinates = (formatDescriptor & (1 << UVCoordinates)) != 0;
 	maxEntries = numberOfEntries;
 	currEntries = 0;
 	currEdges = 0;
@@ -409,22 +415,30 @@ VertexList::VertexList(int formatDescriptor, int numberOfEntries)
 	{
 		stride += 2;
 	}
+	
+	printf("striding: %d", stride);
+	//!!Change Back!!
+	stride = 3;
+	//printf("allocate: %d\n", maxEntries*stride);
 	vertexData = new float[maxEntries*stride];
-
 }
 
 VertexList::~VertexList()
 {
-	delete indizes;
-	delete vertexData;
+	if(indizes!=nullptr){ delete indizes; }
+	//
+	if (vertexData != nullptr) {
+		delete vertexData;
+	}
 }
 
 bool VertexList::addVertex(float x, float y, float z)
 {
-	if (!containsCoordinates || containsVertexColor || containsUVCoordinates)
-	{
-		return false;
-	}
+	printf("we add a vertex %f %f %f\n", x, y, z);
+	//if (!containsCoordinates || containsVertexColor || containsUVCoordinates)
+	//{
+	//	return false;
+	//}
 	if (currEntries >= maxEntries)
 	{
 		extendVertexData();
@@ -433,6 +447,9 @@ bool VertexList::addVertex(float x, float y, float z)
 	vertexData[currEntries*stride+1] = y;
 	vertexData[currEntries*stride+2] = z;
 	++currEntries;
+	++numberOfVertices;
+	printf("\n### new vcount: %d\n", numberOfVertices);
+	
 
 	return true;
 }
@@ -537,6 +554,7 @@ bool VertexList::addIndex(int vertex1, int vertex2, int vertex3)
 
 bool VertexList::extendVertexData()
 {
+	printf("the actual pointer: %p\n", vertexData);
 	float* newArray;
 	newArray = new float[maxEntries + 3 * stride];
 	if (newArray == nullptr)
@@ -544,12 +562,18 @@ bool VertexList::extendVertexData()
 		printf("Error: allocation failed.");
 		return false;
 	}
+	printf("the actual pointer: %p\n", vertexData);
+	puts("copy now");
+	printf("processing %d * %d entries\n", currEntries, stride);
 	for (int i = 0; currEntries*stride>i; ++i)
 	{
+		printf("copying index %d \n", i);
+		printf("the value to copy: %f", vertexData[i]);
 		newArray[i] = vertexData[i];
 	}
 
 	delete vertexData;
+	vertexData = nullptr;
 	vertexData = newArray;
 	maxEntries += 3;
 	extendIndizes();
@@ -576,6 +600,7 @@ bool VertexList::extendIndizes()
 	}
 
 	delete indizes;
+	indizes = nullptr;
 	indizes = newArray;
 	maxEdges += 5;
 	return true;
@@ -668,6 +693,11 @@ int VertexList::getIndexCount()
 	return numberOfIndizes;
 }
 
+int VertexList::getStride()
+{
+	return stride;
+}
+
 float * VertexList::getVertexData()
 {
 	return vertexData;
@@ -676,4 +706,17 @@ float * VertexList::getVertexData()
 int VertexList::getVertexCount()
 {
 	return numberOfVertices;
+}
+
+Vertex::Vertex(float ix, float iy, float iz)
+{
+	x = ix;
+	y = iy;
+	z = iz;
+	u = 0;v = 0;r = g = b = 0;
+}
+
+Vertex::Vertex()
+{
+	x = y = z = u = v = r = g = b = 0;
 }
