@@ -83,12 +83,12 @@ int main()
 	ppmImage myImage("Resource\\smiley.ppm");
 	pixel p = myImage.getPixel(155,190);
 
-	printf("r: %d, g: %d, b: %d\n", p.r,p.g,p.b);
+	//printf("r: %d, g: %d, b: %d\n", p.r,p.g,p.b);
 
 	 p = myImage.getPixel(64, 144);
-	printf("r: %d, g: %d, b: %d\n", p.r, p.g, p.b);
+	//printf("r: %d, g: %d, b: %d\n", p.r, p.g, p.b);
 	 p = myImage.getPixel(155, 190);
-	printf("r: %d, g: %d, b: %d\n", p.r, p.g, p.b);
+	//printf("r: %d, g: %d, b: %d\n", p.r, p.g, p.b);
 
 	//Level Load Test
 	ppmImage theLevel("Resource//minLevel.ppm");
@@ -99,24 +99,32 @@ int main()
 	//done
 
 	//get a vertex buffer
-	VertexList VL(vertexCoordinates,12);
+	VertexList VL(vertexCoordinates|UVCoordinates|vertexColor,12);
 	puts("Vertex list built");
-	VL.addVertex(4, 5, 6);
-	VL.extendVertexData();
-	VL.addVertex(1,2,3);
-	float *t = VL.getVertexData();
-	int vcount = VL.getVertexCount();
-	printf("Our list has %d elements\n",vcount);
-	for (int i = 0; i < VL.getStride()*VL.getVertexCount(); ++i)
-	{
-		printf("val: %f, ", t[i]);
-	}
-	puts("");
+
+	VertexList VL1(vertexCoordinates | UVCoordinates , 12);
+	puts("Vertex list built");
+
+	VertexList VL2(vertexCoordinates | vertexColor, 12);
+	puts("Vertex list built");
+	//VL.addVertex(4, 5, 6);
+	//VL.extendVertexData();
+	//VL.addVertex(1,2,3);
+	//float *t = VL.getVertexData();
+	//int vcount = VL.getVertexCount();
+	//printf("Our list has %d elements\n",vcount);
+	//for (int i = 0; i < VL.getStride()*VL.getVertexCount(); ++i)
+	//{
+	//	printf("val: %f, ", t[i]);
+	//}
+	//puts("");
 
 
 	//get list from game
-	VertexList gvl = theGame.getVertexList();
-	printf("+++Our list has %d elements\n", gvl.getVertexCount());
+
+	//VertexList gvl = theGame.getVertexList();
+	//printf("+++Our list has %d elements\n", gvl.getVertexCount());
+
 	/*Vector Excersise here; remove at appropriete time*/
 	glm::vec4 vec(1.0f,0.0f,0.0f,1.0f);
 	glm::mat4 trans = glm::mat4(1.0f);

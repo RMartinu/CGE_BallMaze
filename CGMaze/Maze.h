@@ -25,9 +25,9 @@ Header file for Maze.cpp
 #define gameRunning 0
 #define gameLost 2
 
-#define vertexCoordinates 0
-#define vertexColor 1
-#define UVCoordinates 2
+#define vertexCoordinates (1<<0)
+#define vertexColor (1<<1)
+#define UVCoordinates (1<<2)
 
 using namespace std;
 

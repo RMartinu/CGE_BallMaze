@@ -389,13 +389,20 @@ VertexList::VertexList(int formatDescriptor)
 
 VertexList::VertexList(int formatDescriptor, int numberOfEntries)
 {
+	printf("My format: %d \n", formatDescriptor);
 	vertexData = nullptr;
 	numberOfVertices = 0;
 	indizes = nullptr;
 	numberOfIndizes = 0;
-	this->containsCoordinates = (formatDescriptor & (1 << vertexCoordinates))!=0;
-	this->containsVertexColor = (formatDescriptor & (1 << vertexColor)) != 0;
-	this->containsUVCoordinates = (formatDescriptor & (1 << UVCoordinates)) != 0;
+	this->containsCoordinates = (formatDescriptor & (vertexCoordinates))!=0;
+	if (this->containsCoordinates);
+	{
+		puts("Contains Coords");
+	}
+	this->containsVertexColor = (formatDescriptor & (vertexColor)) != 0;
+	if (this->containsVertexColor) { puts("containes VColor"); }
+	this->containsUVCoordinates = (formatDescriptor & (UVCoordinates)) != 0;
+	if (this->containsUVCoordinates) { puts("contains UVs"); }
 	maxEntries = numberOfEntries;
 	currEntries = 0;
 	currEdges = 0;
@@ -418,7 +425,7 @@ VertexList::VertexList(int formatDescriptor, int numberOfEntries)
 	
 	printf("striding: %d", stride);
 	//!!Change Back!!
-	stride = 3;
+	//stride = 3;
 	//printf("allocate: %d\n", maxEntries*stride);
 	vertexData = new float[maxEntries*stride];
 }
@@ -435,10 +442,11 @@ VertexList::~VertexList()
 bool VertexList::addVertex(float x, float y, float z)
 {
 	printf("we add a vertex %f %f %f\n", x, y, z);
-	//if (!containsCoordinates || containsVertexColor || containsUVCoordinates)
-	//{
-	//	return false;
-	//}
+	if (!containsCoordinates || containsVertexColor || containsUVCoordinates)
+	{
+		puts("Wrong data format");
+		return false;
+	}
 	if (currEntries >= maxEntries)
 	{
 		extendVertexData();
