@@ -83,16 +83,42 @@ int main()
 	ppmImage myImage("Resource\\smiley.ppm");
 	pixel p = myImage.getPixel(155,190);
 
-
-	Vertex a, b, c;
+	
+	Vertex a, b, c,d;
 	a.x = -0.5; a.y = -0.5; a.z = 0; a.r = 1; a.b = 0; a.g;
 	b.x = 0.5; b.y = -0.5; b.z = 0; b.r = 0; b.b = 1; b.g = 0;
 	c.x = 0; c.y = 0.5; c.z = 0; c.r = 0; c.b = 0; c.g = 1;
-	VertexList Vlist(vertexCoordinates|vertexColor, 3);
-	Vlist.addTriangle(a,b,c);
-	puts("triangle generated successfully");
+	d.x = 0.5; d.y = 0.75; d.z = 0; d.r = 1; d.g = 1; d.b = 0;
 	
+	VertexList Vlist(vertexCoordinates|vertexColor, 4);
+bool successful=	Vlist.addTriangle(a,b,c);
+successful = Vlist.addTriangle(b, c, d);
+if (successful)
+{
+	puts("Verts added successfully");
+}
+else { puts("Vertex insertion failed"); }
 
+	puts("triangle generated successfully");
+	int icount = Vlist.getIndexCount();
+	int vcount = Vlist.getVertexCount();
+	printf("IndexCount: %d, VertexCount: %d", icount, vcount);
+
+	float* tverts = Vlist.getVertexData();
+	unsigned int *tindices = Vlist.getIndizes();
+	
+	puts("My indices: ");
+	for (int i = 0; i < icount; ++i)
+	{
+		printf("%d", *(tindices+i));
+	}
+	puts("\nMy vertices\n");
+	for (int i =0; i<vcount*Vlist.getStride(); i+=Vlist.getStride())
+	{
+		printf("Coords: %f, %f, %f\tColor: %f, %f, %f\n", *(tverts +i+0), *(tverts + i + 1), *(tverts + i + 2), *(tverts + i + 3), *(tverts + i + 4), *(tverts + i + 5) );
+	}
+
+	puts("Is the data fine?");
 
 
 	//printf("r: %d, g: %d, b: %d\n", p.r,p.g,p.b);
@@ -173,7 +199,7 @@ int main()
 	unsigned int VBO;
 	glGenBuffers(1,&VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vGradient), vGradient, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*Vlist.getStride()*Vlist.getVertexCount(), tverts, GL_STATIC_DRAW);
 
 	//simple Vertex Shader
 	unsigned int vertexShader;
@@ -235,7 +261,7 @@ int main()
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vGradient), vGradient, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*Vlist.getStride()*Vlist.getVertexCount(), tverts, GL_STATIC_DRAW);
 	//vertex attrib pointer
 	//glVertexAttribPointer(0,4,GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
 	//glEnableVertexAttribArray(0);
@@ -251,7 +277,7 @@ int main()
 	unsigned int EBO;
 	glGenBuffers(1, &EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(indices),indices,GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(unsigned int)*Vlist.getIndexCount(),tindices,GL_STATIC_DRAW);
 
 	/*and there*/
 

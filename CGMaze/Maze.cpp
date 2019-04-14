@@ -391,9 +391,9 @@ VertexList::VertexList(int formatDescriptor, int numberOfEntries)
 {
 	//printf("My format: %d \n", formatDescriptor);
 	vertexData = nullptr;
-	numberOfVertices = 0;
+	currEntries = 0;
 	indizes = nullptr;
-	numberOfIndizes = 0;
+	currEdges = 0;
 	this->containsCoordinates = (formatDescriptor & (vertexCoordinates))!=0;
 	/*if (this->containsCoordinates);
 	{
@@ -455,7 +455,7 @@ bool VertexList::addVertex(float x, float y, float z)
 	vertexData[currEntries*stride+1] = y;
 	vertexData[currEntries*stride+2] = z;
 	++currEntries;
-	++numberOfVertices;
+	
 	//printf("\n### new vcount: %d\n", numberOfVertices);
 	
 
@@ -478,7 +478,9 @@ bool VertexList::addVertex(float x, float y, float z, float r, float g, float b)
 	vertexData[currEntries*stride + 3] = r;
 	vertexData[currEntries*stride + 4] = g;
 	vertexData[currEntries*stride + 5] = b;
+	printf("indizes pre entry: %d\n", currEntries);
 	++currEntries;
+
 
 	return true;
 }
@@ -556,7 +558,7 @@ bool VertexList::addIndex(int vertex1, int vertex2, int vertex3)
 	indizes[currEdges*3] = vertex1;
 	indizes[currEdges * 3 + 1] = vertex2;
 	indizes[currEdges * 3 + 2] = vertex3;
-	++currEdges;
+	currEdges += 3;
 	return true;
 }
 
@@ -620,6 +622,8 @@ bool VertexList::addTriangle(Vertex v1, Vertex v2, Vertex v3)
 	int vi2 = findVertex(v2);
 	int vi3 = findVertex(v3);
 
+	printf("Verts at hand: %d, %d, %d", vi1, vi2,vi3);
+
 	if (vi1 == -1)
 	{
 		addVertex(v1);
@@ -635,10 +639,12 @@ bool VertexList::addTriangle(Vertex v1, Vertex v2, Vertex v3)
 		addVertex(v3);
 		vi3 = findVertex(v3);
 	}
+	printf("Verts at hand: %d, %d, %d", vi1, vi2, vi3);
 	if (vi1 == -1 || vi2 == -1 || vi3 == -1)
 	{
 		return false;
 	}
+
 	return addIndex(vi1, vi2, vi3);
 	
 }
@@ -693,12 +699,19 @@ int VertexList::findVertex(Vertex v)
 
 unsigned int * VertexList::getIndizes()
 {
+
+	puts("Im returning the following indizes: \n");
+	for (int i = 0; i < currEdges; ++i)
+	{
+		printf("%d ", this->indizes[i]);
+	}
+	puts("\n\n");
 	return indizes;
 }
 
 int VertexList::getIndexCount()
 {
-	return numberOfIndizes;
+	return currEdges;
 }
 
 int VertexList::getStride()
@@ -713,7 +726,7 @@ float * VertexList::getVertexData()
 
 int VertexList::getVertexCount()
 {
-	return numberOfVertices;
+	return currEntries;
 }
 
 Vertex::Vertex(float ix, float iy, float iz)

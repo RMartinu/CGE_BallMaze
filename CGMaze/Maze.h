@@ -65,10 +65,9 @@ class VertexList
 {
 private:
 	unsigned int* indizes;
-	int numberOfIndizes;
 	float* vertexData;
 	int stride;
-	int numberOfVertices;
+
 	int maxEntries;
 	int currEntries;
 	int maxEdges;
