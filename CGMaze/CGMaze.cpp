@@ -83,6 +83,18 @@ int main()
 	ppmImage myImage("Resource\\smiley.ppm");
 	pixel p = myImage.getPixel(155,190);
 
+
+	Vertex a, b, c;
+	a.x = -0.5; a.y = -0.5; a.z = 0; a.r = 1; a.b = 0; a.g;
+	b.x = 0.5; b.y = -0.5; b.z = 0; b.r = 0; b.b = 1; b.g = 0;
+	c.x = 0; c.y = 0.5; c.z = 0; c.r = 0; c.b = 0; c.g = 1;
+	VertexList Vlist(vertexCoordinates|vertexColor, 3);
+	Vlist.addTriangle(a,b,c);
+	puts("triangle generated successfully");
+	
+
+
+
 	//printf("r: %d, g: %d, b: %d\n", p.r,p.g,p.b);
 
 	 p = myImage.getPixel(64, 144);
@@ -130,7 +142,7 @@ int main()
 	glm::mat4 trans = glm::mat4(1.0f);
 	trans = glm::translate(trans, glm::vec3(1.0f,1.0f, 0.0f));
 	vec = trans * vec;
-	std::cout << vec.x <<" "<< vec.y <<" "<< vec.z << std::endl;
+	//std::cout << vec.x <<" "<< vec.y <<" "<< vec.z << std::endl;
 	/**/
 
 	glfwInit();
