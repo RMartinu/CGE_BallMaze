@@ -46,12 +46,13 @@ class Mesh
 private:
 	double pos_x, pos_y, pos_z;
 	double width, height, depth;
-	vector<Vertex> vertexList;
+	vector<Vertex> vertList;
 
 
 public:
 	bool intersectsWithSphere(double pos_x, double pos_y, double pos_z, double radius);
 	vector<Vertex> getVertices();
+	 int getVertexCount();
 	Mesh();
 	Mesh(double pos_x, double pos_y, double width, double depth, double height);
 	Mesh(double pos_x, double pos_y);

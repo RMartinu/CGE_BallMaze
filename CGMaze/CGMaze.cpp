@@ -132,6 +132,9 @@ successful = Vlist.addTriangle(b, c, d);
 	ppmImage theLevel("Resource//minLevel.ppm");
 	Maze theGame(theLevel);
 
+	VertexList VxXx = theGame.getVertexList();
+
+
 	puts("level loaded");
 
 

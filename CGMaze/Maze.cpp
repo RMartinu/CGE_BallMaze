@@ -27,6 +27,7 @@ Maze::Maze(ppmImage &floorplan)
 	
 	Mesh floor(0, 0, this->width, this->height, -1);
 	meshes.push_back(floor);
+	printf("Vertexcount in mazefloor %d while the mesh has %d vertices \n", floor.getVertices().size(), floor.getVertexCount());
 
 	if (floorplan.getWidth() != 0 || floorplan.getHeight() != 0)
 	{
@@ -102,7 +103,7 @@ Maze::Maze(ppmImage &floorplan)
 		 vector<Vertex> mverts = t.getVertices();
 		 for (int i = 0; i < mverts.size(); i += 3)
 		 {
-			 //printf("Adding triangle\n");
+			 printf("Adding triangle\n");
 			 V.addTriangle(mverts.at(i), mverts.at(i + 1), mverts.at(i + 2));
 		 }
 		 
@@ -323,7 +324,12 @@ int Maze::getFloorAt(double w, double h)
 
 vector<Vertex> Mesh::getVertices()
 {
-	return vector<Vertex>();
+	return this->vertList;
+}
+
+int Mesh::getVertexCount()
+{
+	return this->vertList.size();
 }
 
 Mesh::Mesh()
@@ -337,21 +343,83 @@ Mesh::Mesh(double pos_x, double pos_y, double width, double depth, double height
 	//Creates a cubical Mesh with specified dimensions; used to create the floor plate
 	Vertex v[8];
 	v[0].x = pos_x; v[0].y = pos_y; v[0].z = 0;
-	vertexList.push_back(v[0]);
 	v[1].x = pos_x + width; v[1].y = pos_y; v[1].z = 0;
-	vertexList.push_back(v[1]);
 	v[2].x = pos_x; v[2].y = pos_y + depth; v[2].z = 0;
-	vertexList.push_back(v[2]);
 	v[3].x = pos_x; v[3].y = pos_y; v[3].z = height;
-	vertexList.push_back(v[3]);
 	v[4].x = pos_x + width; v[4].y = pos_y + depth; v[4].z = 0;
-	vertexList.push_back(v[4]);
 	v[5].x = pos_x + width; v[5].y = pos_y; v[5].z = height;
-	vertexList.push_back(v[5]);
 	v[6].x = pos_x; v[6].y = pos_y + depth; v[6].z = height;
-	vertexList.push_back(v[6]);
 	v[7].x = pos_x + width; v[7].y = pos_y + depth; v[7].z = height;
-	vertexList.push_back(v[7]);
+	
+	//first triangle, front lower
+	vertList.push_back(v[0]);
+	vertList.push_back(v[1]);
+	vertList.push_back(v[2]);
+
+	//second triangle, front upper
+	vertList.push_back(v[1]);
+	vertList.push_back(v[2]);
+	vertList.push_back(v[4]);
+
+	//third triangle left lower
+	vertList.push_back(v[0]);
+	vertList.push_back(v[2]);
+	vertList.push_back(v[3]);
+
+
+	//forth triangle left upper
+	vertList.push_back(v[2]);
+	vertList.push_back(v[3]);
+	vertList.push_back(v[0]);
+
+
+	//fifth triangle right lower
+	vertList.push_back(v[1]);
+	vertList.push_back(v[4]);
+	vertList.push_back(v[5]);
+
+	//sixt triagle right upper
+	vertList.push_back(v[4]);
+	vertList.push_back(v[5]);
+	vertList.push_back(v[7]);
+
+	//seventh triangle top uppper
+	vertList.push_back(v[3]);
+	vertList.push_back(v[5]);
+	vertList.push_back(v[6]);
+
+
+	//eigth triangle top lower
+	vertList.push_back(v[5]);
+	vertList.push_back(v[6]);
+	vertList.push_back(v[7]);
+
+	//nineth tri front lower
+	vertList.push_back(v[0]);
+	vertList.push_back(v[1]);
+	vertList.push_back(v[3]);
+
+	//tenth tri front upper
+	vertList.push_back(v[1]);
+	vertList.push_back(v[3]);
+	vertList.push_back(v[6]);
+
+	//eleventh back upper
+	vertList.push_back(v[4]);
+	vertList.push_back(v[6]);
+	vertList.push_back(v[7]);
+
+	//twelfth back lower
+	vertList.push_back(v[2]);
+	vertList.push_back(v[4]);
+	vertList.push_back(v[6]);
+
+	//vertList.push_back(v[4]);
+	//vertList.push_back(v[5]);
+	//vertList.push_back(v[6]);
+	//vertList.push_back(v[7]);
+
+	printf("This mesh consists of %d vertices\n", vertList.size());
 
 }
 
@@ -360,21 +428,21 @@ Mesh::Mesh(double pos_x, double pos_y)
 	//creates a unity cube at the specified xy-coordinates and at height zero
 	Vertex v[8];
 	v[0].x = pos_x; v[0].y = pos_y; v[0].z = 0;
-	vertexList.push_back(v[0]);
+	vertList.push_back(v[0]);
 	v[1].x = pos_x+1; v[1].y = pos_y; v[1].z = 0;
-	vertexList.push_back(v[1]);
+	vertList.push_back(v[1]);
 	v[2].x = pos_x; v[2].y = pos_y+1; v[2].z = 0;
-	vertexList.push_back(v[2]);
+	vertList.push_back(v[2]);
 	v[3].x = pos_x; v[3].y = pos_y; v[3].z = 3;
-	vertexList.push_back(v[3]);
+	vertList.push_back(v[3]);
 	v[4].x = pos_x+1; v[4].y = pos_y+1; v[4].z = 0;
-	vertexList.push_back(v[4]);
+	vertList.push_back(v[4]);
 	v[5].x = pos_x+1; v[5].y = pos_y; v[5].z = 3;
-	vertexList.push_back(v[5]);
+	vertList.push_back(v[5]);
 	v[6].x = pos_x; v[6].y = pos_y+1; v[6].z = 3;
-	vertexList.push_back(v[6]);
+	vertList.push_back(v[6]);
 	v[7].x = pos_x+1; v[7].y = pos_y+1; v[7].z = 3;
-	vertexList.push_back(v[7]);
+	vertList.push_back(v[7]);
 
 }
 
