@@ -93,32 +93,32 @@ int main()
 	VertexList Vlist(vertexCoordinates|vertexColor, 4);
 bool successful=	Vlist.addTriangle(a,b,c);
 successful = Vlist.addTriangle(b, c, d);
-if (successful)
-{
-	puts("Verts added successfully");
-}
-else { puts("Vertex insertion failed"); }
+//if (successful)
+//{
+//	puts("Verts added successfully");
+//}
+//else { puts("Vertex insertion failed"); }
 
-	puts("triangle generated successfully");
+	//puts("triangle generated successfully");
 	int icount = Vlist.getIndexCount();
 	int vcount = Vlist.getVertexCount();
-	printf("IndexCount: %d, VertexCount: %d", icount, vcount);
+	//printf("IndexCount: %d, VertexCount: %d", icount, vcount);
 
 	float* tverts = Vlist.getVertexData();
 	unsigned int *tindices = Vlist.getIndizes();
 	
-	puts("My indices: ");
-	for (int i = 0; i < icount; ++i)
-	{
-		printf("%d", *(tindices+i));
-	}
-	puts("\nMy vertices\n");
-	for (int i =0; i<vcount*Vlist.getStride(); i+=Vlist.getStride())
-	{
-		printf("Coords: %f, %f, %f\tColor: %f, %f, %f\n", *(tverts +i+0), *(tverts + i + 1), *(tverts + i + 2), *(tverts + i + 3), *(tverts + i + 4), *(tverts + i + 5) );
-	}
+	//puts("My indices: ");
+	//for (int i = 0; i < icount; ++i)
+	//{
+	//	printf("%d", *(tindices+i));
+	//}
+	//puts("\nMy vertices\n");
+	//for (int i =0; i<vcount*Vlist.getStride(); i+=Vlist.getStride())
+	//{
+	//	printf("Coords: %f, %f, %f\tColor: %f, %f, %f\n", *(tverts +i+0), *(tverts + i + 1), *(tverts + i + 2), *(tverts + i + 3), *(tverts + i + 4), *(tverts + i + 5) );
+	//}
 
-	puts("Is the data fine?");
+	//puts("Is the data fine?");
 
 
 	//printf("r: %d, g: %d, b: %d\n", p.r,p.g,p.b);

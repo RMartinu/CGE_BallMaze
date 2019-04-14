@@ -478,7 +478,7 @@ bool VertexList::addVertex(float x, float y, float z, float r, float g, float b)
 	vertexData[currEntries*stride + 3] = r;
 	vertexData[currEntries*stride + 4] = g;
 	vertexData[currEntries*stride + 5] = b;
-	printf("indizes pre entry: %d\n", currEntries);
+	//printf("indizes pre entry: %d\n", currEntries);
 	++currEntries;
 
 
@@ -555,9 +555,10 @@ bool VertexList::addIndex(int vertex1, int vertex2, int vertex3)
 			return false;
 		}
 	}
-	indizes[currEdges*3] = vertex1;
-	indizes[currEdges * 3 + 1] = vertex2;
-	indizes[currEdges * 3 + 2] = vertex3;
+	//printf("triangle: %d, %d, %d", vertex1, vertex2, vertex3);
+	indizes[currEdges] = vertex1;
+	indizes[currEdges + 1] = vertex2;
+	indizes[currEdges + 2] = vertex3;
 	currEdges += 3;
 	return true;
 }
@@ -622,7 +623,7 @@ bool VertexList::addTriangle(Vertex v1, Vertex v2, Vertex v3)
 	int vi2 = findVertex(v2);
 	int vi3 = findVertex(v3);
 
-	printf("Verts at hand: %d, %d, %d", vi1, vi2,vi3);
+	//printf("in Verts at hand: %d, %d, %d", vi1, vi2,vi3);
 
 	if (vi1 == -1)
 	{
@@ -639,7 +640,7 @@ bool VertexList::addTriangle(Vertex v1, Vertex v2, Vertex v3)
 		addVertex(v3);
 		vi3 = findVertex(v3);
 	}
-	printf("Verts at hand: %d, %d, %d", vi1, vi2, vi3);
+	//printf("out Verts at hand: %d, %d, %d", vi1, vi2, vi3);
 	if (vi1 == -1 || vi2 == -1 || vi3 == -1)
 	{
 		return false;
@@ -700,12 +701,12 @@ int VertexList::findVertex(Vertex v)
 unsigned int * VertexList::getIndizes()
 {
 
-	puts("Im returning the following indizes: \n");
+	/*puts("Im returning the following indizes: \n");
 	for (int i = 0; i < currEdges; ++i)
 	{
 		printf("%d ", this->indizes[i]);
 	}
-	puts("\n\n");
+	puts("\n\n");*/
 	return indizes;
 }
 
