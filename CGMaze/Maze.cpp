@@ -38,7 +38,7 @@ Maze::Maze(ppmImage &floorplan)
 				if (floorplan.getPixel(w, h).r == 255 && floorplan.getPixel(w, h).g == 255 && floorplan.getPixel(w, h).b == 255)
 				{
 					mazeGrid[h*width + w] = way;
-					printf("x: %d, y: %d, type: way\n", w,h);
+					//printf("x: %d, y: %d, type: way\n", w,h);
 					continue;
 				}
 				if (floorplan.getPixel(w, h).r == 0 && floorplan.getPixel(w, h).g == 0 && floorplan.getPixel(w, h).b == 0)
@@ -46,7 +46,7 @@ Maze::Maze(ppmImage &floorplan)
 					mazeGrid[h*width + w] = wall;
 					Mesh newWall(w, h);
 					meshes.push_back(newWall);
-					printf("x: %d, y: %d, type: wall\n", w, h);
+					//printf("x: %d, y: %d, type: wall\n", w, h);
 					continue;
 				}
 				if (floorplan.getPixel(w, h).r == 0 && floorplan.getPixel(w, h).g == 255 && floorplan.getPixel(w, h).b == 0)
@@ -54,7 +54,7 @@ Maze::Maze(ppmImage &floorplan)
 					mazeGrid[h*width + w] = ballstart;
 					ballStart_x = w;
 					ballStart_y = h;
-					printf("x: %d, y: %d, type: start\n", w, h);
+					//printf("x: %d, y: %d, type: start\n", w, h);
 					continue;
 				}
 				if (floorplan.getPixel(w, h).r == 255 && floorplan.getPixel(w, h).g == 0 && floorplan.getPixel(w, h).b == 0)
@@ -62,13 +62,13 @@ Maze::Maze(ppmImage &floorplan)
 					mazeGrid[h*width + w] = finish;
 					Mesh newFinish(w, h, 1, 1, 0.1);
 					meshes.push_back(newFinish);
-					printf("x: %d, y: %d, type: finish\n", w, h);
+					//printf("x: %d, y: %d, type: finish\n", w, h);
 					continue;
 				}
 				if (floorplan.getPixel(w, h).r == 0 && floorplan.getPixel(w, h).g == 0 && floorplan.getPixel(w, h).b == 255)
 				{
 					mazeGrid[h*width + w] = hole;
-					printf("x: %d, y: %d, type: pit\n", w, h);
+					//printf("x: %d, y: %d, type: pit\n", w, h);
 					continue;
 				}
 
@@ -91,18 +91,18 @@ Maze::Maze(ppmImage &floorplan)
 
  VertexList Maze::getVertexList()
  {
-	 puts("getting list");
+	 //puts("getting list");
 	 VertexList V(vertexCoordinates | UVCoordinates,8);
 
 	 int  meshcount = 0;
 	 vector<Mesh> Meshes = getMeshes();
 	 for each(Mesh t in Meshes)
 	 {
-		 printf("Mesh no: %d with %d\n", ++meshcount, t.getVertices().size());
+		 //printf("Mesh no: %d with %d\n", ++meshcount, t.getVertices().size());
 		 vector<Vertex> mverts = t.getVertices();
 		 for (int i = 0; i < mverts.size(); i += 3)
 		 {
-			 printf("Adding triangle\n");
+			 //printf("Adding triangle\n");
 			 V.addTriangle(mverts.at(i), mverts.at(i + 1), mverts.at(i + 2));
 		 }
 		 
@@ -389,20 +389,20 @@ VertexList::VertexList(int formatDescriptor)
 
 VertexList::VertexList(int formatDescriptor, int numberOfEntries)
 {
-	printf("My format: %d \n", formatDescriptor);
+	//printf("My format: %d \n", formatDescriptor);
 	vertexData = nullptr;
 	numberOfVertices = 0;
 	indizes = nullptr;
 	numberOfIndizes = 0;
 	this->containsCoordinates = (formatDescriptor & (vertexCoordinates))!=0;
-	if (this->containsCoordinates);
+	/*if (this->containsCoordinates);
 	{
 		puts("Contains Coords");
-	}
+	}*/
 	this->containsVertexColor = (formatDescriptor & (vertexColor)) != 0;
-	if (this->containsVertexColor) { puts("containes VColor"); }
+	//if (this->containsVertexColor) { puts("containes VColor"); }
 	this->containsUVCoordinates = (formatDescriptor & (UVCoordinates)) != 0;
-	if (this->containsUVCoordinates) { puts("contains UVs"); }
+	//if (this->containsUVCoordinates) { puts("contains UVs"); }
 	maxEntries = numberOfEntries;
 	currEntries = 0;
 	currEdges = 0;
@@ -423,7 +423,7 @@ VertexList::VertexList(int formatDescriptor, int numberOfEntries)
 		stride += 2;
 	}
 	
-	printf("striding: %d", stride);
+	//printf("striding: %d", stride);
 	//!!Change Back!!
 	//stride = 3;
 	//printf("allocate: %d\n", maxEntries*stride);
@@ -441,7 +441,7 @@ VertexList::~VertexList()
 
 bool VertexList::addVertex(float x, float y, float z)
 {
-	printf("we add a vertex %f %f %f\n", x, y, z);
+	//printf("we add a vertex %f %f %f\n", x, y, z);
 	if (!containsCoordinates || containsVertexColor || containsUVCoordinates)
 	{
 		puts("Wrong data format");
@@ -456,7 +456,7 @@ bool VertexList::addVertex(float x, float y, float z)
 	vertexData[currEntries*stride+2] = z;
 	++currEntries;
 	++numberOfVertices;
-	printf("\n### new vcount: %d\n", numberOfVertices);
+	//printf("\n### new vcount: %d\n", numberOfVertices);
 	
 
 	return true;
@@ -562,7 +562,7 @@ bool VertexList::addIndex(int vertex1, int vertex2, int vertex3)
 
 bool VertexList::extendVertexData()
 {
-	printf("the actual pointer: %p\n", vertexData);
+	//printf("the actual pointer: %p\n", vertexData);
 	float* newArray;
 	newArray = new float[maxEntries + 3 * stride];
 	if (newArray == nullptr)
@@ -570,13 +570,13 @@ bool VertexList::extendVertexData()
 		printf("Error: allocation failed.");
 		return false;
 	}
-	printf("the actual pointer: %p\n", vertexData);
-	puts("copy now");
-	printf("processing %d * %d entries\n", currEntries, stride);
+	//printf("the actual pointer: %p\n", vertexData);
+	//puts("copy now");
+	//printf("processing %d * %d entries\n", currEntries, stride);
 	for (int i = 0; currEntries*stride>i; ++i)
 	{
-		printf("copying index %d \n", i);
-		printf("the value to copy: %f", vertexData[i]);
+		//printf("copying index %d \n", i);
+		//printf("the value to copy: %f", vertexData[i]);
 		newArray[i] = vertexData[i];
 	}
 

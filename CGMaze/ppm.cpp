@@ -30,7 +30,7 @@ ppmImage::ppmImage(string fileName)
 	if (buffer[0] == 'P' && buffer[1] == '3' )
 	{
 		//the magic number is ok, lets continue
-		printf("First line length: %d \nMagic number: %3s", bytesRead, buffer );
+		//printf("First line length: %d \nMagic number: %3s", bytesRead, buffer );
 		//reading width
 		bytesRead = fscanf(fp, "%7s", buffer);
 		width = strtol(buffer, nullptr,10);
@@ -84,7 +84,7 @@ ppmImage::ppmImage(string fileName)
 	{
 		//throw if so inclined
 	}
-	puts("should be done");
+	//puts("should be done");
 
 	fclose(fp);
 

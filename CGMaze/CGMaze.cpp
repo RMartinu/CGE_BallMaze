@@ -94,19 +94,19 @@ int main()
 	ppmImage theLevel("Resource//minLevel.ppm");
 	Maze theGame(theLevel);
 
-	puts("if computer not on fire the level is loaded");
+	puts("level loaded");
 
 	//done
 
 	//get a vertex buffer
 	VertexList VL(vertexCoordinates|UVCoordinates|vertexColor,12);
-	puts("Vertex list built");
+	//puts("Vertex list built");
 
 	VertexList VL1(vertexCoordinates | UVCoordinates , 12);
-	puts("Vertex list built");
+	//puts("Vertex list built");
 
 	VertexList VL2(vertexCoordinates | vertexColor, 12);
-	puts("Vertex list built");
+	//puts("Vertex list built");
 	//VL.addVertex(4, 5, 6);
 	//VL.extendVertexData();
 	//VL.addVertex(1,2,3);
