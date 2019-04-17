@@ -27,7 +27,7 @@ Maze::Maze(ppmImage &floorplan)
 	
 	Mesh floor(0, 0, this->width, this->height, -1);
 	meshes.push_back(floor);
-	printf("Vertexcount in mazefloor %d while the mesh has %d vertices \n", floor.getVertices().size(), floor.getVertexCount());
+	//printf("Vertexcount in mazefloor %d while the mesh has %d vertices \n", floor.getVertices().size(), floor.getVertexCount());
 
 	if (floorplan.getWidth() != 0 || floorplan.getHeight() != 0)
 	{
@@ -45,7 +45,12 @@ Maze::Maze(ppmImage &floorplan)
 				if (floorplan.getPixel(w, h).r == 0 && floorplan.getPixel(w, h).g == 0 && floorplan.getPixel(w, h).b == 0)
 				{
 					mazeGrid[h*width + w] = wall;
-					Mesh newWall(w, h);
+					//printf("############Wall %d %d\n", w, h);
+					Mesh newWall(((double)w), ((double)h));
+					//printf("############Wall %d %d\n", w, h);
+
+					newWall.beepMe(w,h);
+					//printf("new mesh actual: %d, %d, %d \n", newWall.getVertices().at(0).x, newWall.getVertices().at(1).x, newWall.getVertices().at(2).x);
 					meshes.push_back(newWall);
 					//printf("x: %d, y: %d, type: wall\n", w, h);
 					continue;
@@ -93,7 +98,7 @@ Maze::Maze(ppmImage &floorplan)
  VertexList Maze::getVertexList()
  {
 	 //puts("getting list");
-	 VertexList V(vertexCoordinates | UVCoordinates,8);
+	 VertexList V(vertexCoordinates | UVCoordinates,3);
 
 	 int  meshcount = 0;
 	 vector<Mesh> Meshes = getMeshes();
@@ -103,7 +108,7 @@ Maze::Maze(ppmImage &floorplan)
 		 vector<Vertex> mverts = t.getVertices();
 		 for (int i = 0; i < mverts.size(); i += 3)
 		 {
-			 printf("Adding triangle\n");
+			 printf("Adding triangle no %d:  %f %f %f\n",i, mverts.at(i).x, mverts.at(i + 1).x, mverts.at(i + 2).x);
 			 V.addTriangle(mverts.at(i), mverts.at(i + 1), mverts.at(i + 2));
 		 }
 		 
@@ -350,7 +355,8 @@ Mesh::Mesh(double pos_x, double pos_y, double width, double depth, double height
 	v[5].x = pos_x + width; v[5].y = pos_y; v[5].z = height;
 	v[6].x = pos_x; v[6].y = pos_y + depth; v[6].z = height;
 	v[7].x = pos_x + width; v[7].y = pos_y + depth; v[7].z = height;
-	
+	printf("%d %d %d %d %d", pos_x, pos_y, width, depth, height);
+	printf("%d %d %d %d %d %d %d", v[0].y, v[1].y, v[2].y, v[3].y, v[4].y, v[5].y, v[6].y);
 	//first triangle, front lower
 	vertList.push_back(v[0]);
 	vertList.push_back(v[1]);
@@ -419,31 +425,96 @@ Mesh::Mesh(double pos_x, double pos_y, double width, double depth, double height
 	//vertList.push_back(v[6]);
 	//vertList.push_back(v[7]);
 
+
+	printf("Vertex data: %d %d %d", v[0].x, v[0].y, v[0].z);
 	printf("This mesh consists of %d vertices\n", vertList.size());
 
 }
 
 Mesh::Mesh(double pos_x, double pos_y)
 {
+	printf("Building at: %f %f\n", pos_x, pos_y);
 	//creates a unity cube at the specified xy-coordinates and at height zero
 	Vertex v[8];
 	v[0].x = pos_x; v[0].y = pos_y; v[0].z = 0;
-	vertList.push_back(v[0]);
 	v[1].x = pos_x+1; v[1].y = pos_y; v[1].z = 0;
-	vertList.push_back(v[1]);
 	v[2].x = pos_x; v[2].y = pos_y+1; v[2].z = 0;
-	vertList.push_back(v[2]);
 	v[3].x = pos_x; v[3].y = pos_y; v[3].z = 3;
-	vertList.push_back(v[3]);
 	v[4].x = pos_x+1; v[4].y = pos_y+1; v[4].z = 0;
-	vertList.push_back(v[4]);
 	v[5].x = pos_x+1; v[5].y = pos_y; v[5].z = 3;
-	vertList.push_back(v[5]);
 	v[6].x = pos_x; v[6].y = pos_y+1; v[6].z = 3;
-	vertList.push_back(v[6]);
 	v[7].x = pos_x+1; v[7].y = pos_y+1; v[7].z = 3;
+
+	//first triangle, front lower
+	vertList.push_back(v[0]);
+	vertList.push_back(v[1]);
+	vertList.push_back(v[2]);
+
+	//second triangle, front upper
+	vertList.push_back(v[1]);
+	vertList.push_back(v[2]);
+	vertList.push_back(v[4]);
+
+	//third triangle left lower
+	vertList.push_back(v[0]);
+	vertList.push_back(v[2]);
+	vertList.push_back(v[3]);
+
+
+	//forth triangle left upper
+	vertList.push_back(v[2]);
+	vertList.push_back(v[3]);
+	vertList.push_back(v[0]);
+
+
+	//fifth triangle right lower
+	vertList.push_back(v[1]);
+	vertList.push_back(v[4]);
+	vertList.push_back(v[5]);
+
+	//sixt triagle right upper
+	vertList.push_back(v[4]);
+	vertList.push_back(v[5]);
 	vertList.push_back(v[7]);
 
+	//seventh triangle top uppper
+	vertList.push_back(v[3]);
+	vertList.push_back(v[5]);
+	vertList.push_back(v[6]);
+
+
+	//eigth triangle top lower
+	vertList.push_back(v[5]);
+	vertList.push_back(v[6]);
+	vertList.push_back(v[7]);
+
+	//nineth tri front lower
+	vertList.push_back(v[0]);
+	vertList.push_back(v[1]);
+	vertList.push_back(v[3]);
+
+	//tenth tri front upper
+	vertList.push_back(v[1]);
+	vertList.push_back(v[3]);
+	vertList.push_back(v[6]);
+
+	//eleventh back upper
+	vertList.push_back(v[4]);
+	vertList.push_back(v[6]);
+	vertList.push_back(v[7]);
+
+	//twelfth back lower
+	vertList.push_back(v[2]);
+	vertList.push_back(v[4]);
+	vertList.push_back(v[6]);
+
+
+	printf("first vertex: %f %f %f", vertList.at(0).x, vertList.at(0).y, vertList.at(0).z);
+}
+
+void Mesh::beepMe(int pos_x, int pos_y)
+{
+	printf("reached me: %d %d", pos_x, pos_y);
 }
 
 Mesh::~Mesh()
@@ -616,7 +687,7 @@ bool VertexList::addVertex(Vertex v)
 }
 bool VertexList::addIndex(int vertex1, int vertex2, int vertex3)
 {
-	if (currEdges>=maxEdges)
+	if (currEdges+3>maxEdges)
 	{
 		if (!extendIndizes())
 		{
@@ -633,9 +704,13 @@ bool VertexList::addIndex(int vertex1, int vertex2, int vertex3)
 
 bool VertexList::extendVertexData()
 {
-	//printf("the actual pointer: %p\n", vertexData);
+
+	puts("####Extending VBuffer");
+	printf("the vertex pointer before: %p\n", vertexData);
 	float* newArray;
-	newArray = new float[maxEntries + 3 * stride];
+	printf("Vertbuffer data: %d %d\n", maxEntries, stride);
+	newArray = new float[maxEntries * stride + 3 * stride];
+
 	if (newArray == nullptr)
 	{
 		printf("Error: allocation failed.");
@@ -654,6 +729,7 @@ bool VertexList::extendVertexData()
 	delete vertexData;
 	vertexData = nullptr;
 	vertexData = newArray;
+	printf("the vertexpointer after: %p\n", vertexData);
 	maxEntries += 3;
 	extendIndizes();
 	return true;
@@ -661,13 +737,16 @@ bool VertexList::extendVertexData()
 
 bool VertexList::extendIndizes()
 {
-	if (currEdges+5 < maxEdges)
+	puts("extend index list");
+	printf("index pointer: %p\n", indizes);
+	if (currEdges+10 < maxEdges)
 	{
+		printf("%d values are sufficient for %d entries\n", maxEdges, currEdges);
 		return true;
 	}
 
 	unsigned int* newArray;
-	newArray = new unsigned int[maxEdges + 5];
+	newArray = new unsigned int[maxEdges + 10];
 	if (newArray == nullptr)
 	{
 		printf("Error: allocation failed.");
@@ -677,11 +756,13 @@ bool VertexList::extendIndizes()
 	{
 		newArray[i] = indizes[i];
 	}
-
+	puts("copy successful");
 	delete indizes;
+	printf("new array for index pointer: %p\n", newArray);
 	indizes = nullptr;
 	indizes = newArray;
-	maxEdges += 5;
+	printf("new index pointer: %p\n", indizes);
+	maxEdges += 10;
 	return true;
 }
 

@@ -44,8 +44,8 @@ public:
 class Mesh
 {
 private:
-	double pos_x, pos_y, pos_z;
-	double width, height, depth;
+	//double pos_x, pos_y, pos_z;
+	//double width, height, depth;
 	vector<Vertex> vertList;
 
 
@@ -56,6 +56,7 @@ public:
 	Mesh();
 	Mesh(double pos_x, double pos_y, double width, double depth, double height);
 	Mesh(double pos_x, double pos_y);
+	void beepMe(int pos_x, int pos_y);
 	~Mesh();
 
 
