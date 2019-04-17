@@ -33,11 +33,18 @@ const char *vertexShaderGradient = "#version 330 core\n"
 "layout (location=0) in vec3 aPos;\n"
 "layout (location=1) in vec3 aColor;\n"
 "out vec3 ourColor;\n"
+"uniform float faktor;\n"
+"uniform mat4 model;\n"
+"uniform mat4 view;\n"
+"uniform mat4 projection;\n"
+
 "void main(){\n"
-"gl_Position = vec4(aPos, 1.0);\n"
+"gl_Position = projection*view*model*vec4(aPos*faktor, 1.0);\n"
 "ourColor = aColor;\n"
 "}";
 
+//"gl_Position = vec4(aPos, 1.0);\n"
+//"gl_Position=vec4(aPos.x/faktor,aPos.y/faktor,aPos.z/faktor,1.0);\n"
 
 const char *fragmentShaderGradient = "#version 330 core\n"
 "out vec4 FragColor;\n"
@@ -88,7 +95,7 @@ int main()
 	a.x = -0.5; a.y = -0.5; a.z = 0; a.r = 1; a.b = 0; a.g=0;
 	b.x = 0.5; b.y = -0.5; b.z = 0; b.r = 0; b.b = 1; b.g = 0;
 	c.x = 0; c.y = 0.5; c.z = 0; c.r = 0; c.b = 0; c.g = 1;
-	d.x = 0.65; d.y = 1.01; d.z = -0.5; d.r = 1; d.g = 1; d.b = 0;
+	d.x = 0.65; d.y = 0.75; d.z = -0.5; d.r = 1; d.g = 1; d.b = 0;
 	e.x = -0.75; e.y = 0.75;e.z = 0; e.r = 0; e.b = 1;e.g = 1;
 	f.x = 0.65; f.y = 0.9; f.z = 0; f.r = 1;f.b = 1;f.g = 0;
 	
@@ -131,15 +138,15 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 	//printf("r: %d, g: %d, b: %d\n", p.r, p.g, p.b);
 
 	//Level Load Test
-	//ppmImage theLevel("Resource//minLevel.ppm");
-	//Maze theGame(theLevel);
+	ppmImage theLevel("Resource//minLevel.ppm");
+	Maze theGame(theLevel);
 
-	//VertexList VxXx = theGame.getVertexList();
+	VertexList VxXx = theGame.getVertexList();
 
 
 	puts("level loaded");
 
-	//Vlist = theGame.getVertexList();
+	Vlist = theGame.getVertexList();
 
 	//puts("triangle generated successfully");
 	int icount = Vlist.getIndexCount();
@@ -258,8 +265,7 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 	glLinkProgram(shaderProgram);
 
 	glUseProgram(shaderProgram);
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
+
 
 	//shaders are ready for action
 
@@ -323,17 +329,63 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 	/*and there*/
 
 
+
+	glEnable(GL_DEPTH_TEST);
+
+
+
+	/*Set up the matrices*/
+	glm::mat4 model = glm::mat4(1.0f); // init to something clearly defined
+	
+
+	//generate the base view matrix
+	glm::mat4 viewMatrix = glm::mat4(1.0f);
+	//translate the whole scene
+	viewMatrix = glm::translate(viewMatrix, glm::vec3(0.0f,0.1f,-3.2f));
+	model = glm::rotate(model, glm::radians(170.0f), glm::vec3(1,0,0));
+	model = glm::scale(model, glm::vec3(0.05f, 0.05f, -0.05f));
+for (int i = 0; i < 4;++i)
+	{
+		for (int j = 0; j < 4; ++j)
+		{
+			//if (i == j)
+			//{
+			//	model[i][j]= 1;
+			//}
+			printf("%f ", viewMatrix[j][i]);
+		}
+		puts("");
+	}
+	//projection Matrix
+	glm::mat4 projectionMatrix=glm::mat4(1.0f);
+	projectionMatrix = glm::perspective(glm::radians(45.0f), 800/600.0f, 0.1f,100.0f);
+
+
+	/**/
+
 	while (!glfwWindowShouldClose(window))
 	{
+		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	glUseProgram(shaderProgram);
+		unsigned int modelLoc = glGetUniformLocation(shaderProgram, "model");
+		glUniformMatrix4fv(modelLoc,1, GL_FALSE, glm::value_ptr(model));
+		unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &viewMatrix[0][0]);
+		unsigned int project = glGetUniformLocation(shaderProgram,"projection");
+		glUniformMatrix4fv(project, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
-		glUseProgram(shaderProgram);
+		unsigned int myFaktor = glGetUniformLocation(shaderProgram, "faktor");
+		glUniform1f(myFaktor, 0.75f);
+
+	
 		glBindVertexArray(VAO);
 		//glDrawArrays(GL_TRIANGLES, 0,3);
 		glDrawElements(GL_TRIANGLES, Vlist.getIndexCount(), GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
 	glfwTerminate();
 	return 7;
 	 

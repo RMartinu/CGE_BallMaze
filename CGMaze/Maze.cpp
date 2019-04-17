@@ -30,6 +30,8 @@ Maze::Maze(ppmImage &floorplan)
 	meshes.push_back(floor);
 	//printf("Vertexcount in mazefloor %d while the mesh has %d vertices \n", floor.getVertices().size(), floor.getVertexCount());
 
+	
+
 	if (floorplan.getWidth() != 0 || floorplan.getHeight() != 0)
 	{
 		for (int h = 0; h < height; ++h)
@@ -84,6 +86,7 @@ Maze::Maze(ppmImage &floorplan)
 		}
 	}
 	//floorplan.getPixel();
+	
 }
 
  Maze::~Maze()
@@ -99,7 +102,7 @@ Maze::Maze(ppmImage &floorplan)
  VertexList Maze::getVertexList()
  {
 	 //puts("getting list");
-	 VertexList V(vertexCoordinates | UVCoordinates,3);
+	 VertexList V(vertexCoordinates |vertexColor,3);
 
 	 int  meshcount = 0;
 	 vector<Mesh> Meshes = getMeshes();
@@ -110,7 +113,13 @@ Maze::Maze(ppmImage &floorplan)
 		 for (int i = 0; i < mverts.size(); i += 3)
 		 {
 			 //printf("Adding triangle no %d:  %f %f %f\n",i, mverts.at(i).x, mverts.at(i + 1).x, mverts.at(i + 2).x);
-			 V.addTriangle(mverts.at(i), mverts.at(i + 1), mverts.at(i + 2));
+
+			 Vertex a, b, c;
+			 a = mverts.at(i);
+			 b = mverts.at(i + 1);
+			 c = mverts.at(i + 2);
+			 a.r = b.g = c.b = 1;
+			 V.addTriangle(a,b,c);
 		 }
 		 
 
