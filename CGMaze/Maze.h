@@ -5,6 +5,9 @@ Header file for Maze.cpp
 #include "ppm.h"
 #include <vector>
 
+
+#define epsilon_F 0.001
+
 #define pitchRate 10
 #define rollRate 10
 #define gravity 9.81
@@ -98,6 +101,9 @@ public:
 	int getStride();
 	float* getVertexData();
 	int getVertexCount();
+	bool getContainsCoordinates();
+	bool getContainsVertexColor();
+	bool getContainsUVCoordinates();
 };
 
 

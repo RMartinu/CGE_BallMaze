@@ -84,28 +84,30 @@ int main()
 	pixel p = myImage.getPixel(155,190);
 
 	
-	Vertex a, b, c,d;
-	a.x = -0.5; a.y = -0.5; a.z = 0; a.r = 1; a.b = 0; a.g;
+	Vertex a, b, c,d,e, f;
+	a.x = -0.5; a.y = -0.5; a.z = 0; a.r = 1; a.b = 0; a.g=0;
 	b.x = 0.5; b.y = -0.5; b.z = 0; b.r = 0; b.b = 1; b.g = 0;
 	c.x = 0; c.y = 0.5; c.z = 0; c.r = 0; c.b = 0; c.g = 1;
-	d.x = 0.5; d.y = 0.75; d.z = 0; d.r = 1; d.g = 1; d.b = 0;
+	d.x = 0.65; d.y = 1.01; d.z = -0.5; d.r = 1; d.g = 1; d.b = 0;
+	e.x = -0.75; e.y = 0.75;e.z = 0; e.r = 0; e.b = 1;e.g = 1;
+	f.x = 0.65; f.y = 0.9; f.z = 0; f.r = 1;f.b = 1;f.g = 0;
 	
-	VertexList Vlist(vertexCoordinates|vertexColor, 4);
-bool successful=	Vlist.addTriangle(a,b,c);
-successful = Vlist.addTriangle(b, c, d);
+	VertexList Vlist(vertexCoordinates|vertexColor, 3);
+bool successful=	
+successful = Vlist.addTriangle(d, e, f);
+successful = Vlist.addTriangle(a,b,c);
+Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle(a, c,e);
+
+	//VertexList Vlist(vertexCoordinates,8);
+
+
 //if (successful)
 //{
 //	puts("Verts added successfully");
 //}
 //else { puts("Vertex insertion failed"); }
 
-	//puts("triangle generated successfully");
-	int icount = Vlist.getIndexCount();
-	int vcount = Vlist.getVertexCount();
-	//printf("IndexCount: %d, VertexCount: %d", icount, vcount);
 
-	float* tverts = Vlist.getVertexData();
-	unsigned int *tindices = Vlist.getIndizes();
 	
 	//puts("My indices: ");
 	//for (int i = 0; i < icount; ++i)
@@ -129,15 +131,24 @@ successful = Vlist.addTriangle(b, c, d);
 	//printf("r: %d, g: %d, b: %d\n", p.r, p.g, p.b);
 
 	//Level Load Test
-	ppmImage theLevel("Resource//minLevel.ppm");
-	Maze theGame(theLevel);
+	//ppmImage theLevel("Resource//minLevel.ppm");
+	//Maze theGame(theLevel);
 
-	VertexList VxXx = theGame.getVertexList();
+	//VertexList VxXx = theGame.getVertexList();
 
 
 	puts("level loaded");
 
+	//Vlist = theGame.getVertexList();
 
+	//puts("triangle generated successfully");
+	int icount = Vlist.getIndexCount();
+	int vcount = Vlist.getVertexCount();
+	printf("IndexCount: %d, VertexCount: %d", icount, vcount);
+
+	float* tverts = Vlist.getVertexData();
+	unsigned int *tindices = Vlist.getIndizes();
+	
 	//done
 
 	//get a vertex buffer
@@ -270,11 +281,27 @@ successful = Vlist.addTriangle(b, c, d);
 	//glVertexAttribPointer(0,4,GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
 	//glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+	
+	if (Vlist.getContainsVertexColor()) {
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(1);
+	}
+	if (Vlist.getContainsUVCoordinates())
+	{
+		if (Vlist.getContainsVertexColor())
+		{
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(6 * sizeof(float)));
+			glEnableVertexAttribArray(2);
+		}
+		if (!Vlist.getContainsVertexColor())
+		{
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(3 * sizeof(float)));
+			glEnableVertexAttribArray(1);
+		}
+	}
 
 
 	/* Lets play with EBO*/
@@ -282,6 +309,16 @@ successful = Vlist.addTriangle(b, c, d);
 	glGenBuffers(1, &EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(unsigned int)*Vlist.getIndexCount(),tindices,GL_STATIC_DRAW);
+
+
+	puts("indizes to render");
+	unsigned int * tin = Vlist.getIndizes();
+	for (int i = 0; i < Vlist.getIndexCount();i++)
+	{
+		printf("%d ", *(tin + i));
+	}
+	puts("\ndone\n");
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*9, tindices, GL_STATIC_DRAW);
 
 	/*and there*/
 
@@ -292,7 +329,7 @@ successful = Vlist.addTriangle(b, c, d);
 		glUseProgram(shaderProgram);
 		glBindVertexArray(VAO);
 		//glDrawArrays(GL_TRIANGLES, 0,3);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, Vlist.getIndexCount(), GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

@@ -92,11 +92,11 @@ ppmImage::ppmImage(string fileName)
 ppmImage::~ppmImage()
 {
 	if (pixelField != nullptr) {
-		delete pixelField;
+		delete[] pixelField;
 	}
 	if (t != nullptr)
 	{
-		delete t;
+		delete[] t;
 	}
 }
 
@@ -108,7 +108,7 @@ int ppmImage::getHeight()
 unsigned char * ppmImage::imageDataAsCharArray()
 {
 	if (t != nullptr) {
-		delete t;
+		delete []t;
 		t = nullptr;
 	}
 	 t= new unsigned char[width*height];
