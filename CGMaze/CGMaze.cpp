@@ -626,7 +626,7 @@ int main()
 		model = glm::rotate(model, glm::radians((float)theGame.getPitch()), glm::vec3(1, 0, 0));
 
 
-		printf("game dimensions: w: %d, h: %d", theGame.getWidth(), theGame.getHeight());
+		//printf("game dimensions: w: %d, h: %d", theGame.getWidth(), theGame.getHeight());
 		model = glm::translate(model, glm::vec3(-0.33, -0.35, 0));
 		model = glm::scale(model, glm::vec3(0.05f, 0.05f, -0.05f));
 

@@ -192,6 +192,7 @@ void Maze::advance(double deltaTime)
 	moveBall(deltaTime);
 	if (checkCollision())
 	{
+		printf("Collision imminent!!\n");
 		handleCollision();
 
 
@@ -214,14 +215,20 @@ int Maze::checkCollision()
 				status = area[h][w];
 			}
 */
+			printf("%d", area[h][w]);
 			status = status | (1 << area[h][w]); //every bit represents a bool of a floor type
 		}
 
 	}
+	
+	for (int i = 0; i < 4; ++i)
+	{
+		delete area[i];
+	}
+	delete area;
 
-
-
-	return false;
+	printf("Status: %d\n", status);
+	return status;
 }
 
 void Maze::handleCollision()
@@ -229,11 +236,11 @@ void Maze::handleCollision()
 	int **candidates=getTouchedGround();
 	
 	
-	for (int h = ball_y-2; h < ball_y+2; ++h)
+	for (int h = ball_y - 2; h < ball_y + 2; ++h)
 	{
-		for (int w = ball_x-2; w < ball_x+2; ++w)
+		for (int w = ball_x - 2; w < ball_x + 2; ++w)
 		{
-			switch (mazeGrid[h*width+w])
+			switch (mazeGrid[h*width + w])
 			{
 			case finish:
 			{
@@ -242,7 +249,7 @@ void Maze::handleCollision()
 				{
 					gameState = gameFinished;
 				}
-				
+
 				break; }
 			case wall:
 			{
@@ -268,7 +275,7 @@ void Maze::handleCollision()
 					//above and colliding
 					ballVelocity_y *= -1;
 				}
-				
+
 				break; }
 			case hole:
 			{
@@ -282,6 +289,13 @@ void Maze::handleCollision()
 			}
 		}
 	}
+
+		for (int i = 0; i < 4; ++i)
+		{
+			delete candidates[i];
+		}
+		delete candidates;
+
 
 }
 
@@ -319,7 +333,7 @@ void Maze::moveBall(double deltaTime)
 	ballVelocity_y = pitch;
 	ball_x += ballVelocity_x * (deltaTime);
 	ball_y += ballVelocity_y * (deltaTime);
-	printf("Ballposition: x: %f, y: %f\n", ball_x, ball_y);
+	//printf("Ballposition: x: %f, y: %f\n", ball_x, ball_y);
 }
 
 void Maze::getRotations()
@@ -364,7 +378,7 @@ int** Maze::getTouchedGround()
 }
 int Maze::getFloorAt(double w, double h)
 {
-	return mazeGrid[(int)h*width + width];
+	return mazeGrid[(int)h*width + (int)w];
 
 }
 
