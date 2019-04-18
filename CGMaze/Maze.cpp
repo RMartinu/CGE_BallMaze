@@ -618,12 +618,12 @@ bool VertexList::addVertex(float x, float y, float z, float r, float g, float b)
 {
 	if (!containsCoordinates || !containsVertexColor || containsUVCoordinates)
 	{
-		puts("\n##refusing");
+		//puts("\n##refusing");
 		return false;
 	}
 	if (currEntries+3 > maxEntries)
 	{
-		puts("extend vertex");
+		//puts("extend vertex");
 		extendVertexData();
 	}
 	vertexData[currEntries*stride] = x;
@@ -688,7 +688,7 @@ bool VertexList::addVertex(Vertex v)
 	}
 	if (containsCoordinates && containsVertexColor && !containsUVCoordinates)
 	{
-		printf("inserting: %f, %f, %f\n", v.x,v.y,v.z);
+		//printf("inserting: %f, %f, %f\n", v.x,v.y,v.z);
 		bool t= addVertex(v.x, v.y, v.z, v.r, v.g, v.b);
 		if (!t)
 		{
@@ -716,7 +716,7 @@ bool VertexList::addIndex(int vertex1, int vertex2, int vertex3)
 			return false;
 		}
 	}
-	printf("triangle: %d, %d, %d", vertex1, vertex2, vertex3);
+	//printf("triangle: %d, %d, %d", vertex1, vertex2, vertex3);
 	indizes[currEdges] = vertex1;
 	indizes[currEdges + 1] = vertex2;
 	indizes[currEdges + 2] = vertex3;
@@ -794,7 +794,7 @@ bool VertexList::addTriangle(Vertex v1, Vertex v2, Vertex v3)
 	int vi2 = findVertex(v2);
 	int vi3 = findVertex(v3);
 
-	printf("in Verts at hand: %d, %d, %d", vi1, vi2,vi3);
+	//printf("in Verts at hand: %d, %d, %d", vi1, vi2,vi3);
 
 	if (vi1 == -1)
 	{
@@ -811,10 +811,10 @@ bool VertexList::addTriangle(Vertex v1, Vertex v2, Vertex v3)
 		addVertex(v3);
 		vi3 = findVertex(v3);
 	}
-	printf("out Verts at hand: %d, %d, %d\n", vi1, vi2, vi3);
+	//printf("out Verts at hand: %d, %d, %d\n", vi1, vi2, vi3);
 	if (vi1 == -1 || vi2 == -1 || vi3 == -1)
 	{
-		printf("vertex %d, %d, %d not inserted\n", vi1, vi2, vi3);
+		//printf("vertex %d, %d, %d not inserted\n", vi1, vi2, vi3);
 		return false;
 	}
 

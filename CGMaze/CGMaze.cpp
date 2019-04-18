@@ -151,7 +151,7 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 	//puts("triangle generated successfully");
 	int icount = Vlist.getIndexCount();
 	int vcount = Vlist.getVertexCount();
-	printf("IndexCount: %d, VertexCount: %d", icount, vcount);
+	//printf("IndexCount: %d, VertexCount: %d", icount, vcount);
 
 	float* tverts = Vlist.getVertexData();
 	unsigned int *tindices = Vlist.getIndizes();
@@ -317,13 +317,13 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(unsigned int)*Vlist.getIndexCount(),tindices,GL_STATIC_DRAW);
 
 
-	puts("indizes to render");
-	unsigned int * tin = Vlist.getIndizes();
-	for (int i = 0; i < Vlist.getIndexCount();i++)
-	{
-		printf("%d ", *(tin + i));
-	}
-	puts("\ndone\n");
+	//puts("indizes to render");
+	//unsigned int * tin = Vlist.getIndizes();
+	//for (int i = 0; i < Vlist.getIndexCount();i++)
+	//{
+	//	printf("%d ", *(tin + i));
+	//}
+	//puts("\ndone\n");
 	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*9, tindices, GL_STATIC_DRAW);
 
 	/*and there*/
@@ -342,20 +342,20 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 	glm::mat4 viewMatrix = glm::mat4(1.0f);
 	//translate the whole scene
 	viewMatrix = glm::translate(viewMatrix, glm::vec3(0.0f,0.1f,-3.2f));
-	model = glm::rotate(model, glm::radians(170.0f), glm::vec3(1,0,0));
+	model = glm::rotate(model, glm::radians(145.0f), glm::vec3(1,0,0));
 	model = glm::scale(model, glm::vec3(0.05f, 0.05f, -0.05f));
-for (int i = 0; i < 4;++i)
-	{
-		for (int j = 0; j < 4; ++j)
-		{
-			//if (i == j)
-			//{
-			//	model[i][j]= 1;
-			//}
-			printf("%f ", viewMatrix[j][i]);
-		}
-		puts("");
-	}
+//for (int i = 0; i < 4;++i)
+//	{
+//		for (int j = 0; j < 4; ++j)
+//		{
+//			//if (i == j)
+//			//{
+//			//	model[i][j]= 1;
+//			//}
+//			printf("%f ", viewMatrix[j][i]);
+//		}
+//		puts("");
+//	}
 	//projection Matrix
 	glm::mat4 projectionMatrix=glm::mat4(1.0f);
 	projectionMatrix = glm::perspective(glm::radians(45.0f), 800/600.0f, 0.1f,100.0f);
