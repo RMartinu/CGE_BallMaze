@@ -234,7 +234,9 @@ int Maze::checkCollision()
 void Maze::handleCollision()
 {
 	int **candidates=getTouchedGround();
-	
+
+	bool collided_x = false;
+	bool collided_y = false;
 	
 	for (int h = ball_y - 2; h < ball_y + 2; ++h)
 	{
@@ -244,7 +246,7 @@ void Maze::handleCollision()
 			{
 			case finish:
 			{
-
+				puts("im done with this");
 				if (ball_x<w + 1 && ball_x>w && ball_y<h + 1 && ball_y>h)
 				{
 					gameState = gameFinished;
@@ -254,31 +256,52 @@ void Maze::handleCollision()
 			case wall:
 			{
 
+				printf("Touching wall\n");
 				if (ball_x > (w + 1) && ball_x - ballRadius < (w + 1))
 				{
 					//On the rights side and colliding
+					if (!collided_x)
+					{
+						collided_x= true;
 
-					ballVelocity_x *= -1;
+						ballVelocity_x *= -1;
+					}
 				}
 				if (ball_y < h && (ball_y + ballRadius) > h)
 				{
 					//below and colliding
-					ballVelocity_y *= -1;
+					if (!collided_y)
+					{
+						collided_y = true;
+
+						ballVelocity_y *= -1;
+					}
 				}
 				if (ball_x <w && ball_x + ballRadius>w)
 				{
 					//left and coliding
-					ballVelocity_x *= -1;
+					if (!collided_x)
+					{
+						collided_x = true;
+
+						ballVelocity_x *= -1;
+					}
 				}
 				if (ball_y > (h + 1) && ball_y < (-ballRadius) < (h + 1))
 				{
 					//above and colliding
-					ballVelocity_y *= -1;
+					if (!collided_y)
+					{
+						collided_y = true;
+
+						ballVelocity_y *= -1;
+					}
 				}
 
 				break; }
 			case hole:
 			{
+				puts("down the rabbit hole");
 				if (ball_x<w + 1 && ball_x>w && ball_y<h + 1 && ball_y>h)
 				{
 					gameState = gameLost;
@@ -329,8 +352,8 @@ void Maze::rotateField(double deltaTime)
 
 void Maze::moveBall(double deltaTime)
 {
-	ballVelocity_x = -roll;
-	ballVelocity_y = pitch;
+	ballVelocity_x = ballVelocity_x -roll/5;
+	ballVelocity_y = ballVelocity_y +pitch/5;
 	ball_x += ballVelocity_x * (deltaTime);
 	ball_y += ballVelocity_y * (deltaTime);
 	//printf("Ballposition: x: %f, y: %f\n", ball_x, ball_y);
