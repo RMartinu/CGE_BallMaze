@@ -188,7 +188,20 @@ void key_Callback(GLFWwindow * window, int key, int scanCode, int action, int mo
 
 static void cursor_position_callback(GLFWwindow *window, double xpos, double ypos)
 {
-	printf("the mousey posizion: %f %f\n", xpos, ypos);
+	double static  prevXPos, prevYPos;
+	double deltaX, deltaY;
+	deltaX = xpos - prevXPos;
+	deltaY = ypos - prevYPos;
+	prevXPos = xpos;
+	prevYPos = ypos;
+
+	/*to be revised as suitabe*/
+
+
+
+	printf("the mousey position changed by: %f %f\n", deltaX, deltaY);
+
+
 }
 
 void scroll_wheel_callback(GLFWwindow * window, double xoffset, double yoffset)
