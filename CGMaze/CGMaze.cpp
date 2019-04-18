@@ -11,7 +11,9 @@
 #include <glm/glm.hpp>
 #include<glm/gtc/matrix_transform.hpp>
 #include<glm/gtc/type_ptr.hpp>
-
+#include "inputState.h"
+ 
+inputState gameState;
 
 const char *vertexShaderSource = "#version 330 core\n"
 "layout (location = 0) in vec3 aPos;\n"
@@ -82,33 +84,111 @@ void framebuffer_size_callback(GLFWwindow* window, int w, int h)
 
 void key_Callback(GLFWwindow * window, int key, int scanCode, int action, int modifiers)
 {
-	if (( key == GLFW_KEY_W) && (action==GLFW_PRESS))
+	//Key Up Events
+	if (key == GLFW_KEY_W && action==GLFW_PRESS)
 	{
+		gameState.update_pitch = 1;
 		printf("Key pressed: %d\n", key);
 	}
-	if ((key == GLFW_KEY_UP ) && (action == GLFW_PRESS))
+	if (key == GLFW_KEY_UP && action == GLFW_PRESS)
 	{
+		gameState.update_pitch = 1;
 		printf("Key pressed: %d\n", key);
 	}
-	if ((key == GLFW_KEY_UP || key == GLFW_KEY_W) && action == GLFW_RELEASE)
+	if (key == GLFW_KEY_W && action == GLFW_RELEASE)
 	{
+		gameState.update_pitch = 0;
 		printf("Key released: %d\n", key);
+	}
+	if (key == GLFW_KEY_UP && action == GLFW_RELEASE)
+	{
+		gameState.update_pitch = 0;
+		printf("Key released: %d\n", key);
+	}
+
+	//Key Down Events
+	if (key == GLFW_KEY_S && action == GLFW_PRESS)
+	{
+		gameState.update_pitch = -1;
+		printf("Key pressed: %d\n", key);
+	}
+	if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
+	{
+		gameState.update_pitch = -1;
+		printf("Key pressed: %d\n", key);
+	}
+	if (key == GLFW_KEY_S && action == GLFW_RELEASE)
+	{
+		gameState.update_pitch = 0;
+		printf("Key released: %d\n", key);
+	}
+	if (key == GLFW_KEY_DOWN && action == GLFW_RELEASE)
+	{
+		gameState.update_pitch = 0;
+		printf("Key released: %d\n", key);
+	}
+
+	//Key Left Events
+	if (key == GLFW_KEY_A && action == GLFW_PRESS)
+	{
+		gameState.update_roll = -1;
+		printf("Key pressed: %d\n", key);
+	}
+	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
+	{
+		gameState.update_roll = -1;
+		printf("Key pressed: %d\n", key);
+	}
+	if (key == GLFW_KEY_A && action == GLFW_RELEASE)
+	{
+		gameState.update_roll = 0;
+		printf("Key released: %d\n", key);
+	}
+	if (key == GLFW_KEY_LEFT && action == GLFW_RELEASE)
+	{
+		gameState.update_roll = 0;
+		printf("Key released: %d\n", key);
+	}
+	//Key Right Events
+	if (key == GLFW_KEY_D && action == GLFW_PRESS)
+	{
+		gameState.update_roll = 1;
+		printf("Key pressed: %d\n", key);
+	}
+	if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
+	{
+		gameState.update_roll = 1;
+		printf("Key pressed: %d\n", key);
+	}
+	if (key == GLFW_KEY_D && action == GLFW_RELEASE)
+	{
+		gameState.update_roll = 0;
+		printf("Key released: %d\n", key);
+	}
+	if (key == GLFW_KEY_RIGHT && action == GLFW_RELEASE)
+	{
+		gameState.update_roll = 0;
+		printf("Key released: %d\n", key);
+	}
+
+	//Key Exit Game Event
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+	{
+		gameState.quitGame = 1;
+		printf("Key pressed: %d\n", key);
+	}
+
+	//Key Reset Game Event
+	if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS)
+	{
+		gameState.resetGame = 1;
+		printf("Key pressed: %d\n", key);
 	}
 }
 
 static void cursor_position_callback(GLFWwindow *window, double xpos, double ypos)
 {
-	double static  prevXPos, prevYPos;
-	double deltaX, deltaY;
-	deltaX = xpos - prevXPos;
-	deltaY = ypos - prevYPos;
-
-	/*to be revised as suitabe*/
-
-
-
-	printf("the mousey position changed by: %f %f\n", deltaX, deltaY);
-
+	printf("the mousey posizion: %f %f\n", xpos, ypos);
 }
 
 void scroll_wheel_callback(GLFWwindow * window, double xoffset, double yoffset)
