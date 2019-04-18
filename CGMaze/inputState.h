@@ -8,6 +8,7 @@ public:
 	int update_roll=0, update_pitch = 0;
 	bool quitGame = false;
 	bool resetGame = true;
+	bool lmbPressed = false;
 
 	inputState();
 	~inputState();

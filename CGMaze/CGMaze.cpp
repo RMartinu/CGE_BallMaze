@@ -13,6 +13,9 @@
 #include<glm/gtc/type_ptr.hpp>
 #include "inputState.h"
  
+
+#define mouseSpeed 0.2f
+
 inputState gameState;
 
 const char *vertexShaderSource = "#version 330 core\n"
@@ -188,17 +191,46 @@ void key_Callback(GLFWwindow * window, int key, int scanCode, int action, int mo
 
 static void cursor_position_callback(GLFWwindow *window, double xpos, double ypos)
 {
+
+
+
 	double static  prevXPos, prevYPos;
 	double deltaX, deltaY;
 	deltaX = xpos - prevXPos;
 	deltaY = ypos - prevYPos;
 	prevXPos = xpos;
 	prevYPos = ypos;
-
+	if (!gameState.lmbPressed)
+		return;
 	/*to be revised as suitabe*/
+	gameState.camera_x += deltaX * mouseSpeed;
+
+	if (gameState.camera_x > 90)
+	{
+		gameState.camera_x = 90;
+	}
+	if(gameState.camera_x<0)
+	{
+		gameState.camera_x = 0;
+	}
+
+
+	gameState.camera_y += deltaY * mouseSpeed;
+	if (gameState.camera_y < 35)
+	{
+
+		gameState.camera_y = 35;
+	}
+	if (gameState.camera_y > 80)
+	{
+		gameState.camera_y = 80;
+	}
 
 
 
+
+
+	printf("Camera angles x:  %f y: %f", gameState.camera_x, gameState.camera_y);
 	printf("the mousey position changed by: %f %f\n", deltaX, deltaY);
 
 
@@ -206,6 +238,16 @@ static void cursor_position_callback(GLFWwindow *window, double xpos, double ypo
 
 void scroll_wheel_callback(GLFWwindow * window, double xoffset, double yoffset)
 {
+	gameState.camera_zoom -= yoffset/10;
+	if (gameState.camera_zoom < 0.1)
+	{
+		gameState.camera_zoom = 0.1;
+	}
+	if (gameState.camera_zoom > 2)
+	{
+		gameState.camera_zoom = 2;
+	}
+
 	printf("mouse wheel: x: %f y: %f\n", xoffset, yoffset);
 }
 
@@ -215,10 +257,12 @@ void mouse_button_callback(GLFWwindow * window, int button, int action, int modi
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
 	{
 		printf("Mousebutton pressed");
+		gameState.lmbPressed = true;
 	}
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
 	{
 		printf("Mousebutton released");
+		gameState.lmbPressed = false;
 	}
 
 	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
@@ -522,14 +566,14 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 //		puts("");
 //	}
 	//projection Matrix
-	glm::mat4 projectionMatrix=glm::mat4(1.0f);
-	projectionMatrix = glm::perspective(glm::radians(45.0f), 800/600.0f, 0.1f,100.0f);
+
 
 
 	/**/
 
 	while (!glfwWindowShouldClose(window))
-	{
+	{	glm::mat4 projectionMatrix=glm::mat4(1.0f);
+	projectionMatrix = glm::perspective(glm::radians((45.0f*(float)gameState.camera_zoom)), 800/600.0f, 0.1f,100.0f);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	glUseProgram(shaderProgram);
 		unsigned int modelLoc = glGetUniformLocation(shaderProgram, "model");
@@ -548,6 +592,7 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 		glDrawElements(GL_TRIANGLES, Vlist.getIndexCount(), GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+
 	}
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
