@@ -132,10 +132,18 @@ Maze::Maze(ppmImage &floorplan)
 	 VertexList V(vertexCoordinates|UVCoordinates,8);
 
 	 Mesh BallMesh = getBall();
-	 vector<Vertex> bverts = BallMesh.getVertices();
-	 for (int i = 0; i < bverts.size(); i+=3)
+
+	 vector<Vertex> mverts = BallMesh.getVertices();
+	 for (int i = 0; i < mverts.size(); i += 3)
 	 {
-		 V.addTriangle(bverts.at(i), bverts.at(i + 1), bverts.at(i + 2));
+		 //printf("Adding triangle no %d:  %f %f %f\n",i, mverts.at(i).x, mverts.at(i + 1).x, mverts.at(i + 2).x);
+
+		 Vertex a, b, c;
+		 a = mverts.at(i);
+		 b = mverts.at(i + 1);
+		 c = mverts.at(i + 2);
+		 a.r = b.g = c.b = 0.5;
+		 V.addTriangle(a, b, c);
 	 }
 
 	 return V;
@@ -143,7 +151,9 @@ Maze::Maze(ppmImage &floorplan)
 
  Mesh Maze::getBall()
  {
-	 return Mesh();
+
+	 Mesh theGlobe(this->ball_x, this->ball_y);
+	 return theGlobe;
  }
 
  void Maze::updateRoll(int speed)
@@ -299,14 +309,17 @@ void Maze::rotateField(double deltaTime)
 		roll = -maxRoll;
 	}
 
-	printf("actual pitch %f, act roll %f\n", pitch, roll);
+	//printf("actual pitch %f, act roll %f\n", pitch, roll);
 }
 
 
-void Maze::moveBall(int deltaTime)
+void Maze::moveBall(double deltaTime)
 {
-	ball_x += ballVelocity_x * (deltaTime/(float)1000);
-	ball_y += ballVelocity_y * (deltaTime / (float)1000);
+	ballVelocity_x = -roll;
+	ballVelocity_y = pitch;
+	ball_x += ballVelocity_x * (deltaTime);
+	ball_y += ballVelocity_y * (deltaTime);
+	printf("Ballposition: x: %f, y: %f\n", ball_x, ball_y);
 }
 
 void Maze::getRotations()
@@ -395,7 +408,7 @@ Mesh::Mesh(double pos_x, double pos_y, double width, double depth, double height
 	v[7].x = pos_x + width; v[7].y = pos_y + depth; v[7].z = height;
 	//printf("%d %d %d %d %d", pos_x, pos_y, width, depth, height);
 	//printf("%d %d %d %d %d %d %d", v[0].y, v[1].y, v[2].y, v[3].y, v[4].y, v[5].y, v[6].y);
-	//first triangle, front lower
+	//first triangle, floor lower
 	vertList.push_back(v[0]);
 	vertList.push_back(v[1]);
 	vertList.push_back(v[2]);
@@ -414,7 +427,7 @@ Mesh::Mesh(double pos_x, double pos_y, double width, double depth, double height
 	//forth triangle left upper
 	vertList.push_back(v[2]);
 	vertList.push_back(v[3]);
-	vertList.push_back(v[0]);
+	vertList.push_back(v[6]);
 
 
 	//fifth triangle right lower
@@ -446,7 +459,7 @@ Mesh::Mesh(double pos_x, double pos_y, double width, double depth, double height
 	//tenth tri front upper
 	vertList.push_back(v[1]);
 	vertList.push_back(v[3]);
-	vertList.push_back(v[6]);
+	vertList.push_back(v[5]);
 
 	//eleventh back upper
 	vertList.push_back(v[4]);

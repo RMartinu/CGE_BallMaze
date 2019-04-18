@@ -12,7 +12,7 @@
 #include<glm/gtc/matrix_transform.hpp>
 #include<glm/gtc/type_ptr.hpp>
 #include "inputState.h"
- 
+
 
 #define mouseSpeed 0.2f
 
@@ -64,13 +64,13 @@ const char *fragmentShaderGradient = "#version 330 core\n"
 
 //"FragColor = vec4(ourColor, 1.0);\n"
 
-float vertices[] = {-0.5f,-0.5f, 0.0f,
+float vertices[] = { -0.5f,-0.5f, 0.0f,
 					0.5f, -0.5f, 0.0f,
-					0.0f, 0.5f, 0.0f};
-float v2[] = {	0.5f, 0.5f, 0.0f,
+					0.0f, 0.5f, 0.0f };
+float v2[] = { 0.5f, 0.5f, 0.0f,
 				0.5f, -0.5f, 0.0f,
 				-0.5f, -0.5f, 0.0f,
-				-0.5, 0.5, 0.0f}
+				-0.5, 0.5, 0.0f }
 ;
 
 float vGradient[] = { -0.5f,-0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
@@ -92,22 +92,22 @@ void executeGameStateUpdate(double deltaTime, Maze &Game)
 	}
 	if (gameState.turbo)
 	{
-		Game.updatePitch(gameState.update_pitch*10);
-		Game.updateRoll(gameState.update_roll*10);
+		Game.updatePitch(gameState.update_pitch * 10);
+		Game.updateRoll(gameState.update_roll * 10);
 	}
 	else
 	{
 		Game.updatePitch(gameState.update_pitch);
 		Game.updateRoll(gameState.update_roll);
 	}
-	
+
 	Game.advance(deltaTime);
 
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int w, int h)
 {
-	glViewport(0,0, w,h);
+	glViewport(0, 0, w, h);
 }
 
 void key_Callback(GLFWwindow * window, int key, int scanCode, int action, int modifiers)
@@ -247,7 +247,7 @@ static void cursor_position_callback(GLFWwindow *window, double xpos, double ypo
 	{
 		gameState.camera_x = +45;
 	}
-	if(gameState.camera_x<-45)
+	if (gameState.camera_x < -45)
 	{
 		gameState.camera_x = -45;
 	}
@@ -276,7 +276,7 @@ static void cursor_position_callback(GLFWwindow *window, double xpos, double ypo
 
 void scroll_wheel_callback(GLFWwindow * window, double xoffset, double yoffset)
 {
-	gameState.camera_zoom -= yoffset/10;
+	gameState.camera_zoom -= yoffset / 10;
 	if (gameState.camera_zoom < 0.1)
 	{
 		gameState.camera_zoom = 0.1;
@@ -289,7 +289,7 @@ void scroll_wheel_callback(GLFWwindow * window, double xoffset, double yoffset)
 	printf("mouse wheel: x: %f y: %f\n", xoffset, yoffset);
 }
 
-static bool cursorVisible=true;
+static bool cursorVisible = true;
 void mouse_button_callback(GLFWwindow * window, int button, int action, int modifiers)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
@@ -325,28 +325,28 @@ void mouse_button_callback(GLFWwindow * window, int button, int action, int modi
 
 int main()
 {
-    std::cout << "Hello World!\n"; 
+	std::cout << "Hello World!\n";
 
 	//ppmImage thePlan("insert Path here");
 	//Maze theGame(thePlan);
-	
-	ppmImage myImage("Resource\\smiley.ppm");
-	pixel p = myImage.getPixel(155,190);
 
-	
-	Vertex a, b, c,d,e, f;
-	a.x = -0.5; a.y = -0.5; a.z = 0; a.r = 1; a.b = 0; a.g=0;
+	ppmImage myImage("Resource\\smiley.ppm");
+	pixel p = myImage.getPixel(155, 190);
+
+
+	Vertex a, b, c, d, e, f;
+	a.x = -0.5; a.y = -0.5; a.z = 0; a.r = 1; a.b = 0; a.g = 0;
 	b.x = 0.5; b.y = -0.5; b.z = 0; b.r = 0; b.b = 1; b.g = 0;
 	c.x = 0; c.y = 0.5; c.z = 0; c.r = 0; c.b = 0; c.g = 1;
 	d.x = 0.65; d.y = 0.75; d.z = -0.5; d.r = 1; d.g = 1; d.b = 0;
-	e.x = -0.75; e.y = 0.75;e.z = 0; e.r = 0; e.b = 1;e.g = 1;
-	f.x = 0.65; f.y = 0.9; f.z = 0; f.r = 1;f.b = 1;f.g = 0;
-	
-	VertexList Vlist(vertexCoordinates|vertexColor, 3);
-bool successful=	
-successful = Vlist.addTriangle(d, e, f);
-successful = Vlist.addTriangle(a,b,c);
-Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle(a, c,e);
+	e.x = -0.75; e.y = 0.75; e.z = 0; e.r = 0; e.b = 1; e.g = 1;
+	f.x = 0.65; f.y = 0.9; f.z = 0; f.r = 1; f.b = 1; f.g = 0;
+
+	VertexList Vlist(vertexCoordinates | vertexColor, 3);
+	bool successful =
+		successful = Vlist.addTriangle(d, e, f);
+	successful = Vlist.addTriangle(a, b, c);
+	Vlist.addTriangle(c, e, f); Vlist.addTriangle(a, f, c); successful = Vlist.addTriangle(a, c, e);
 
 	//VertexList Vlist(vertexCoordinates,8);
 
@@ -358,7 +358,7 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 //else { puts("Vertex insertion failed"); }
 
 
-	
+
 	//puts("My indices: ");
 	//for (int i = 0; i < icount; ++i)
 	//{
@@ -375,9 +375,9 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 
 	//printf("r: %d, g: %d, b: %d\n", p.r,p.g,p.b);
 
-	 p = myImage.getPixel(64, 144);
+	p = myImage.getPixel(64, 144);
 	//printf("r: %d, g: %d, b: %d\n", p.r, p.g, p.b);
-	 p = myImage.getPixel(155, 190);
+	p = myImage.getPixel(155, 190);
 	//printf("r: %d, g: %d, b: %d\n", p.r, p.g, p.b);
 
 	//Level Load Test
@@ -398,14 +398,14 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 
 	float* tverts = Vlist.getVertexData();
 	unsigned int *tindices = Vlist.getIndizes();
-	
+
 	//done
 
 	//get a vertex buffer
-	VertexList VL(vertexCoordinates|UVCoordinates|vertexColor,12);
+	VertexList VL(vertexCoordinates | UVCoordinates | vertexColor, 12);
 	//puts("Vertex list built");
 
-	VertexList VL1(vertexCoordinates | UVCoordinates , 12);
+	VertexList VL1(vertexCoordinates | UVCoordinates, 12);
 	//puts("Vertex list built");
 
 	VertexList VL2(vertexCoordinates | vertexColor, 12);
@@ -429,9 +429,9 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 	//printf("+++Our list has %d elements\n", gvl.getVertexCount());
 
 	/*Vector Excersise here; remove at appropriete time*/
-	glm::vec4 vec(1.0f,0.0f,0.0f,1.0f);
+	glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
 	glm::mat4 trans = glm::mat4(1.0f);
-	trans = glm::translate(trans, glm::vec3(1.0f,1.0f, 0.0f));
+	trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));
 	vec = trans * vec;
 	//std::cout << vec.x <<" "<< vec.y <<" "<< vec.z << std::endl;
 	/**/
@@ -441,7 +441,7 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow *window = glfwCreateWindow(800,600,"Our first Window", NULL, NULL);
+	GLFWwindow *window = glfwCreateWindow(800, 600, "Our first Window", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Something went wrong" << std::endl;
@@ -455,8 +455,8 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 		return -13;
 	}
 
-	glViewport(0,0,800,600);
-	glfwSetFramebufferSizeCallback(window,framebuffer_size_callback);
+	glViewport(0, 0, 800, 600);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetKeyCallback(window, key_Callback);
 	glfwSetCursorPosCallback(window, cursor_position_callback);
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
@@ -466,7 +466,7 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 
 	/*Lets put our OGL stuff btween here*/
 	unsigned int VBO;
-	glGenBuffers(1,&VBO);
+	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*Vlist.getStride()*Vlist.getVertexCount(), tverts, GL_STATIC_DRAW);
 
@@ -519,7 +519,7 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 	//Linking vertices
 	//glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3*sizeof(float),(void*)0);
 	//glEnableVertexAttribArray(0);
-	
+
 
 
 
@@ -537,7 +537,7 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	
+
 	if (Vlist.getContainsVertexColor()) {
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(3 * sizeof(float)));
 		glEnableVertexAttribArray(1);
@@ -561,7 +561,7 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 	unsigned int EBO;
 	glGenBuffers(1, &EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(unsigned int)*Vlist.getIndexCount(),tindices,GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*Vlist.getIndexCount(), tindices, GL_STATIC_DRAW);
 
 
 	//puts("indizes to render");
@@ -581,89 +581,128 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 
 
 
-	
-//for (int i = 0; i < 4;++i)
-//	{
-//		for (int j = 0; j < 4; ++j)
-//		{
-//			//if (i == j)
-//			//{
-//			//	model[i][j]= 1;
-//			//}
-//			printf("%f ", viewMatrix[j][i]);
-//		}
-//		puts("");
-//	}
-	//projection Matrix
+
+	//for (int i = 0; i < 4;++i)
+	//	{
+	//		for (int j = 0; j < 4; ++j)
+	//		{
+	//			//if (i == j)
+	//			//{
+	//			//	model[i][j]= 1;
+	//			//}
+	//			printf("%f ", viewMatrix[j][i]);
+	//		}
+	//		puts("");
+	//	}
+		//projection Matrix
 
 
 
-	/**/
+		/**/
 
 	double time = glfwGetTime();
 	double deltaTime, previousTime;
-	
+
 
 	while (!glfwWindowShouldClose(window) && !gameState.quitGame)
-	{previousTime = time;
-	time = glfwGetTime();
-	deltaTime = time - previousTime;	glm::mat4 projectionMatrix=glm::mat4(1.0f);
-	projectionMatrix = glm::perspective(glm::radians((45.0f*(float)gameState.camera_zoom)), 800/600.0f, 0.1f,100.0f);
+	{
+
+		previousTime = time;
+		time = glfwGetTime();
+		deltaTime = time - previousTime;	glm::mat4 projectionMatrix = glm::mat4(1.0f);
+		projectionMatrix = glm::perspective(glm::radians((45.0f*(float)gameState.camera_zoom)), 800 / 600.0f, 0.1f, 100.0f);
 
 
-	/*Set up the matrices*/
-	glm::mat4 model = glm::mat4(1.0f); // init to something clearly defined
+		/*Set up the matrices*/
+		glm::mat4 model = glm::mat4(1.0f); // init to something clearly defined
 
-		//generate the base view matrix
-	glm::mat4 viewMatrix = glm::mat4(1.0f);
+			//generate the base view matrix
+		glm::mat4 viewMatrix = glm::mat4(1.0f);
 
-	//translate the whole scene
-	viewMatrix = glm::translate(viewMatrix, glm::vec3(0.0f, 0.1f, -3.2f));
-	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1, 0, 0));
-	model = glm::rotate(model, glm::radians((float)theGame.getRoll()), glm::vec3(0,1,0));
-	model = glm::rotate(model, glm::radians((float)theGame.getPitch()), glm::vec3(1, 0, 0));
+		//translate the whole scene
+		viewMatrix = glm::translate(viewMatrix, glm::vec3(0.0f, 0.1f, -3.2f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1, 0, 0));
+		model = glm::rotate(model, glm::radians((float)theGame.getRoll()), glm::vec3(0, 1, 0));
+		model = glm::rotate(model, glm::radians((float)theGame.getPitch()), glm::vec3(1, 0, 0));
 
 
-	printf("game dimensions: w: %d, h: %d", theGame.getWidth(), theGame.getHeight());
-	model = glm::translate(model, glm::vec3(-0.33, -0.35, 0));
-	model = glm::scale(model, glm::vec3(0.05f, 0.05f, -0.05f));
+		printf("game dimensions: w: %d, h: %d", theGame.getWidth(), theGame.getHeight());
+		model = glm::translate(model, glm::vec3(-0.33, -0.35, 0));
+		model = glm::scale(model, glm::vec3(0.05f, 0.05f, -0.05f));
 
-	//printf("Current time: %f, deltatime: %f\n", time,deltaTime);
+		//printf("Current time: %f, deltatime: %f\n", time,deltaTime);
 
-	//translate the whole scene
-	viewMatrix = glm::translate(viewMatrix, glm::vec3(0.0f, 0.1f, -3.2f));
-	float radius = 10;
-	float camX = sin(gameState.camera_x/57)*radius;
-	float camZ = cos(gameState.camera_x/57)*radius;
-	float camY = sin(gameState.camera_y/57)*radius;
-	camX *= cos(gameState.camera_y / 57);
-	camZ *= cos(gameState.camera_y / 57);
-	viewMatrix = glm::lookAt(glm::vec3(camX, camY, camZ), glm::vec3(0,0,0), glm::vec3(0,1,0));
-		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-	glUseProgram(shaderProgram);
+		//translate the whole scene
+		viewMatrix = glm::translate(viewMatrix, glm::vec3(0.0f, 0.1f, -3.2f));
+		float radius = 10;
+		float camX = sin(gameState.camera_x / 57)*radius;
+		float camZ = cos(gameState.camera_x / 57)*radius;
+		float camY = sin(gameState.camera_y / 57)*radius;
+		camX *= cos(gameState.camera_y / 57);
+		camZ *= cos(gameState.camera_y / 57);
+		viewMatrix = glm::lookAt(glm::vec3(camX, camY, camZ), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glUseProgram(shaderProgram);
 		unsigned int modelLoc = glGetUniformLocation(shaderProgram, "model");
-		glUniformMatrix4fv(modelLoc,1, GL_FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &viewMatrix[0][0]);
-		unsigned int project = glGetUniformLocation(shaderProgram,"projection");
+		unsigned int project = glGetUniformLocation(shaderProgram, "projection");
 		glUniformMatrix4fv(project, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
 		unsigned int myFaktor = glGetUniformLocation(shaderProgram, "faktor");
 		glUniform1f(myFaktor, 0.75f);
 
-		unsigned int ambientBright = glGetUniformLocation(shaderProgram,"ambientBrightness");
+		unsigned int ambientBright = glGetUniformLocation(shaderProgram, "ambientBrightness");
 		glUniform1f(ambientBright, 0.25f);
 
 
 		glm::vec3 ambCol = glm::vec3(0.9, 0.7, 0.8);
 
-		unsigned int lightColor = glGetUniformLocation(shaderProgram,"lightColor");
+		unsigned int lightColor = glGetUniformLocation(shaderProgram, "lightColor");
 		glUniform3fv(lightColor, 1, glm::value_ptr(ambCol));
 
-	
+
 		glBindVertexArray(VAO);
 		//glDrawArrays(GL_TRIANGLES, 0,3);
 		glDrawElements(GL_TRIANGLES, Vlist.getIndexCount(), GL_UNSIGNED_INT, 0);
+
+		/*Draw the Ball*/
+
+
+		VertexList ballList = theGame.getBallVertices();
+
+		unsigned int ballVBO;
+		glGenBuffers(1, &ballVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, ballVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float)*ballList.getStride()*ballList.getVertexCount(), ballList.getVertexData(), GL_DYNAMIC_DRAW);
+
+		//VAO for ball
+		unsigned int ballVAO;
+		glGenVertexArrays(1, &ballVAO);
+		glBindVertexArray(ballVAO);
+
+		glBindBuffer(GL_ARRAY_BUFFER, ballVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float)*ballList.getStride()*ballList.getVertexCount(), ballList.getVertexData(), GL_DYNAMIC_DRAW);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, ballList.getStride()* sizeof(float), (void*)0);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, ballList.getStride() * sizeof(float), (void*)(3*sizeof(float)));
+		glEnableVertexAttribArray(1);
+
+		unsigned int ballEBO;
+		glGenBuffers(1,&ballEBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ballEBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*ballList.getIndexCount(), ballList.getIndizes(),GL_DYNAMIC_DRAW);
+
+		glBindVertexArray(ballVAO);
+		glDrawElements(GL_TRIANGLES, ballList.getIndexCount(), GL_UNSIGNED_INT,0);
+
+
+
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 		executeGameStateUpdate(deltaTime, theGame);
@@ -673,9 +712,9 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 	glDeleteShader(fragmentShader);
 	glfwTerminate();
 	return 7;
-	 
 
-	
+
+
 }
 
 // Programm ausführen: STRG+F5 oder "Debuggen" > Menü "Ohne Debuggen starten"

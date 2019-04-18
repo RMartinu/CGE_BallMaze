@@ -135,7 +135,7 @@ public: Maze(ppmImage &floorplan);
 	 int checkCollision();
 	 void handleCollision();
 	 void rotateField(double deltaTime);
-	 void moveBall(int deltaTime);
+	 void moveBall(double deltaTime);
 	 //Mesh getBall();
 	 void getRotations(); //returns struct with rotation infos
 	 double getRoll();
