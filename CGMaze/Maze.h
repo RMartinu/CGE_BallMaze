@@ -11,7 +11,7 @@ Header file for Maze.cpp
 #define pitchRate 2
 #define rollRate 2
 #define gravity 9.81
-#define ballRadius 1
+#define ballRadius 0.9
 #define ballMass 1
 #define maxPitch 30
 #define maxRoll 30

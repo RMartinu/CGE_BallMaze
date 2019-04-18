@@ -264,7 +264,7 @@ void Maze::handleCollision()
 					{
 						collided_x= true;
 
-						ballVelocity_x *= -1;
+						ballVelocity_x *= -0.75;
 					}
 				}
 				if (ball_y < h && (ball_y + ballRadius) > h)
@@ -274,7 +274,7 @@ void Maze::handleCollision()
 					{
 						collided_y = true;
 
-						ballVelocity_y *= -1;
+						ballVelocity_y *= -0.75;
 					}
 				}
 				if (ball_x <w && ball_x + ballRadius>w)
@@ -284,17 +284,17 @@ void Maze::handleCollision()
 					{
 						collided_x = true;
 
-						ballVelocity_x *= -1;
+						ballVelocity_x *= -0.75;
 					}
 				}
-				if (ball_y > (h + 1) && ball_y < (-ballRadius) < (h + 1))
+				if (ball_y > (h + 1) && (ball_y-ballRadius) < (h + 1))
 				{
 					//above and colliding
 					if (!collided_y)
 					{
 						collided_y = true;
 
-						ballVelocity_y *= -1;
+						ballVelocity_y *= -0.75;
 					}
 				}
 
