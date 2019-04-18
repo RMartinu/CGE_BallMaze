@@ -54,8 +54,11 @@ const char *vertexShaderGradient = "#version 330 core\n"
 const char *fragmentShaderGradient = "#version 330 core\n"
 "out vec4 FragColor;\n"
 "in vec3 ourColor;\n"
+"uniform float ambientBrightness;\n"
+"uniform vec3 lightColor;\n"
 "void main(){\n"
-"FragColor = vec4(ourColor, 1.0);\n"
+"vec3 ambient = ambientBrightness*lightColor;"
+"FragColor = vec4(ourColor*ambient, 1.0);\n"
 "}";
 
 
@@ -647,6 +650,15 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 
 		unsigned int myFaktor = glGetUniformLocation(shaderProgram, "faktor");
 		glUniform1f(myFaktor, 0.75f);
+
+		unsigned int ambientBright = glGetUniformLocation(shaderProgram,"ambientBrightness");
+		glUniform1f(ambientBright, 0.25f);
+
+
+		glm::vec3 ambCol = glm::vec3(0.9, 0.7, 0.8);
+
+		unsigned int lightColor = glGetUniformLocation(shaderProgram,"lightColor");
+		glUniform3fv(lightColor, 1, glm::value_ptr(ambCol));
 
 	
 		glBindVertexArray(VAO);
