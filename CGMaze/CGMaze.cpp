@@ -80,6 +80,65 @@ void framebuffer_size_callback(GLFWwindow* window, int w, int h)
 	glViewport(0,0, w,h);
 }
 
+void key_Callback(GLFWwindow * window, int key, int scanCode, int action, int modifiers)
+{
+	if (( key == GLFW_KEY_W) && (action==GLFW_PRESS))
+	{
+		printf("Key pressed: %d\n", key);
+	}
+	if ((key == GLFW_KEY_UP ) && (action == GLFW_PRESS))
+	{
+		printf("Key pressed: %d\n", key);
+	}
+	if ((key == GLFW_KEY_UP || key == GLFW_KEY_W) && action == GLFW_RELEASE)
+	{
+		printf("Key released: %d\n", key);
+	}
+}
+
+static void cursor_position_callback(GLFWwindow *window, double xpos, double ypos)
+{
+
+	printf("the mousey posizion: %f %f\n", xpos, ypos);
+}
+
+void scroll_wheel_callback(GLFWwindow * window, double xoffset, double yoffset)
+{
+	printf("mouse wheel: x: %f y: %f\n", xoffset, yoffset);
+}
+
+static bool cursorVisible=true;
+void mouse_button_callback(GLFWwindow * window, int button, int action, int modifiers)
+{
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+	{
+		printf("Mousebutton pressed");
+	}
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+	{
+		printf("Mousebutton released");
+	}
+
+	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+	{
+		printf("hide Cursor");
+		if (cursorVisible)
+		{
+			cursorVisible = false;
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		}
+		else
+		{
+			cursorVisible = true;
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		}
+
+
+
+	}
+}
+
+
 int main()
 {
     std::cout << "Hello World!\n"; 
@@ -214,6 +273,10 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 
 	glViewport(0,0,800,600);
 	glfwSetFramebufferSizeCallback(window,framebuffer_size_callback);
+	glfwSetKeyCallback(window, key_Callback);
+	glfwSetCursorPosCallback(window, cursor_position_callback);
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
+	glfwSetScrollCallback(window, scroll_wheel_callback);
 
 
 
