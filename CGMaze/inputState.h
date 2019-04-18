@@ -9,6 +9,7 @@ public:
 	bool quitGame = false;
 	bool resetGame = true;
 	bool lmbPressed = false;
+	bool turbo = false;
 
 	inputState();
 	~inputState();

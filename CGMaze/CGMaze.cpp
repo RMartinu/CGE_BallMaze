@@ -87,9 +87,17 @@ void executeGameStateUpdate(double deltaTime, Maze &Game)
 		Game.resetMaze();
 		gameState.resetGame = false;
 	}
+	if (gameState.turbo)
+	{
+		Game.updatePitch(gameState.update_pitch*10);
+		Game.updateRoll(gameState.update_roll*10);
+	}
+	else
+	{
+		Game.updatePitch(gameState.update_pitch);
+		Game.updateRoll(gameState.update_roll);
+	}
 	
-	Game.updatePitch(gameState.update_pitch);
-	Game.updateRoll(gameState.update_roll);
 	Game.advance(deltaTime);
 
 }
@@ -102,7 +110,7 @@ void framebuffer_size_callback(GLFWwindow* window, int w, int h)
 void key_Callback(GLFWwindow * window, int key, int scanCode, int action, int modifiers)
 {
 	//Key Up Events
-	if (key == GLFW_KEY_W && action==GLFW_PRESS)
+	if (key == GLFW_KEY_W && action == GLFW_PRESS)
 	{
 		gameState.update_pitch = -1;
 		printf("Key pressed: %d\n", key);
@@ -201,6 +209,19 @@ void key_Callback(GLFWwindow * window, int key, int scanCode, int action, int mo
 		gameState.resetGame = 1;
 		printf("Key pressed: %d\n", key);
 	}
+
+	//Key Turbo Game Event
+	if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS)
+	{
+		gameState.turbo = true;
+		printf("Key pressed: %d\n", key);
+	}
+	if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE)
+	{
+		gameState.turbo = false;
+		printf("Key pressed: %d\n", key);
+	}
+
 }
 
 static void cursor_position_callback(GLFWwindow *window, double xpos, double ypos)
