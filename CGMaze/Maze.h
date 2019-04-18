@@ -140,6 +140,8 @@ public: Maze(ppmImage &floorplan);
 	 void getRotations(); //returns struct with rotation infos
 	 int** getTouchedGround();
 	 int getFloorAt(double width, double height);
+	 int getWidth();
+	 int getHeight();
 };
 
 

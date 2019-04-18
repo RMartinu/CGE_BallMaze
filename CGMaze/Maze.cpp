@@ -337,6 +337,16 @@ int Maze::getFloorAt(double w, double h)
 
 }
 
+int Maze::getWidth()
+{
+	return this->width;
+}
+
+int Maze::getHeight()
+{
+	return this->height;
+}
+
 vector<Vertex> Mesh::getVertices()
 {
 	return this->vertList;

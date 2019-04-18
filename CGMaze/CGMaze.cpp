@@ -205,13 +205,13 @@ static void cursor_position_callback(GLFWwindow *window, double xpos, double ypo
 	/*to be revised as suitabe*/
 	gameState.camera_x += deltaX * mouseSpeed;
 
-	if (gameState.camera_x > 90)
+	if (gameState.camera_x > +45)
 	{
-		gameState.camera_x = 90;
+		gameState.camera_x = +45;
 	}
-	if(gameState.camera_x<0)
+	if(gameState.camera_x<-45)
 	{
-		gameState.camera_x = 0;
+		gameState.camera_x = -45;
 	}
 
 
@@ -230,8 +230,8 @@ static void cursor_position_callback(GLFWwindow *window, double xpos, double ypo
 
 
 
-	printf("Camera angles x:  %f y: %f", gameState.camera_x, gameState.camera_y);
-	printf("the mousey position changed by: %f %f\n", deltaX, deltaY);
+	//printf("Camera angles x:  %f y: %f", gameState.camera_x, gameState.camera_y);
+	//printf("the mousey position changed by: %f %f\n", deltaX, deltaY);
 
 
 }
@@ -551,7 +551,10 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 	glm::mat4 viewMatrix = glm::mat4(1.0f);
 	//translate the whole scene
 	viewMatrix = glm::translate(viewMatrix, glm::vec3(0.0f,0.1f,-3.2f));
-	model = glm::rotate(model, glm::radians(145.0f), glm::vec3(1,0,0));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1,0,0));
+
+	printf("game dimensions: w: %d, h: %d", theGame.getWidth(), theGame.getHeight());
+	model = glm::translate(model, glm::vec3(-0.33, -0.35,0));
 	model = glm::scale(model, glm::vec3(0.05f, 0.05f, -0.05f));
 //for (int i = 0; i < 4;++i)
 //	{
@@ -574,6 +577,18 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 	while (!glfwWindowShouldClose(window))
 	{	glm::mat4 projectionMatrix=glm::mat4(1.0f);
 	projectionMatrix = glm::perspective(glm::radians((45.0f*(float)gameState.camera_zoom)), 800/600.0f, 0.1f,100.0f);
+
+	//generate the base view matrix
+	glm::mat4 viewMatrix = glm::mat4(1.0f);
+	//translate the whole scene
+	viewMatrix = glm::translate(viewMatrix, glm::vec3(0.0f, 0.1f, -3.2f));
+	float radius = 10;
+	float camX = sin(gameState.camera_x/57)*radius;
+	float camZ = cos(gameState.camera_x/57)*radius;
+	float camY = sin(gameState.camera_y/57)*radius;
+	camX *= cos(gameState.camera_y / 57);
+	camZ *= cos(gameState.camera_y / 57);
+	viewMatrix = glm::lookAt(glm::vec3(camX, camY, camZ), glm::vec3(0,0,0), glm::vec3(0,1,0));
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	glUseProgram(shaderProgram);
 		unsigned int modelLoc = glGetUniformLocation(shaderProgram, "model");
