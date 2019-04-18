@@ -176,14 +176,19 @@ void Maze::resetMaze()
 	ballVelocity_x = ballVelocity_y = ballVelocity_z = 0;
 }
 
-void Maze::advance(int deltaTime)
+void Maze::advance(double deltaTime)
 {
 	rotateField(deltaTime);
 	moveBall(deltaTime);
 	if (checkCollision())
 	{
 		handleCollision();
+
+
 	}
+	//printf("Pitch roll updatestate up %f, ur %f\n", this->rollFlag, this->pitchFlag);
+	//printf("this mazes current orientation: p: %f r: %f \n", this->pitch, this->roll);
+
 }
 
 int Maze::checkCollision()
@@ -270,12 +275,13 @@ void Maze::handleCollision()
 
 }
 
-void Maze::rotateField(int deltaTime)
+void Maze::rotateField(double deltaTime)
 {
 	prevPitch = pitch;
 	prevRoll = roll;
-	pitch += (pitchFlag * pitchRate) * (deltaTime / (float)1000);
-	roll += (rollFlag * rollRate) * (deltaTime / (float)1000);
+	pitch =pitch +(pitchFlag * pitchRate) * (deltaTime);
+	//printf("deltapitch %f %f %f \n", pitchFlag, pitchRate, deltaTime);
+	roll += (rollFlag * rollRate) * (deltaTime );
 	if (pitch > maxPitch)
 	{
 		pitch = maxPitch;
@@ -292,6 +298,8 @@ void Maze::rotateField(int deltaTime)
 	{
 		roll = -maxRoll;
 	}
+
+	printf("actual pitch %f, act roll %f\n", pitch, roll);
 }
 
 
@@ -304,6 +312,16 @@ void Maze::moveBall(int deltaTime)
 void Maze::getRotations()
 {
 
+}
+
+double Maze::getRoll()
+{
+	return this->roll;
+}
+
+double Maze::getPitch()
+{
+	return this->pitch;
 }
 
 int** Maze::getTouchedGround()

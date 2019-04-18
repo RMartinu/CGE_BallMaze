@@ -8,8 +8,8 @@ Header file for Maze.cpp
 
 #define epsilon_F 0.001
 
-#define pitchRate 10
-#define rollRate 10
+#define pitchRate 2
+#define rollRate 2
 #define gravity 9.81
 #define ballRadius 1
 #define ballMass 1
@@ -131,13 +131,16 @@ public: Maze(ppmImage &floorplan);
 	 void updateRoll(int speed);
 	 void updatePitch(int speed);
 	 void resetMaze();
-	 void advance(int deltaTime);
+	 void advance(double deltaTime);
 	 int checkCollision();
 	 void handleCollision();
-	 void rotateField(int deltaTime);
+	 void rotateField(double deltaTime);
 	 void moveBall(int deltaTime);
 	 //Mesh getBall();
 	 void getRotations(); //returns struct with rotation infos
+	 double getRoll();
+	 double getPitch();
+
 	 int** getTouchedGround();
 	 int getFloorAt(double width, double height);
 	 int getWidth();

@@ -80,6 +80,20 @@ unsigned int indices[] = {
 	1, 2, 3
 };
 
+void executeGameStateUpdate(double deltaTime, Maze &Game)
+{
+	if (gameState.resetGame)
+	{
+		Game.resetMaze();
+		gameState.resetGame = false;
+	}
+	
+	Game.updatePitch(gameState.update_pitch);
+	Game.updateRoll(gameState.update_roll);
+	Game.advance(deltaTime);
+
+}
+
 void framebuffer_size_callback(GLFWwindow* window, int w, int h)
 {
 	glViewport(0,0, w,h);
@@ -90,12 +104,12 @@ void key_Callback(GLFWwindow * window, int key, int scanCode, int action, int mo
 	//Key Up Events
 	if (key == GLFW_KEY_W && action==GLFW_PRESS)
 	{
-		gameState.update_pitch = 1;
+		gameState.update_pitch = -1;
 		printf("Key pressed: %d\n", key);
 	}
 	if (key == GLFW_KEY_UP && action == GLFW_PRESS)
 	{
-		gameState.update_pitch = 1;
+		gameState.update_pitch = -1;
 		printf("Key pressed: %d\n", key);
 	}
 	if (key == GLFW_KEY_W && action == GLFW_RELEASE)
@@ -112,12 +126,12 @@ void key_Callback(GLFWwindow * window, int key, int scanCode, int action, int mo
 	//Key Down Events
 	if (key == GLFW_KEY_S && action == GLFW_PRESS)
 	{
-		gameState.update_pitch = -1;
+		gameState.update_pitch = 1;
 		printf("Key pressed: %d\n", key);
 	}
 	if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
 	{
-		gameState.update_pitch = -1;
+		gameState.update_pitch = 1;
 		printf("Key pressed: %d\n", key);
 	}
 	if (key == GLFW_KEY_S && action == GLFW_RELEASE)
@@ -134,12 +148,12 @@ void key_Callback(GLFWwindow * window, int key, int scanCode, int action, int mo
 	//Key Left Events
 	if (key == GLFW_KEY_A && action == GLFW_PRESS)
 	{
-		gameState.update_roll = -1;
+		gameState.update_roll = 1;
 		printf("Key pressed: %d\n", key);
 	}
 	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
 	{
-		gameState.update_roll = -1;
+		gameState.update_roll = 1;
 		printf("Key pressed: %d\n", key);
 	}
 	if (key == GLFW_KEY_A && action == GLFW_RELEASE)
@@ -155,12 +169,12 @@ void key_Callback(GLFWwindow * window, int key, int scanCode, int action, int mo
 	//Key Right Events
 	if (key == GLFW_KEY_D && action == GLFW_PRESS)
 	{
-		gameState.update_roll = 1;
+		gameState.update_roll = -1;
 		printf("Key pressed: %d\n", key);
 	}
 	if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
 	{
-		gameState.update_roll = 1;
+		gameState.update_roll = -1;
 		printf("Key pressed: %d\n", key);
 	}
 	if (key == GLFW_KEY_D && action == GLFW_RELEASE)
@@ -543,19 +557,7 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 
 
 
-	/*Set up the matrices*/
-	glm::mat4 model = glm::mat4(1.0f); // init to something clearly defined
 	
-
-	//generate the base view matrix
-	glm::mat4 viewMatrix = glm::mat4(1.0f);
-	//translate the whole scene
-	viewMatrix = glm::translate(viewMatrix, glm::vec3(0.0f,0.1f,-3.2f));
-	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1,0,0));
-
-	printf("game dimensions: w: %d, h: %d", theGame.getWidth(), theGame.getHeight());
-	model = glm::translate(model, glm::vec3(-0.33, -0.35,0));
-	model = glm::scale(model, glm::vec3(0.05f, 0.05f, -0.05f));
 //for (int i = 0; i < 4;++i)
 //	{
 //		for (int j = 0; j < 4; ++j)
@@ -574,12 +576,36 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 
 	/**/
 
-	while (!glfwWindowShouldClose(window))
-	{	glm::mat4 projectionMatrix=glm::mat4(1.0f);
+	double time = glfwGetTime();
+	double deltaTime, previousTime;
+	
+
+	while (!glfwWindowShouldClose(window) && !gameState.quitGame)
+	{previousTime = time;
+	time = glfwGetTime();
+	deltaTime = time - previousTime;	glm::mat4 projectionMatrix=glm::mat4(1.0f);
 	projectionMatrix = glm::perspective(glm::radians((45.0f*(float)gameState.camera_zoom)), 800/600.0f, 0.1f,100.0f);
 
-	//generate the base view matrix
+
+	/*Set up the matrices*/
+	glm::mat4 model = glm::mat4(1.0f); // init to something clearly defined
+
+		//generate the base view matrix
 	glm::mat4 viewMatrix = glm::mat4(1.0f);
+
+	//translate the whole scene
+	viewMatrix = glm::translate(viewMatrix, glm::vec3(0.0f, 0.1f, -3.2f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1, 0, 0));
+	model = glm::rotate(model, glm::radians((float)theGame.getRoll()), glm::vec3(0,1,0));
+	model = glm::rotate(model, glm::radians((float)theGame.getPitch()), glm::vec3(1, 0, 0));
+
+
+	printf("game dimensions: w: %d, h: %d", theGame.getWidth(), theGame.getHeight());
+	model = glm::translate(model, glm::vec3(-0.33, -0.35, 0));
+	model = glm::scale(model, glm::vec3(0.05f, 0.05f, -0.05f));
+
+	//printf("Current time: %f, deltatime: %f\n", time,deltaTime);
+
 	//translate the whole scene
 	viewMatrix = glm::translate(viewMatrix, glm::vec3(0.0f, 0.1f, -3.2f));
 	float radius = 10;
@@ -607,6 +633,7 @@ Vlist.addTriangle(c,e,f);Vlist.addTriangle(a,f,c);successful = Vlist.addTriangle
 		glDrawElements(GL_TRIANGLES, Vlist.getIndexCount(), GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+		executeGameStateUpdate(deltaTime, theGame);
 
 	}
 	glDeleteShader(vertexShader);
