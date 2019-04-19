@@ -875,7 +875,7 @@ VertexList::VertexList(int formatDescriptor, int numberOfEntries)
 		stride += 2;
 	}
 	
-	printf("striding: %d", stride);
+	//printf("striding: %d", stride);
 	//!!Change Back!!
 	//stride = 3;
 	//printf("allocate: %d\n", maxEntries*stride);

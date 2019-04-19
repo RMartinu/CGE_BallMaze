@@ -111,7 +111,7 @@ unsigned char * ppmImage::imageDataAsCharArray()
 		delete []t;
 		t = nullptr;
 	}
-	 t= new unsigned char[width*height];
+	 t= new unsigned char[width*height*3];
 
 	 for (int i = 0; i < width*height; i += 3)
 	 {

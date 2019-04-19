@@ -37,7 +37,9 @@ const char *fragmentShaderSource = "#version 330 core\n"
 const char *vertexShaderGradient = "#version 330 core\n"
 "layout (location=0) in vec3 aPos;\n"
 "layout (location=1) in vec3 aColor;\n"
+"layout (location=2) in vec2 aTexCoord;\n"
 "out vec3 ourColor;\n"
+"out vec2 TexCoord;\n"
 "uniform float faktor;\n"
 "uniform mat4 model;\n"
 "uniform mat4 view;\n"
@@ -46,6 +48,7 @@ const char *vertexShaderGradient = "#version 330 core\n"
 "void main(){\n"
 "gl_Position = projection*view*model*vec4(aPos*faktor, 1.0);\n"
 "ourColor = aColor;\n"
+"TexCoord=aTexCoord;\n"
 "}";
 
 //"gl_Position = vec4(aPos, 1.0);\n"
@@ -54,14 +57,17 @@ const char *vertexShaderGradient = "#version 330 core\n"
 const char *fragmentShaderGradient = "#version 330 core\n"
 "out vec4 FragColor;\n"
 "in vec3 ourColor;\n"
+"in vec2 TexCoord;\n"
 "uniform float ambientBrightness;\n"
 "uniform vec3 lightColor;\n"
+"uniform sampler2D ourTexture;"
 "void main(){\n"
 "vec3 ambient = ambientBrightness*lightColor;"
-"FragColor = vec4(ourColor*ambient, 1.0);\n"
+"FragColor = texture(ourTexture, TexCoord)*vec4(ourColor, 1.0);\n"
+
 "}";
 
-
+//"FragColor = vec4(ourColor*ambient, 1.0);\n"
 //"FragColor = vec4(ourColor, 1.0);\n"
 
 float vertices[] = { -0.5f,-0.5f, 0.0f,
@@ -380,6 +386,7 @@ VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates, 3);
 	//p = myImage.getPixel(155, 190);
 	//printf("r: %d, g: %d, b: %d\n", p.r, p.g, p.b);
 
+
 	//Level Load Test
 	ppmImage theLevel("Resource//minLevel.ppm");
 	Maze theGame(theLevel);
@@ -465,6 +472,28 @@ VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates, 3);
 
 
 	/*Lets put our OGL stuff btween here*/
+
+		//load texture
+	ppmImage theTexture("Resource/texAtlas.ppm");
+
+	unsigned char * probe = theTexture.imageDataAsCharArray()
+		;
+	for (int i = 0; i < theTexture.getWidth()*theTexture.getHeight(); i+=3)
+	{
+		printf("R: %u G: %u B: %u \n", (unsigned )*(probe + i), *(probe + i + 1) , *(probe+i+2));
+	}
+	unsigned int textureId = 0;
+
+
+	glGenTextures(1, &textureId);
+
+	printf("texture Id: %ud", textureId);
+	glBindTexture(GL_TEXTURE_2D, textureId);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, theTexture.getWidth(), theTexture.getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, theTexture.imageDataAsCharArray());
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textureId);
+
 	unsigned int VBO;
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -555,6 +584,10 @@ VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates, 3);
 			glEnableVertexAttribArray(1);
 		}
 	}
+
+	//Bind texture to object
+	glBindTexture(GL_TEXTURE_2D, textureId);
+	glBindVertexArray(VAO);
 
 
 	/* Lets play with EBO*/
