@@ -102,7 +102,7 @@ Maze::Maze(ppmImage &floorplan)
  VertexList Maze::getVertexList()
  {
 	 //puts("getting list");
-	 VertexList V(vertexCoordinates |vertexColor,3);
+	 VertexList V(vertexCoordinates|vertexColor|UVCoordinates,3);
 
 	 int  meshcount = 0;
 	 vector<Mesh> Meshes = getMeshes();
@@ -119,6 +119,7 @@ Maze::Maze(ppmImage &floorplan)
 			 b = mverts.at(i + 1);
 			 c = mverts.at(i + 2);
 			 a.r = b.g = c.b = 1;
+
 			 V.addTriangle(a,b,c);
 		 }
 		 
@@ -129,7 +130,7 @@ Maze::Maze(ppmImage &floorplan)
 
  VertexList Maze::getBallVertices()
  {
-	 VertexList V(vertexCoordinates|UVCoordinates,8);
+	 VertexList V(vertexCoordinates|vertexColor,8);
 
 	 Mesh BallMesh = getBall();
 
@@ -650,23 +651,29 @@ Mesh::Mesh()
 Mesh::Mesh(double pos_x, double pos_y, double width, double depth, double height)
 {
 	//Creates a cubical Mesh with specified dimensions; used to create the floor plate
-	Vertex v[8];
-	v[0].x = pos_x; v[0].y = pos_y; v[0].z = 0;
-	v[1].x = pos_x + width; v[1].y = pos_y; v[1].z = 0;
-	v[2].x = pos_x; v[2].y = pos_y + depth; v[2].z = 0;
-	v[3].x = pos_x; v[3].y = pos_y; v[3].z = height;
-	v[4].x = pos_x + width; v[4].y = pos_y + depth; v[4].z = 0;
-	v[5].x = pos_x + width; v[5].y = pos_y; v[5].z = height;
-	v[6].x = pos_x; v[6].y = pos_y + depth; v[6].z = height;
-	v[7].x = pos_x + width; v[7].y = pos_y + depth; v[7].z = height;
+	Vertex v[12];
+	v[0].x = pos_x; v[0].y = pos_y; v[0].z = 0; v[0].u = 0.5; v[0].v = 0.5; //bottom, left, back
+	v[1].x = pos_x + width; v[1].y = pos_y; v[1].z = 0; v[1].u = 0.5; v[1].v = 0; //bottom, right, back
+	v[2].x = pos_x; v[2].y = pos_y + depth; v[2].z = 0; v[2].u = 0.5; v[2].v = 0; //bottom, left, front
+	v[3].x = pos_x; v[3].y = pos_y; v[3].z = height; v[3].u = 1; v[3].v = 0.5; //top, left, back
+	v[4].x = pos_x + width; v[4].y = pos_y + depth; v[4].z = 0; v[4].u = 0.6; v[4].v = 0.5; //bottom, right, front
+	v[5].x = pos_x + width; v[5].y = pos_y; v[5].z = height; v[5].u = 1; v[5].v = 0; //top, right, back
+	v[6].x = pos_x; v[6].y = pos_y + depth; v[6].z = height; v[6].u = 1; v[6].v = 0; //top, left, front
+	v[7].x = pos_x + width; v[7].y = pos_y + depth; v[7].z = height; v[7].u = 1; v[7].v = 0.5; //top, right, front
+
+	v[8].x = pos_x; v[8].y = pos_y; v[8].z = height; v[8].u = 1; v[8].v = 0.5; //2 top, left, back	
+	v[9].x = pos_x + width; v[9].y = pos_y; v[9].z = height; v[9].u = 1; v[9].v = 1; //2 top, right, back
+	v[10].x = pos_x; v[10].y = pos_y + depth; v[10].z = height; v[10].u = 0.5; v[10].v = 0.5; //2 top, left, front
+	v[11].x = pos_x + width; v[11].y = pos_y + depth; v[11].z = height; v[11].u = 0.5; v[11].v = 1; //2 top, right, front
+
 	//printf("%d %d %d %d %d", pos_x, pos_y, width, depth, height);
 	//printf("%d %d %d %d %d %d %d", v[0].y, v[1].y, v[2].y, v[3].y, v[4].y, v[5].y, v[6].y);
-	//first triangle, floor lower
+	//first triangle, bottom lower
 	vertList.push_back(v[0]);
 	vertList.push_back(v[1]);
 	vertList.push_back(v[2]);
 
-	//second triangle, front upper
+	//second triangle, bottom upper
 	vertList.push_back(v[1]);
 	vertList.push_back(v[2]);
 	vertList.push_back(v[4]);
@@ -693,41 +700,36 @@ Mesh::Mesh(double pos_x, double pos_y, double width, double depth, double height
 	vertList.push_back(v[5]);
 	vertList.push_back(v[7]);
 
-	//seventh triangle top uppper
-	vertList.push_back(v[3]);
-	vertList.push_back(v[5]);
-	vertList.push_back(v[6]);
+	//seventh triangle top upper
+	vertList.push_back(v[8]);
+	vertList.push_back(v[9]);
+	vertList.push_back(v[10]);
 
 
 	//eigth triangle top lower
-	vertList.push_back(v[5]);
-	vertList.push_back(v[6]);
-	vertList.push_back(v[7]);
+	vertList.push_back(v[9]);
+	vertList.push_back(v[10]);
+	vertList.push_back(v[11]);
 
-	//nineth tri front lower
+	//nineth tri back lower
 	vertList.push_back(v[0]);
 	vertList.push_back(v[1]);
 	vertList.push_back(v[3]);
 
-	//tenth tri front upper
+	//tenth tri back upper
 	vertList.push_back(v[1]);
 	vertList.push_back(v[3]);
 	vertList.push_back(v[5]);
 
-	//eleventh back upper
+	//eleventh front upper
 	vertList.push_back(v[4]);
 	vertList.push_back(v[6]);
 	vertList.push_back(v[7]);
 
-	//twelfth back lower
+	//twelfth front lower
 	vertList.push_back(v[2]);
 	vertList.push_back(v[4]);
 	vertList.push_back(v[6]);
-
-	//vertList.push_back(v[4]);
-	//vertList.push_back(v[5]);
-	//vertList.push_back(v[6]);
-	//vertList.push_back(v[7]);
 
 
 	//printf("Vertex data: %d %d %d", v[0].x, v[0].y, v[0].z);
@@ -739,22 +741,27 @@ Mesh::Mesh(double pos_x, double pos_y)
 {
 	//printf("Building at: %f %f\n", pos_x, pos_y);
 	//creates a unity cube at the specified xy-coordinates and at height zero
-	Vertex v[8];
-	v[0].x = pos_x; v[0].y = pos_y; v[0].z = 0;
-	v[1].x = pos_x+1; v[1].y = pos_y; v[1].z = 0;
-	v[2].x = pos_x; v[2].y = pos_y+1; v[2].z = 0;
-	v[3].x = pos_x; v[3].y = pos_y; v[3].z = 3;
-	v[4].x = pos_x+1; v[4].y = pos_y+1; v[4].z = 0;
-	v[5].x = pos_x+1; v[5].y = pos_y; v[5].z = 3;
-	v[6].x = pos_x; v[6].y = pos_y+1; v[6].z = 3;
-	v[7].x = pos_x+1; v[7].y = pos_y+1; v[7].z = 3;
+	Vertex v[12];
+	v[0].x = pos_x; v[0].y = pos_y; v[0].z = 0; v[0].u = 0; v[0].v = 0.5; //bottom, left, back
+	v[1].x = pos_x+1; v[1].y = pos_y; v[1].z = 0; v[1].u = 0; v[1].v = 0; //bottom, right, back
+	v[2].x = pos_x; v[2].y = pos_y+1; v[2].z = 0; v[2].u = 0; v[2].v = 0; //bottom, left, front
+	v[3].x = pos_x; v[3].y = pos_y; v[3].z = 3; v[3].u = 0.5; v[3].v = 0.5; //top, left, back
+	v[4].x = pos_x+1; v[4].y = pos_y+1; v[4].z = 0; v[4].u = 0; v[4].v = 0.5; //bottom, right, front
+	v[5].x = pos_x+1; v[5].y = pos_y; v[5].z = 3; v[5].u = 0.5; v[5].v = 0; //top, right, back
+	v[6].x = pos_x; v[6].y = pos_y+1; v[6].z = 3; v[6].u = 0.5; v[6].v = 0; //top, left, front
+	v[7].x = pos_x+1; v[7].y = pos_y+1; v[7].z = 3; v[7].u = 0.5; v[7].v = 0.5; //top, right, front
 
-	//first triangle, front lower
+	v[8].x = pos_x; v[8].y = pos_y; v[8].z = 3; v[8].u = 0.5; v[8].v = 0.5; //2 top, left, back	
+	v[9].x = pos_x+1; v[9].y = pos_y; v[9].z = 3; v[9].u = 0.5; v[9].v = 1; //2 top, right, back
+	v[10].x = pos_x; v[10].y = pos_y + 1; v[10].z = 3; v[10].u = 0; v[10].v = 0.5; //2 top, left, front
+	v[11].x = pos_x + 1; v[11].y = pos_y + 1; v[11].z = 3; v[11].u = 0; v[11].v = 1; //2 top, right, front
+
+	//first triangle, bottom lower
 	vertList.push_back(v[0]);
 	vertList.push_back(v[1]);
 	vertList.push_back(v[2]);
 
-	//second triangle, front upper
+	//second triangle, bottom upper
 	vertList.push_back(v[1]);
 	vertList.push_back(v[2]);
 	vertList.push_back(v[4]);
@@ -768,7 +775,7 @@ Mesh::Mesh(double pos_x, double pos_y)
 	//forth triangle left upper
 	vertList.push_back(v[2]);
 	vertList.push_back(v[3]);
-	vertList.push_back(v[0]);
+	vertList.push_back(v[6]);
 
 
 	//fifth triangle right lower
@@ -781,39 +788,41 @@ Mesh::Mesh(double pos_x, double pos_y)
 	vertList.push_back(v[5]);
 	vertList.push_back(v[7]);
 
-	//seventh triangle top uppper
-	vertList.push_back(v[3]);
-	vertList.push_back(v[5]);
-	vertList.push_back(v[6]);
+	//seventh triangle top upper
+	vertList.push_back(v[8]);
+	vertList.push_back(v[9]);
+	vertList.push_back(v[10]);
 
 
 	//eigth triangle top lower
-	vertList.push_back(v[5]);
-	vertList.push_back(v[6]);
-	vertList.push_back(v[7]);
+	vertList.push_back(v[9]);
+	vertList.push_back(v[10]);
+	vertList.push_back(v[11]);
 
-	//nineth tri front lower
+	//nineth tri back lower
 	vertList.push_back(v[0]);
 	vertList.push_back(v[1]);
 	vertList.push_back(v[3]);
 
-	//tenth tri front upper
+	//tenth tri back upper
 	vertList.push_back(v[1]);
 	vertList.push_back(v[3]);
-	vertList.push_back(v[6]);
+	vertList.push_back(v[5]);
 
-	//eleventh back upper
+	//eleventh front upper
 	vertList.push_back(v[4]);
 	vertList.push_back(v[6]);
 	vertList.push_back(v[7]);
 
-	//twelfth back lower
+	//twelfth front lower
 	vertList.push_back(v[2]);
 	vertList.push_back(v[4]);
 	vertList.push_back(v[6]);
 
 
 	//printf("first vertex: %f %f %f", vertList.at(0).x, vertList.at(0).y, vertList.at(0).z);
+
+
 }
 
 void Mesh::beepMe(int pos_x, int pos_y)
@@ -866,7 +875,7 @@ VertexList::VertexList(int formatDescriptor, int numberOfEntries)
 		stride += 2;
 	}
 	
-	//printf("striding: %d", stride);
+	printf("striding: %d", stride);
 	//!!Change Back!!
 	//stride = 3;
 	//printf("allocate: %d\n", maxEntries*stride);

@@ -326,11 +326,11 @@ void mouse_button_callback(GLFWwindow * window, int button, int action, int modi
 int main()
 {
 	std::cout << "Hello World!\n";
-
+VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates, 3);
 	//ppmImage thePlan("insert Path here");
 	//Maze theGame(thePlan);
 
-	ppmImage myImage("Resource\\smiley.ppm");
+	/*ppmImage myImage("Resource\\smiley.ppm");
 	pixel p = myImage.getPixel(155, 190);
 
 
@@ -342,14 +342,14 @@ int main()
 	e.x = -0.75; e.y = 0.75; e.z = 0; e.r = 0; e.b = 1; e.g = 1;
 	f.x = 0.65; f.y = 0.9; f.z = 0; f.r = 1; f.b = 1; f.g = 0;
 
-	VertexList Vlist(vertexCoordinates | vertexColor, 3);
+	
 	bool successful =
 		successful = Vlist.addTriangle(d, e, f);
 	successful = Vlist.addTriangle(a, b, c);
 	Vlist.addTriangle(c, e, f); Vlist.addTriangle(a, f, c); successful = Vlist.addTriangle(a, c, e);
 
 	//VertexList Vlist(vertexCoordinates,8);
-
+*/
 
 //if (successful)
 //{
@@ -375,9 +375,9 @@ int main()
 
 	//printf("r: %d, g: %d, b: %d\n", p.r,p.g,p.b);
 
-	p = myImage.getPixel(64, 144);
-	//printf("r: %d, g: %d, b: %d\n", p.r, p.g, p.b);
-	p = myImage.getPixel(155, 190);
+	//p = myImage.getPixel(64, 144);
+	////printf("r: %d, g: %d, b: %d\n", p.r, p.g, p.b);
+	//p = myImage.getPixel(155, 190);
 	//printf("r: %d, g: %d, b: %d\n", p.r, p.g, p.b);
 
 	//Level Load Test
@@ -402,13 +402,13 @@ int main()
 	//done
 
 	//get a vertex buffer
-	VertexList VL(vertexCoordinates | UVCoordinates | vertexColor, 12);
-	//puts("Vertex list built");
+	//VertexList VL(vertexCoordinates | UVCoordinates | vertexColor, 12);
+	////puts("Vertex list built");
 
-	VertexList VL1(vertexCoordinates | UVCoordinates, 12);
-	//puts("Vertex list built");
+	//VertexList VL1(vertexCoordinates | UVCoordinates, 12);
+	////puts("Vertex list built");
 
-	VertexList VL2(vertexCoordinates | vertexColor, 12);
+	//VertexList VL2(vertexCoordinates | vertexColor, 12);
 	//puts("Vertex list built");
 	//VL.addVertex(4, 5, 6);
 	//VL.extendVertexData();
@@ -546,7 +546,7 @@ int main()
 	{
 		if (Vlist.getContainsVertexColor())
 		{
-			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(6 * sizeof(float)));
+			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(6 * sizeof(float)));
 			glEnableVertexAttribArray(2);
 		}
 		if (!Vlist.getContainsVertexColor())
@@ -602,7 +602,7 @@ int main()
 
 	double time = glfwGetTime();
 	double deltaTime, previousTime;
-
+	puts("begin to play");
 
 	while (!glfwWindowShouldClose(window) && !gameState.quitGame)
 	{
