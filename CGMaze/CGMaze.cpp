@@ -63,7 +63,7 @@ const char *fragmentShaderGradient = "#version 330 core\n"
 "uniform sampler2D ourTexture;"
 "void main(){\n"
 "vec3 ambient = ambientBrightness*lightColor;"
-"FragColor = texture(ourTexture, TexCoord)*vec4(ourColor, 1.0);\n"
+"FragColor = texture(ourTexture, TexCoord)*vec4(ourColor*ambient, 1.0);\n"
 
 "}";
 
@@ -269,7 +269,6 @@ static void cursor_position_callback(GLFWwindow *window, double xpos, double ypo
 	{
 		gameState.camera_y = 80;
 	}
-
 
 
 
@@ -480,7 +479,9 @@ VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates, 3);
 		;
 	for (int i = 0; i < theTexture.getWidth()*theTexture.getHeight(); i+=3)
 	{
-		printf("R: %u G: %u B: %u \n", (unsigned )*(probe + i), *(probe + i + 1) , *(probe+i+2));
+		
+		//printf("R: %u G: %u B: %u \n", (unsigned )*(probe + i), *(probe + i + 1) , *(probe+i+2));
+		
 	}
 	unsigned int textureId = 0;
 
@@ -489,6 +490,7 @@ VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates, 3);
 
 	printf("texture Id: %ud", textureId);
 	glBindTexture(GL_TEXTURE_2D, textureId);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, theTexture.getWidth(), theTexture.getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, theTexture.imageDataAsCharArray());
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glActiveTexture(GL_TEXTURE0);
@@ -687,7 +689,7 @@ VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates, 3);
 		glUniform1f(myFaktor, 0.75f);
 
 		unsigned int ambientBright = glGetUniformLocation(shaderProgram, "ambientBrightness");
-		glUniform1f(ambientBright, 0.25f);
+		glUniform1f(ambientBright, 0.75f);
 
 
 		glm::vec3 ambCol = glm::vec3(0.9, 0.7, 0.8);

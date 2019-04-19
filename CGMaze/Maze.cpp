@@ -656,27 +656,29 @@ Mesh::Mesh(double pos_x, double pos_y, double width, double depth, double height
 	v[1].x = pos_x + width; v[1].y = pos_y; v[1].z = 0; v[1].u = 0.5; v[1].v = 0; //bottom, right, back
 	v[2].x = pos_x; v[2].y = pos_y + depth; v[2].z = 0; v[2].u = 0.5; v[2].v = 0; //bottom, left, front
 	v[3].x = pos_x; v[3].y = pos_y; v[3].z = height; v[3].u = 1; v[3].v = 0.5; //top, left, back
-	v[4].x = pos_x + width; v[4].y = pos_y + depth; v[4].z = 0; v[4].u = 0.6; v[4].v = 0.5; //bottom, right, front
+	v[4].x = pos_x + width; v[4].y = pos_y + depth; v[4].z = 0; v[4].u = 0.5; v[4].v = 0.5; //bottom, right, front
 	v[5].x = pos_x + width; v[5].y = pos_y; v[5].z = height; v[5].u = 1; v[5].v = 0; //top, right, back
 	v[6].x = pos_x; v[6].y = pos_y + depth; v[6].z = height; v[6].u = 1; v[6].v = 0; //top, left, front
 	v[7].x = pos_x + width; v[7].y = pos_y + depth; v[7].z = height; v[7].u = 1; v[7].v = 0.5; //top, right, front
 
-	v[8].x = pos_x; v[8].y = pos_y; v[8].z = height; v[8].u = 1; v[8].v = 0.5; //2 top, left, back	
-	v[9].x = pos_x + width; v[9].y = pos_y; v[9].z = height; v[9].u = 1; v[9].v = 1; //2 top, right, back
-	v[10].x = pos_x; v[10].y = pos_y + depth; v[10].z = height; v[10].u = 0.5; v[10].v = 0.5; //2 top, left, front
-	v[11].x = pos_x + width; v[11].y = pos_y + depth; v[11].z = height; v[11].u = 0.5; v[11].v = 1; //2 top, right, front
+	v[8].x = pos_x; v[8].y = pos_y; v[8].z = 0; v[8].u = 1; v[8].v = 0.5; //2 bottom, left, back
+	v[9].x = pos_x + width; v[9].y = pos_y; v[9].z = 0; v[9].u = 1; v[9].v = 1; //2 bottom, right, back
+	v[10].x = pos_x; v[10].y = pos_y + depth; v[10].z = 0; v[10].u = 0.5; v[10].v = 0.5; //2 bottom, left, front
+	v[11].x = pos_x + width; v[11].y = pos_y + depth; v[11].z = 0; v[11].u = 0.5; v[11].v = 1; //2 bottom, right, front
+
+
 
 	//printf("%d %d %d %d %d", pos_x, pos_y, width, depth, height);
 	//printf("%d %d %d %d %d %d %d", v[0].y, v[1].y, v[2].y, v[3].y, v[4].y, v[5].y, v[6].y);
 	//first triangle, bottom lower
-	vertList.push_back(v[0]);
-	vertList.push_back(v[1]);
-	vertList.push_back(v[2]);
+	vertList.push_back(v[8]);
+	vertList.push_back(v[9]);
+	vertList.push_back(v[10]);
 
 	//second triangle, bottom upper
-	vertList.push_back(v[1]);
-	vertList.push_back(v[2]);
-	vertList.push_back(v[4]);
+	vertList.push_back(v[9]);
+	vertList.push_back(v[10]);
+	vertList.push_back(v[11]);
 
 	//third triangle left lower
 	vertList.push_back(v[0]);
@@ -701,15 +703,15 @@ Mesh::Mesh(double pos_x, double pos_y, double width, double depth, double height
 	vertList.push_back(v[7]);
 
 	//seventh triangle top upper
-	vertList.push_back(v[8]);
-	vertList.push_back(v[9]);
-	vertList.push_back(v[10]);
+	vertList.push_back(v[3]);
+	vertList.push_back(v[5]);
+	vertList.push_back(v[6]);
 
 
 	//eigth triangle top lower
-	vertList.push_back(v[9]);
-	vertList.push_back(v[10]);
-	vertList.push_back(v[11]);
+	vertList.push_back(v[5]);
+	vertList.push_back(v[6]);
+	vertList.push_back(v[7]);
 
 	//nineth tri back lower
 	vertList.push_back(v[0]);
@@ -746,10 +748,10 @@ Mesh::Mesh(double pos_x, double pos_y)
 	v[1].x = pos_x+1; v[1].y = pos_y; v[1].z = 0; v[1].u = 0; v[1].v = 0; //bottom, right, back
 	v[2].x = pos_x; v[2].y = pos_y+1; v[2].z = 0; v[2].u = 0; v[2].v = 0; //bottom, left, front
 	v[3].x = pos_x; v[3].y = pos_y; v[3].z = 3; v[3].u = 0.5; v[3].v = 0.5; //top, left, back
-	v[4].x = pos_x+1; v[4].y = pos_y+1; v[4].z = 0; v[4].u = 0; v[4].v = 0.5; //bottom, right, front
+	v[4].x = pos_x+1; v[4].y = pos_y+1; v[4].z = 0; v[4].u = 0; v[4].v =0.5; //bottom, right, front
 	v[5].x = pos_x+1; v[5].y = pos_y; v[5].z = 3; v[5].u = 0.5; v[5].v = 0; //top, right, back
 	v[6].x = pos_x; v[6].y = pos_y+1; v[6].z = 3; v[6].u = 0.5; v[6].v = 0; //top, left, front
-	v[7].x = pos_x+1; v[7].y = pos_y+1; v[7].z = 3; v[7].u = 0.5; v[7].v = 0.5; //top, right, front
+	v[7].x = pos_x+1; v[7].y = pos_y+1; v[7].z = 3; v[7].u = 0.5; v[7].v =0.5; //top, right, front
 
 	v[8].x = pos_x; v[8].y = pos_y; v[8].z = 3; v[8].u = 0.5; v[8].v = 0.5; //2 top, left, back	
 	v[9].x = pos_x+1; v[9].y = pos_y; v[9].z = 3; v[9].u = 0.5; v[9].v = 1; //2 top, right, back

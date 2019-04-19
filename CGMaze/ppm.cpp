@@ -113,11 +113,13 @@ unsigned char * ppmImage::imageDataAsCharArray()
 	}
 	 t= new unsigned char[width*height*3];
 
-	 for (int i = 0; i < width*height; i += 3)
+	 for (int i = 0; i < width*height*3; i += 3)
 	 {
-		 t[i + 0] = pixelField->r;
-		 t[i + 1] = pixelField->g;
-		 t[i + 2] = pixelField->b;
+		 t[i + 0] = (pixelField+i/3)->r;
+		 t[i + 1] = (pixelField+i/3)->g;
+		 t[i + 2] = (pixelField+i/3)->b;
+		// printf("PF: r. %d, %d, %d\t",);
+		 //printf("actually in there %u %u %u\n", t[i], t[i+1], t[i+2]);
 	 }
 	return t;
 }
