@@ -673,6 +673,8 @@ int main()
 		VertexList ballList = theGame.getBallVertices();
 
 		unsigned int ballVBO;
+
+		glDeleteBuffers(1, &ballVBO);
 		glGenBuffers(1, &ballVBO);
 		glBindBuffer(GL_ARRAY_BUFFER, ballVBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float)*ballList.getStride()*ballList.getVertexCount(), ballList.getVertexData(), GL_DYNAMIC_DRAW);
@@ -706,6 +708,8 @@ int main()
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 		executeGameStateUpdate(deltaTime, theGame);
+		glDeleteBuffers(1,&ballEBO);
+		glDeleteVertexArrays(1,&ballVAO);
 
 	}
 	glDeleteShader(vertexShader);
