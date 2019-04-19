@@ -193,7 +193,7 @@ void Maze::advance(double deltaTime)
 	if (checkCollision())
 	{
 		//printf("Collision imminent!!\n");
-		handleCollision();
+		//handleCollision();
 
 
 	}
@@ -253,49 +253,130 @@ void Maze::handleCollision()
 				}
 
 				break; }
+			//case wall:
+			//{
+
+			//	
+			//	if (ball_x > (w + 1) && ball_x - ballRadius < (w + 1))
+			//	{
+			//		
+			//		//On the rights side and colliding
+			//		if (!collided_x)
+			//		{printf("Touching wall on the left\n");
+			//			collided_x= true;
+
+			//			ballVelocity_x *= -0.75;
+			//		}
+			//	}
+			//	if (ball_y < h && (ball_y + ballRadius) > h)
+			//	{
+			//		//above and colliding
+			//		if (!collided_y)
+			//		{
+			//			printf("Touching wall below\n");
+			//			collided_y = true;
+			//			printf("Velocity y: %f", ballVelocity_y);
+			//			if (ballVelocity_y>1)
+			//			{
+			//				ballVelocity_y *= -0.75;
+			//			}
+			//			else
+			//			{
+			//				ball_y = (int)ball_y;
+			//				ballVelocity_y *= 0;
+			//			}
+
+			//		
+			//		}
+			//	}
+			//	if (ball_x <w && ball_x + ballRadius>w)
+			//	{
+			//		//left and coliding
+			//		if (!collided_x)
+			//		{
+			//			printf("Touching wall on the right\n");
+			//			collided_x = true;
+
+			//			ballVelocity_x *= -0.75;
+			//		}
+			//	}
+			//	if (ball_y > (h + 1) && (ball_y-ballRadius) < (h + 1))
+			//	{
+			//		//below and colliding
+			//		if (!collided_y)
+			//		{
+			//			printf("Touching wall above\n");
+			//			collided_y = true;
+
+			//			ballVelocity_y *= -0.75;
+			//		}
+			//	}
+
+			//	break; }
 			case wall:
 			{
 
-				
-				if (ball_x > (w + 1) && ball_x - ballRadius < (w + 1))
-				{
-					printf("Touching wall on the left\n");
-					//On the rights side and colliding
-					if (!collided_x)
-					{
-						collided_x= true;
 
-						ballVelocity_x *= -0.75;
+				if (ball_x > (w) && (ball_x - ballRadius) < (w))
+				{
+					
+					//On the rights side and colliding
+					if (roll>0)
+					{
+					//puts("XXXXX");
+					//if (!collided_x)
+					{
+						printf("Touching wall on the left\n");
+						collided_x = true;
+						ball_x = (int)ball_x+1;
+						ballVelocity_x *= 0;
+					}
 					}
 				}
 				if (ball_y < h && (ball_y + ballRadius) > h)
 				{
-					//below and colliding
-					if (!collided_y)
+					//above and colliding
+					if (pitch > 0)
 					{
-						collided_y = true;
+						//if (!collided_y)
+						{
+							printf("Touching wall below\n");
+							collided_y = true;
+							ball_y = (int)ball_y;
+								ballVelocity_y *= 0;
+							
 
-						ballVelocity_y *= -0.75;
+
+						}
 					}
 				}
-				if (ball_x <w && ball_x + ballRadius>w)
+				if (ball_x <(w )&& ball_x + ballRadius>w)
 				{
 					//left and coliding
-					if (!collided_x)
+					if (roll < 0)
 					{
-						collided_x = true;
-
-						ballVelocity_x *= -0.75;
+						//if (!collided_x)
+						{
+							printf("Touching wall on the right\n");
+							collided_x = true;
+							ball_x = (int)ball_x;
+							ballVelocity_x *= 0;
+						}
 					}
 				}
-				if (ball_y > (h + 1) && (ball_y-ballRadius) < (h + 1))
+				if (ball_y > (h ) && (ball_y - ballRadius) < (h ))
 				{
-					//above and colliding
-					if (!collided_y)
+					//below and colliding
+					if (pitch < 0)
 					{
-						collided_y = true;
+						//if (!collided_y)
+						{
+							printf("Touching wall above\n");
+							collided_y = true;
 
-						ballVelocity_y *= -0.75;
+							ball_y = (int)ball_y+1;
+							ballVelocity_y *= 0;
+						}
 					}
 				}
 
@@ -353,10 +434,27 @@ void Maze::rotateField(double deltaTime)
 
 void Maze::moveBall(double deltaTime)
 {
-	ballVelocity_x = ballVelocity_x -roll/5;
-	ballVelocity_y = ballVelocity_y +pitch/5;
-	ball_x += ballVelocity_x * (deltaTime);
+	//ballVelocity_x = fmin(fmax(ballVelocity_x -roll/5,-maxVelocity),maxVelocity);
+	//ballVelocity_y = fmin(fmax(ballVelocity_y + pitch / 5, -maxVelocity), maxVelocity);
+	
+	printf("veloX: %f, veloY %f\n", ballVelocity_x, ballVelocity_y);
+
+	double fx, fy;
+	fx = ball_x + ballVelocity_x * deltaTime;
+	fy = ball_y + ballVelocity_y * deltaTime;
+
+	if (this->getFloorAt(fx, fy) != wall)
+	{//move	ball_x += ballVelocity_x * (deltaTime);
 	ball_y += ballVelocity_y * (deltaTime);
+	ballVelocity_x = -roll;
+	ballVelocity_y = pitch;
+	}
+	else
+	{//plan b
+
+		printf("blocked at %f %f \n", fx,fy);
+	}
+
 	//printf("Ballposition: x: %f, y: %f\n", ball_x, ball_y);
 }
 

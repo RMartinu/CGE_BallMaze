@@ -15,6 +15,7 @@ Header file for Maze.cpp
 #define ballMass 1
 #define maxPitch 30
 #define maxRoll 30
+#define maxVelocity 5
 
 #define way 0
 #define ballstart 1

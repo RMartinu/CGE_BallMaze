@@ -214,7 +214,7 @@ void key_Callback(GLFWwindow * window, int key, int scanCode, int action, int mo
 	}
 
 	//Key Turbo Game Event
-	if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS)
+	if ((key == GLFW_KEY_LEFT_SHIFT|| key == GLFW_KEY_RIGHT_SHIFT) && action == GLFW_PRESS)
 	{
 		gameState.turbo = true;
 		printf("Key pressed: %d\n", key);
@@ -381,7 +381,7 @@ int main()
 	//printf("r: %d, g: %d, b: %d\n", p.r, p.g, p.b);
 
 	//Level Load Test
-	ppmImage theLevel("Resource//minLevel.ppm");
+	ppmImage theLevel("Resource//emaze.ppm");
 	Maze theGame(theLevel);
 
 	VertexList VxXx = theGame.getVertexList();
