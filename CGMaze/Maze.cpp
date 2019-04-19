@@ -192,7 +192,7 @@ void Maze::advance(double deltaTime)
 	moveBall(deltaTime);
 	if (checkCollision())
 	{
-		printf("Collision imminent!!\n");
+		//printf("Collision imminent!!\n");
 		handleCollision();
 
 
@@ -215,7 +215,7 @@ int Maze::checkCollision()
 				status = area[h][w];
 			}
 */
-			printf("%d", area[h][w]);
+			//printf("%d", area[h][w]);
 			status = status | (1 << area[h][w]); //every bit represents a bool of a floor type
 		}
 
@@ -227,7 +227,7 @@ int Maze::checkCollision()
 	}
 	delete area;
 
-	printf("Status: %d\n", status);
+	//printf("Status: %d\n", status);
 	return status;
 }
 
@@ -256,9 +256,10 @@ void Maze::handleCollision()
 			case wall:
 			{
 
-				printf("Touching wall\n");
+				
 				if (ball_x > (w + 1) && ball_x - ballRadius < (w + 1))
 				{
+					printf("Touching wall on the left\n");
 					//On the rights side and colliding
 					if (!collided_x)
 					{
