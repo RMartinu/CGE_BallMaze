@@ -437,20 +437,137 @@ void Maze::moveBall(double deltaTime)
 	//ballVelocity_x = fmin(fmax(ballVelocity_x -roll/5,-maxVelocity),maxVelocity);
 	//ballVelocity_y = fmin(fmax(ballVelocity_y + pitch / 5, -maxVelocity), maxVelocity);
 	
-	printf("veloX: %f, veloY %f\n", ballVelocity_x, ballVelocity_y);
+	//printf("veloX: %f, veloY %f\n", ballVelocity_x, ballVelocity_y);
 
 	double fx, fy;
 	fx = ball_x + ballVelocity_x * deltaTime;
 	fy = ball_y + ballVelocity_y * deltaTime;
 
-	if (this->getFloorAt(fx, fy) != wall)
-	{//move	ball_x += ballVelocity_x * (deltaTime);
+	double cogx=(int)fx+0.5, cogy=(int)fy+0.5;	
+	
+
+		// y=kx+d
+	
+		//k=y/x
+
+		double kVel = ballVelocity_y / ballVelocity_x;
+		double kImp = (ball_y - cogy) / (ball_x - cogx);
+
+
+		int xoffset, yoffset;
+		if (ballVelocity_x > 0)
+		{
+			xoffset = 1;
+		}
+		else
+		{
+			xoffset = 0;
+		}
+		if (ballVelocity_y > 0)
+		{
+			yoffset = 1;
+		}
+		else
+		{
+			yoffset = 0;
+		}
+
+	if (this->getFloorAt(fx+xoffset, fy+yoffset) != wall)
+	{//move	
+	ball_x += ballVelocity_x * (deltaTime);
 	ball_y += ballVelocity_y * (deltaTime);
-	ballVelocity_x = -roll;
-	ballVelocity_y = pitch;
+	//ballVelocity_x = -roll;
+	//ballVelocity_y = pitch;
+
+	ballVelocity_x = fmin(fmax(ballVelocity_x -roll/5,-maxVelocity),maxVelocity);
+	ballVelocity_y = fmin(fmax(ballVelocity_y + pitch / 5, -maxVelocity), maxVelocity);
+
 	}
 	else
 	{//plan b
+		//if (kVel <= kImp)
+		//{
+		//	ballVelocity_x *= -1;
+		//}
+		//if (kVel >= kImp)
+		//{
+		//	ballVelocity_y *= -1;
+		//}
+		//printf("Vect: %f\n", kVel);
+		//double px=ball_x, py=ball_y;
+		//px += ballVelocity_x * (deltaTime);
+		//py += ballVelocity_y * (deltaTime);
+		//if (getFloorAt(px, py) != wall)
+		//{
+		//	ball_x = px;
+		//	ball_y = py;
+
+		//	puts("bounce");
+		//}
+		//else
+		//{
+		//	puts("redisplace");
+
+		//	//ballVelocity_x = ballVelocity_y = 0;
+		//
+		//	int sx, sy;
+		//	double minDist = 999;
+		//	for (int i=(int)ball_x-1; i<(int)ball_x+2;++i)
+		//	{
+		//		for (int j = (int)ball_y - 1; j < (int)ball_y + 2; ++j)
+		//		{
+		//			if (getFloorAt(i, j) != wall)
+		//			{
+		//				//calc distanace
+		//				double d = abs(i - ball_x) + abs(j - ball_y);
+		//				if (d < minDist)
+		//				{
+		//					minDist = d;
+		//					sx = i; sy = j;
+		//				}
+		//			}
+		//		}
+		//	}
+
+		//	if ((ball_x > sx && ballVelocity_x > 0)|| (ball_x < sx && ballVelocity_x < 0))
+		//	{
+		//		ballVelocity_x = 0;
+		//	}
+
+		//	if ((ball_y > sy && ballVelocity_y > 0) || (ball_y < sy && ballVelocity_y < 0))
+		//	{
+		//		ballVelocity_y = 0;
+		//	}
+		//	ball_x = sx; ball_y = sy;
+
+		/*}*/
+		
+	//	ballVelocity_x = ballVelocity_y = 0;
+
+		bool lateral = false;
+		bool ventral = false;
+		if (getFloorAt(ball_x+1, ball_y) == wall || getFloorAt(ball_x-1, ball_y) == wall)
+		{
+			puts("lateral collision");
+			ball_x = (int)(ball_x + 0.5);
+			ballVelocity_x *= -1;
+			lateral = true;
+		}
+		if (getFloorAt(ball_x, ball_y+1) == wall || getFloorAt(ball_x, ball_y-1) == wall)
+		{
+			puts("dorsal");
+			ball_y = (int)(ball_y + 0.5);
+			ballVelocity_y *= -1;
+			ventral = true;
+		}
+		 
+
+		if (lateral && ventral)
+		{
+			ballVelocity_x = ballVelocity_y = 0;
+		}
+		ball_x += ballVelocity_x * (deltaTime);
+		ball_y += ballVelocity_y * (deltaTime);
 
 		printf("blocked at %f %f \n", fx,fy);
 	}

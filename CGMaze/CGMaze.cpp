@@ -381,7 +381,7 @@ int main()
 	//printf("r: %d, g: %d, b: %d\n", p.r, p.g, p.b);
 
 	//Level Load Test
-	ppmImage theLevel("Resource//emaze.ppm");
+	ppmImage theLevel("Resource//minLevel.ppm");
 	Maze theGame(theLevel);
 
 	VertexList VxXx = theGame.getVertexList();
