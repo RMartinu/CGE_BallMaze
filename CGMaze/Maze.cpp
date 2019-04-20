@@ -153,7 +153,7 @@ Maze::Maze(ppmImage &floorplan)
  Mesh Maze::getBall()
  {
 
-	 Mesh theGlobe(this->ball_x, this->ball_y);
+	 Mesh theGlobe(ball_x, ball_y, true);
 	 return theGlobe;
  }
 
@@ -827,6 +827,17 @@ Mesh::Mesh(double pos_x, double pos_y)
 
 }
 
+Mesh::Mesh(double pos_x, double pos_y, bool isSphere)
+{
+	const float r = 0;
+	const float g = 132;
+	const float b = 255;
+
+	Vertex v[19];
+	v[0].x = 0.000000, v[0].y = 0.707107, v[0].z = -0.707107, v[0].r = r, v[0].g = g, v[0].b = b;
+
+}
+
 void Mesh::beepMe(int pos_x, int pos_y)
 {
 	//printf("reached me: %d %d", pos_x, pos_y);
@@ -1227,10 +1238,13 @@ Vertex::Vertex(float ix, float iy, float iz)
 	x = ix;
 	y = iy;
 	z = iz;
-	u = 0;v = 0;r = g = b = 0;
+	u = 0;
+	v = 0;
+	r = g = b = 0;
+	nx = ny = nz = 0;
 }
 
 Vertex::Vertex()
 {
-	x = y = z = u = v = r = g = b = 0;
+	x = y = z = u = v = r = g = b = nx=ny=nz= 0;
 }

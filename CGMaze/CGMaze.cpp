@@ -1,6 +1,6 @@
 // CGMaze.cpp : Diese Datei enthält die Funktion "main". Hier beginnt und endet die Ausführung des Programms.
 //
-
+// light ciolor: r=0, g= 228, b=255
 #include "pch.h"
 #include <iostream>
 #include "ppm.h"
@@ -63,7 +63,7 @@ const char *fragmentShaderGradient = "#version 330 core\n"
 "uniform sampler2D ourTexture;"
 "void main(){\n"
 "vec3 ambient = ambientBrightness*lightColor;"
-"FragColor = texture(ourTexture, TexCoord)*vec4(ourColor*ambient, 1.0);\n"
+"FragColor = texture(ourTexture, TexCoord)"//*vec4(ourColor*ambient, 1.0);\n"
 
 "}";
 

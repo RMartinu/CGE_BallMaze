@@ -32,13 +32,14 @@ Header file for Maze.cpp
 #define vertexCoordinates (1<<0)
 #define vertexColor (1<<1)
 #define UVCoordinates (1<<2)
+#define normals (1<<3)
 
 using namespace std;
 
 class Vertex
 {
 public:
-	double x, y, z, u, v, r, g, b;
+	double x, y, z, u, v, r, g, b, nx,ny,nz;
 	Vertex(float ix, float iy, float iz);
 	Vertex();
 };
@@ -60,6 +61,7 @@ public:
 	Mesh();
 	Mesh(double pos_x, double pos_y, double width, double depth, double height);
 	Mesh(double pos_x, double pos_y);
+	Mesh(double pos_x, double pos_y, bool isSphere);
 	void beepMe(int pos_x, int pos_y);
 	~Mesh();
 
@@ -81,6 +83,7 @@ private:
 	bool containsCoordinates;
 	bool containsVertexColor;
 	bool containsUVCoordinates;
+	bool containsNormals;
 
 public:	
 
