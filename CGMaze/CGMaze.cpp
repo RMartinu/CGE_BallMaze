@@ -38,6 +38,7 @@ const char *vertexShaderGradient = "#version 330 core\n"
 "layout (location=0) in vec3 aPos;\n"
 "layout (location=1) in vec3 aColor;\n"
 "layout (location=2) in vec2 aTexCoord;\n"
+"layout (location=3) in vec3 aNormal;\n"
 "out vec3 ourColor;\n"
 "out vec2 TexCoord;\n"
 "uniform float faktor;\n"
@@ -565,11 +566,41 @@ VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates|normals, 3);
 	//glVertexAttribPointer(0,4,GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
 	//glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
+	
+	if (Vlist.getContainsCoordinates() && Vlist.getContainsVertexColor() && Vlist.getContainsUVCoordinates() && Vlist.getContainsNormals())
+	{
+		//coordinates
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(0);
 
+		//rgb
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(1);
 
-	if (Vlist.getContainsVertexColor()) {
+		//uv
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(6 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+
+		//normals
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(8 * sizeof(float)));
+		glEnableVertexAttribArray(3);
+	}
+	if (Vlist.getContainsCoordinates() && Vlist.getContainsVertexColor() && !Vlist.getContainsUVCoordinates() && Vlist.getContainsNormals())
+	{
+		//coordinates
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(0);
+
+		//rgb
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(1);
+
+		//normals
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(6 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+	}
+
+	/*if (Vlist.getContainsVertexColor()) {
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(3 * sizeof(float)));
 		glEnableVertexAttribArray(1);
 	}
@@ -585,7 +616,7 @@ VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates|normals, 3);
 			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(3 * sizeof(float)));
 			glEnableVertexAttribArray(1);
 		}
-	}
+	}*/
 
 	//Bind texture to object
 	glBindTexture(GL_TEXTURE_2D, textureId);
