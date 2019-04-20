@@ -102,7 +102,7 @@ Maze::Maze(ppmImage &floorplan)
  VertexList Maze::getVertexList()
  {
 	 //puts("getting list");
-	 VertexList V(vertexCoordinates|vertexColor|UVCoordinates,3);
+	 VertexList V(vertexCoordinates|vertexColor|UVCoordinates|normals,3); //####normals
 
 	 int  meshcount = 0;
 	 vector<Mesh> Meshes = getMeshes();
@@ -869,6 +869,7 @@ VertexList::VertexList(int formatDescriptor, int numberOfEntries)
 	//if (this->containsVertexColor) { puts("containes VColor"); }
 	this->containsUVCoordinates = (formatDescriptor & (UVCoordinates)) != 0;
 	//if (this->containsUVCoordinates) { puts("contains UVs"); }
+	this->containsNormals = (formatDescriptor & (normals)) != 0;
 	maxEntries = numberOfEntries;
 	currEntries = 0;
 	currEdges = 0;
@@ -888,8 +889,11 @@ VertexList::VertexList(int formatDescriptor, int numberOfEntries)
 	{
 		stride += 2;
 	}
-	
-	//printf("striding: %d", stride);
+	if (this->containsNormals == true)
+	{
+		stride += 3;
+	}
+	printf("striding: %d", stride);
 	//!!Change Back!!
 	//stride = 3;
 	//printf("allocate: %d\n", maxEntries*stride);
@@ -911,7 +915,7 @@ VertexList::~VertexList()
 bool VertexList::addVertex(float x, float y, float z)
 {
 	//printf("we add a vertex %f %f %f\n", x, y, z);
-	if (!containsCoordinates || containsVertexColor || containsUVCoordinates)
+	if (!containsCoordinates || containsVertexColor || containsUVCoordinates || containsNormals)
 	{
 		puts("Wrong data format");
 		return false;
@@ -933,7 +937,7 @@ bool VertexList::addVertex(float x, float y, float z)
 
 bool VertexList::addVertex(float x, float y, float z, float r, float g, float b)
 {
-	if (!containsCoordinates || !containsVertexColor || containsUVCoordinates)
+	if (!containsCoordinates || !containsVertexColor || containsUVCoordinates || containsNormals)
 	{
 		//puts("\n##refusing");
 		return false;
@@ -956,9 +960,9 @@ bool VertexList::addVertex(float x, float y, float z, float r, float g, float b)
 	return true;
 }
 
-bool VertexList::addVertex(float x, float y, float z, float r, float g, float b, float u, float v)
+bool VertexList::addVertex(float x, float y, float z, float r, float g, float b, float u, float v, float nx, float ny, float nz)
 {
-	if (!containsCoordinates || !containsVertexColor || !containsUVCoordinates)
+	if (!containsCoordinates || !containsVertexColor || !containsUVCoordinates || !containsNormals)
 	{
 		return false;
 	}
@@ -974,13 +978,16 @@ bool VertexList::addVertex(float x, float y, float z, float r, float g, float b,
 	vertexData[currEntries*stride + 5] = b;
 	vertexData[currEntries*stride + 6] = u;
 	vertexData[currEntries*stride + 7] = v;
+	vertexData[currEntries*stride + 8] = nx;
+	vertexData[currEntries*stride + 9] = ny;
+	vertexData[currEntries*stride + 10] = nz;
 	++currEntries;
 	return true;
 }
 
 bool VertexList::addVertex(float x, float y, float z, float u, float v)
 {
-	if (!containsCoordinates || containsVertexColor || !containsUVCoordinates)
+	if (!containsCoordinates || containsVertexColor || !containsUVCoordinates || containsNormals)
 	{
 		return false;
 	}
@@ -999,11 +1006,11 @@ bool VertexList::addVertex(float x, float y, float z, float u, float v)
 
 bool VertexList::addVertex(Vertex v)
 {
-	if (containsCoordinates && !containsVertexColor && !containsUVCoordinates)
+	if (containsCoordinates && !containsVertexColor && !containsUVCoordinates && !containsNormals)
 	{
 		return addVertex(v.x, v.y, v.z);
 	}
-	if (containsCoordinates && containsVertexColor && !containsUVCoordinates)
+	if (containsCoordinates && containsVertexColor && !containsUVCoordinates && !containsNormals)
 	{
 		//printf("inserting: %f, %f, %f\n", v.x,v.y,v.z);
 		bool t= addVertex(v.x, v.y, v.z, v.r, v.g, v.b);
@@ -1013,13 +1020,13 @@ bool VertexList::addVertex(Vertex v)
 		}
 		return t;
 	}
-	if (containsCoordinates && !containsVertexColor && containsUVCoordinates)
+	if (containsCoordinates && !containsVertexColor && containsUVCoordinates && !containsNormals)
 	{
 		return addVertex(v.x, v.y, v.z, v.u, v.v);
 	}
-	if (containsCoordinates && containsVertexColor && containsUVCoordinates)
+	if (containsCoordinates && containsVertexColor && containsUVCoordinates && containsNormals)
 	{
-		return addVertex(v.x, v.y, v.z, v.r, v.g, v.b, v.u, v.v);
+		return addVertex(v.x, v.y, v.z, v.r, v.g, v.b, v.u, v.v, v.nx, v.ny, v.nz);
 	}
 	return false;
 }

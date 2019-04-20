@@ -331,30 +331,30 @@ void mouse_button_callback(GLFWwindow * window, int button, int action, int modi
 int main()
 {
 	std::cout << "Hello World!\n";
-VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates, 3);
+VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates|normals, 3);
 	//ppmImage thePlan("insert Path here");
 	//Maze theGame(thePlan);
 
 	/*ppmImage myImage("Resource\\smiley.ppm");
 	pixel p = myImage.getPixel(155, 190);
+*/
 
+	//Vertex a, b, c, d, e, f;
+	//a.x = -0.5; a.y = -0.5; a.z = 0; a.r = 1; a.b = 0; a.g = 0;
+	//b.x = 0.5; b.y = -0.5; b.z = 0; b.r = 0; b.b = 1; b.g = 0;
+	//c.x = 0; c.y = 0.5; c.z = 0; c.r = 0; c.b = 0; c.g = 1;
+	//d.x = 0.65; d.y = 0.75; d.z = -0.5; d.r = 1; d.g = 1; d.b = 0;
+	//e.x = -0.75; e.y = 0.75; e.z = 0; e.r = 0; e.b = 1; e.g = 1;
+	//f.x = 0.65; f.y = 0.9; f.z = 0; f.r = 1; f.b = 1; f.g = 0;
 
-	Vertex a, b, c, d, e, f;
-	a.x = -0.5; a.y = -0.5; a.z = 0; a.r = 1; a.b = 0; a.g = 0;
-	b.x = 0.5; b.y = -0.5; b.z = 0; b.r = 0; b.b = 1; b.g = 0;
-	c.x = 0; c.y = 0.5; c.z = 0; c.r = 0; c.b = 0; c.g = 1;
-	d.x = 0.65; d.y = 0.75; d.z = -0.5; d.r = 1; d.g = 1; d.b = 0;
-	e.x = -0.75; e.y = 0.75; e.z = 0; e.r = 0; e.b = 1; e.g = 1;
-	f.x = 0.65; f.y = 0.9; f.z = 0; f.r = 1; f.b = 1; f.g = 0;
-
-	
-	bool successful =
-		successful = Vlist.addTriangle(d, e, f);
-	successful = Vlist.addTriangle(a, b, c);
-	Vlist.addTriangle(c, e, f); Vlist.addTriangle(a, f, c); successful = Vlist.addTriangle(a, c, e);
+	//
+	//bool successful =
+	//	successful = Vlist.addTriangle(d, e, f);
+	//successful = Vlist.addTriangle(a, b, c);
+	//Vlist.addTriangle(c, e, f); Vlist.addTriangle(a, f, c); successful = Vlist.addTriangle(a, c, e);
 
 	//VertexList Vlist(vertexCoordinates,8);
-*/
+
 
 //if (successful)
 //{
