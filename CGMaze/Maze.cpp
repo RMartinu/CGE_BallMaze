@@ -1228,9 +1228,11 @@ Vertex::Vertex(float ix, float iy, float iz)
 	y = iy;
 	z = iz;
 	u = 0;v = 0;r = g = b = 0;
+	nx = ny = nz = 0;
 }
 
 Vertex::Vertex()
 {
+	nx = ny = nz = 0;
 	x = y = z = u = v = r = g = b = 0;
 }
