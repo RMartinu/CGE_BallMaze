@@ -32,6 +32,7 @@ Header file for Maze.cpp
 #define vertexCoordinates (1<<0)
 #define vertexColor (1<<1)
 #define UVCoordinates (1<<2)
+#define normals (1<<3);
 
 using namespace std;
 

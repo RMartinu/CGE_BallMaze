@@ -570,19 +570,19 @@ VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates, 3);
 
 
 	if (Vlist.getContainsVertexColor()) {
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(3 * sizeof(float)));
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(6 * sizeof(float)));
 		glEnableVertexAttribArray(1);
 	}
 	if (Vlist.getContainsUVCoordinates())
 	{
 		if (Vlist.getContainsVertexColor())
 		{
-			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(6 * sizeof(float)));
+			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(8 * sizeof(float)));
 			glEnableVertexAttribArray(2);
 		}
 		if (!Vlist.getContainsVertexColor())
 		{
-			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(3 * sizeof(float)));
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(6 * sizeof(float)));
 			glEnableVertexAttribArray(1);
 		}
 	}

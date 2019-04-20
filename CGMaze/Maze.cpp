@@ -865,7 +865,7 @@ VertexList::VertexList(int formatDescriptor, int numberOfEntries)
 	stride = 0;
 	if (this->containsCoordinates == true)
 	{
-		stride += 3;
+		stride += 6;
 	}
 	if (this->containsVertexColor == true)
 	{
@@ -911,6 +911,10 @@ bool VertexList::addVertex(float x, float y, float z)
 	vertexData[currEntries*stride] = x;
 	vertexData[currEntries*stride+1] = y;
 	vertexData[currEntries*stride+2] = z;
+	vertexData[currEntries*stride + 3] = 0;
+	vertexData[currEntries*stride + 4] = 0;
+	vertexData[currEntries*stride + 5] = 0;
+
 	++currEntries;
 	
 	//printf("\n### new vcount: %d\n", numberOfVertices);
@@ -934,9 +938,14 @@ bool VertexList::addVertex(float x, float y, float z, float r, float g, float b)
 	vertexData[currEntries*stride] = x;
 	vertexData[currEntries*stride + 1] = y;
 	vertexData[currEntries*stride + 2] = z;
-	vertexData[currEntries*stride + 3] = r;
-	vertexData[currEntries*stride + 4] = g;
-	vertexData[currEntries*stride + 5] = b;
+	
+	vertexData[currEntries*stride + 3] = z;
+	vertexData[currEntries*stride + 4] = z;
+	vertexData[currEntries*stride + 5] = z;
+
+	vertexData[currEntries*stride + 6] = r;
+	vertexData[currEntries*stride + 7] = g;
+	vertexData[currEntries*stride + 8] = b;
 	//printf("indizes pre entry: %d\n", currEntries);
 	++currEntries;
 
@@ -957,11 +966,16 @@ bool VertexList::addVertex(float x, float y, float z, float r, float g, float b,
 	vertexData[currEntries*stride] = x;
 	vertexData[currEntries*stride + 1] = y;
 	vertexData[currEntries*stride + 2] = z;
-	vertexData[currEntries*stride + 3] = r;
-	vertexData[currEntries*stride + 4] = g;
-	vertexData[currEntries*stride + 5] = b;
-	vertexData[currEntries*stride + 6] = u;
-	vertexData[currEntries*stride + 7] = v;
+
+	vertexData[currEntries*stride + 3] = 0;
+	vertexData[currEntries*stride + 4] = 0;
+	vertexData[currEntries*stride + 5] = 0;
+
+	vertexData[currEntries*stride + 6] = r;
+	vertexData[currEntries*stride + 7] = g;
+	vertexData[currEntries*stride + 8] = b;
+	vertexData[currEntries*stride + 9] = u;
+	vertexData[currEntries*stride + 10] = v;
 	++currEntries;
 	return true;
 }
@@ -979,8 +993,13 @@ bool VertexList::addVertex(float x, float y, float z, float u, float v)
 	vertexData[currEntries*stride] = x;
 	vertexData[currEntries*stride + 1] = y;
 	vertexData[currEntries*stride + 2] = z;
-	vertexData[currEntries*stride + 3] = u;
-	vertexData[currEntries*stride + 4] = v;
+
+	vertexData[currEntries*stride + 3] = 0;
+	vertexData[currEntries*stride + 4] = 0;
+	vertexData[currEntries*stride + 5] = 0;
+
+	vertexData[currEntries*stride + 6] = u;
+	vertexData[currEntries*stride + 7] = v;
 	++currEntries;
 	return true;
 }
@@ -1135,7 +1154,7 @@ int VertexList::findVertex(Vertex v)
 		{
 			if (containsUVCoordinates && containsVertexColor)
 			{
-				if (abs(vertexData[i+3] - v.r) < epsilon_F && abs(vertexData[i + 4] - v.g) < epsilon_F && abs(vertexData[i + 5] - v.b) < epsilon_F && abs(vertexData[i + 6] - v.u) < epsilon_F && abs(vertexData[i + 7] - v.v) < epsilon_F)
+				if (abs(vertexData[i+3+3] - v.r) < epsilon_F && abs(vertexData[i + 4+3] - v.g) < epsilon_F && abs(vertexData[i + 5+3] - v.b) < epsilon_F && abs(vertexData[i + 6] - v.u) < epsilon_F && abs(vertexData[i + 7] - v.v) < epsilon_F)
 				{
 					return i / stride;
 				}
@@ -1146,7 +1165,7 @@ int VertexList::findVertex(Vertex v)
 			}
 			else if (containsUVCoordinates && !containsVertexColor)
 			{
-				if (abs(vertexData[i + 3] - v.u) < epsilon_F && abs(vertexData[i + 4] - v.v) < epsilon_F)
+				if (abs(vertexData[i + 3+3] - v.u) < epsilon_F && abs(vertexData[i + 4+3] - v.v) < epsilon_F)
 				{
 					return i / stride;
 				}
@@ -1157,7 +1176,7 @@ int VertexList::findVertex(Vertex v)
 			}
 			else if (!containsUVCoordinates && containsVertexColor)
 			{
-				if (abs(vertexData[i + 3] - v.r) < epsilon_F && abs(vertexData[i + 4] - v.g) < epsilon_F && abs(vertexData[i + 5] - v.b) < epsilon_F)
+				if (abs(vertexData[i + 3+3] - v.r) < epsilon_F && abs(vertexData[i + 4+3] - v.g) < epsilon_F && abs(vertexData[i + 5+3] - v.b) < epsilon_F)
 				{
 					return i / stride;
 				}
