@@ -63,7 +63,7 @@ const char *fragmentShaderGradient = "#version 330 core\n"
 "uniform sampler2D ourTexture;"
 "void main(){\n"
 "vec3 ambient = ambientBrightness*lightColor;"
-"FragColor = texture(ourTexture, TexCoord)"//*vec4(ourColor*ambient, 1.0);\n"
+"FragColor = texture(ourTexture, TexCoord)*vec4(ourColor*ambient, 1.0);\n"
 
 "}";
 
@@ -331,7 +331,7 @@ void mouse_button_callback(GLFWwindow * window, int button, int action, int modi
 int main()
 {
 	std::cout << "Hello World!\n";
-VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates, 3);
+VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates|normals, 3);
 	//ppmImage thePlan("insert Path here");
 	//Maze theGame(thePlan);
 
@@ -567,24 +567,42 @@ VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates, 3);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-
-
-	if (Vlist.getContainsVertexColor()) {
+	if (Vlist.getContainsVertexColor() && Vlist.getContainsUVCoordinates() &&  !Vlist.getContainsNormals())
+	{
+		puts("Fall 1");
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(3 * sizeof(float)));
 		glEnableVertexAttribArray(1);
+
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(6 * sizeof(float)));
+		glEnableVertexAttribArray(2);
 	}
-	if (Vlist.getContainsUVCoordinates())
+	if (!Vlist.getContainsVertexColor() && Vlist.getContainsUVCoordinates() &&  !Vlist.getContainsNormals())
 	{
-		if (Vlist.getContainsVertexColor())
-		{
-			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(6 * sizeof(float)));
-			glEnableVertexAttribArray(2);
-		}
-		if (!Vlist.getContainsVertexColor())
-		{
-			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(3 * sizeof(float)));
-			glEnableVertexAttribArray(1);
-		}
+		puts("Fall 2");
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(1);
+	}
+	if (Vlist.getContainsVertexColor() && Vlist.getContainsUVCoordinates() && Vlist.getContainsNormals())
+	{
+		
+			puts("Fall 3");
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(1);
+
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(6 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(8 * sizeof(float)));
+		glEnableVertexAttribArray(3);
+	}
+	if (Vlist.getContainsVertexColor() && !Vlist.getContainsUVCoordinates() && Vlist.getContainsNormals())
+	{
+		puts("Fall 4");
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(1);
+
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, Vlist.getStride() * sizeof(float), (void*)(6 * sizeof(float)));
+		glEnableVertexAttribArray(2);
 	}
 
 	//Bind texture to object

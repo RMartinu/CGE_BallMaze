@@ -102,7 +102,7 @@ Maze::Maze(ppmImage &floorplan)
  VertexList Maze::getVertexList()
  {
 	 //puts("getting list");
-	 VertexList V(vertexCoordinates|vertexColor|UVCoordinates,3);
+	 VertexList V(vertexCoordinates|vertexColor|UVCoordinates|normals,3);
 
 	 int  meshcount = 0;
 	 vector<Mesh> Meshes = getMeshes();
@@ -744,19 +744,19 @@ Mesh::Mesh(double pos_x, double pos_y)
 	//printf("Building at: %f %f\n", pos_x, pos_y);
 	//creates a unity cube at the specified xy-coordinates and at height zero
 	Vertex v[12];
-	v[0].x = pos_x; v[0].y = pos_y; v[0].z = 0; v[0].u = 0; v[0].v = 0.5; //bottom, left, back
-	v[1].x = pos_x+1; v[1].y = pos_y; v[1].z = 0; v[1].u = 0; v[1].v = 0; //bottom, right, back
-	v[2].x = pos_x; v[2].y = pos_y+1; v[2].z = 0; v[2].u = 0; v[2].v = 0; //bottom, left, front
-	v[3].x = pos_x; v[3].y = pos_y; v[3].z = 3; v[3].u = 0.5; v[3].v = 0.5; //top, left, back
-	v[4].x = pos_x+1; v[4].y = pos_y+1; v[4].z = 0; v[4].u = 0; v[4].v =0.5; //bottom, right, front
-	v[5].x = pos_x+1; v[5].y = pos_y; v[5].z = 3; v[5].u = 0.5; v[5].v = 0; //top, right, back
-	v[6].x = pos_x; v[6].y = pos_y+1; v[6].z = 3; v[6].u = 0.5; v[6].v = 0; //top, left, front
-	v[7].x = pos_x+1; v[7].y = pos_y+1; v[7].z = 3; v[7].u = 0.5; v[7].v =0.5; //top, right, front
+	v[0].x = pos_x; v[0].y = pos_y; v[0].z = 0; v[0].u = 0; v[0].v = 0.5; v[0].nx = 0; v[0].ny = 0; v[0].nz = 0;  //bottom, left, back
+	v[1].x = pos_x+1; v[1].y = pos_y; v[1].z = 0; v[1].u = 0; v[1].v = 0; v[1].nx = 0; v[1].ny = 0; v[1].nz = 0; //bottom, right, back
+	v[2].x = pos_x; v[2].y = pos_y+1; v[2].z = 0; v[2].u = 0; v[2].v = 0; v[2].nx = 0; v[2].ny = 0; v[2].nz = 0; //bottom, left, front
+	v[3].x = pos_x; v[3].y = pos_y; v[3].z = 3; v[3].u = 0.5; v[3].v = 0.5; v[3].nx = 0; v[3].ny = 0; v[3].nz = 0; //top, left, back
+	v[4].x = pos_x+1; v[4].y = pos_y+1; v[4].z = 0; v[4].u = 0; v[4].v =0.5; v[4].nx = 0; v[4].ny = 0; v[4].nz = 0; //bottom, right, front
+	v[5].x = pos_x+1; v[5].y = pos_y; v[5].z = 3; v[5].u = 0.5; v[5].v = 0; v[5].nx = 0; v[5].ny = 0; v[5].nz = 0; //top, right, back
+	v[6].x = pos_x; v[6].y = pos_y+1; v[6].z = 3; v[6].u = 0.5; v[6].v = 0; v[6].nx = 0; v[6].ny = 0; v[6].nz = 0; //top, left, front
+	v[7].x = pos_x+1; v[7].y = pos_y+1; v[7].z = 3; v[7].u = 0.5; v[7].v =0.5; v[7].nx = 0; v[7].ny = 0; v[7].nz = 0; //top, right, front
 
-	v[8].x = pos_x; v[8].y = pos_y; v[8].z = 3; v[8].u = 0.5; v[8].v = 0.5; //2 top, left, back	
-	v[9].x = pos_x+1; v[9].y = pos_y; v[9].z = 3; v[9].u = 0.5; v[9].v = 1; //2 top, right, back
-	v[10].x = pos_x; v[10].y = pos_y + 1; v[10].z = 3; v[10].u = 0; v[10].v = 0.5; //2 top, left, front
-	v[11].x = pos_x + 1; v[11].y = pos_y + 1; v[11].z = 3; v[11].u = 0; v[11].v = 1; //2 top, right, front
+	v[8].x = pos_x; v[8].y = pos_y; v[8].z = 3; v[8].u = 0.5; v[8].v = 0.5; v[8].nx = 0; v[8].ny = 0; v[8].nz = 1;//2 top, left, back	
+	v[9].x = pos_x+1; v[9].y = pos_y; v[9].z = 3; v[9].u = 0.5; v[9].v = 1;v[9].nx = 0; v[9].ny = 0; v[9].nz = 1; //2 top, right, back
+	v[10].x = pos_x; v[10].y = pos_y + 1; v[10].z = 3; v[10].u = 0; v[10].v = 0.5;v[10].nx = 0; v[10].ny = 0; v[10].nz = 1; //2 top, left, front
+	v[11].x = pos_x + 1; v[11].y = pos_y + 1; v[11].z = 3; v[11].u = 0; v[11].v = 1;v[1].nx = 0; v[11].ny = 0; v[11].nz = 1; //2 top, right, front
 
 	//first triangle, bottom lower
 	vertList.push_back(v[0]);
@@ -868,6 +868,7 @@ VertexList::VertexList(int formatDescriptor, int numberOfEntries)
 	//if (this->containsVertexColor) { puts("containes VColor"); }
 	this->containsUVCoordinates = (formatDescriptor & (UVCoordinates)) != 0;
 	//if (this->containsUVCoordinates) { puts("contains UVs"); }
+	this->containsNormals = (formatDescriptor & (normals)) != 0;
 	maxEntries = numberOfEntries;
 	currEntries = 0;
 	currEdges = 0;
@@ -887,8 +888,12 @@ VertexList::VertexList(int formatDescriptor, int numberOfEntries)
 	{
 		stride += 2;
 	}
+	if (this->containsNormals == true)
+	{
+		stride += 3;
+	}
 	
-	//printf("striding: %d", stride);
+	printf("striding: %d, data: %d%d%d%d", stride, containsCoordinates ,containsVertexColor, containsUVCoordinates, containsNormals);
 	//!!Change Back!!
 	//stride = 3;
 	//printf("allocate: %d\n", maxEntries*stride);
@@ -910,7 +915,7 @@ VertexList::~VertexList()
 bool VertexList::addVertex(float x, float y, float z)
 {
 	//printf("we add a vertex %f %f %f\n", x, y, z);
-	if (!containsCoordinates || containsVertexColor || containsUVCoordinates)
+	if (!containsCoordinates || containsVertexColor || containsUVCoordinates || containsNormals)
 	{
 		puts("Wrong data format");
 		return false;
@@ -930,9 +935,10 @@ bool VertexList::addVertex(float x, float y, float z)
 	return true;
 }
 
-bool VertexList::addVertex(float x, float y, float z, float r, float g, float b)
+
+bool VertexList::addVertex(float x, float y, float z, float r, float g, float b, float nx, float ny, float nz)
 {
-	if (!containsCoordinates || !containsVertexColor || containsUVCoordinates)
+	if (!containsCoordinates || !containsVertexColor || containsUVCoordinates || !containsNormals)
 	{
 		//puts("\n##refusing");
 		return false;
@@ -948,6 +954,9 @@ bool VertexList::addVertex(float x, float y, float z, float r, float g, float b)
 	vertexData[currEntries*stride + 3] = r;
 	vertexData[currEntries*stride + 4] = g;
 	vertexData[currEntries*stride + 5] = b;
+	vertexData[currEntries*stride + 6] = nx;
+	vertexData[currEntries*stride + 7] = ny;
+	vertexData[currEntries*stride + 8] = nz;
 	//printf("indizes pre entry: %d\n", currEntries);
 	++currEntries;
 
@@ -955,9 +964,9 @@ bool VertexList::addVertex(float x, float y, float z, float r, float g, float b)
 	return true;
 }
 
-bool VertexList::addVertex(float x, float y, float z, float r, float g, float b, float u, float v)
+bool VertexList::addVertex(float x, float y, float z, float r, float g, float b, float u, float v, float nx, float ny, float nz)
 {
-	if (!containsCoordinates || !containsVertexColor || !containsUVCoordinates)
+	if (!containsCoordinates || !containsVertexColor || !containsUVCoordinates || !containsNormals)
 	{
 		return false;
 	}
@@ -973,13 +982,16 @@ bool VertexList::addVertex(float x, float y, float z, float r, float g, float b,
 	vertexData[currEntries*stride + 5] = b;
 	vertexData[currEntries*stride + 6] = u;
 	vertexData[currEntries*stride + 7] = v;
+	vertexData[currEntries*stride + 8] = nx;
+	vertexData[currEntries*stride + 9] = ny;
+	vertexData[currEntries*stride + 10] = nz;
 	++currEntries;
 	return true;
 }
 
-bool VertexList::addVertex(float x, float y, float z, float u, float v)
+bool VertexList::addVertex(float x, float y, float z, float u, float v, float nx, float ny, float nz)
 {
-	if (!containsCoordinates || containsVertexColor || !containsUVCoordinates)
+	if (!containsCoordinates || containsVertexColor || !containsUVCoordinates || !containsNormals)
 	{
 		return false;
 	}
@@ -992,31 +1004,36 @@ bool VertexList::addVertex(float x, float y, float z, float u, float v)
 	vertexData[currEntries*stride + 2] = z;
 	vertexData[currEntries*stride + 3] = u;
 	vertexData[currEntries*stride + 4] = v;
+	vertexData[currEntries*stride + 5] = nx;
+	vertexData[currEntries*stride + 6] = ny;
+	vertexData[currEntries*stride + 7] = nz;
 	++currEntries;
 	return true;
 }
 
 bool VertexList::addVertex(Vertex v)
 {
-	if (containsCoordinates && !containsVertexColor && !containsUVCoordinates)
+	printf("adding vertex: %d%d%d%d\n", containsCoordinates , containsVertexColor, containsUVCoordinates , containsNormals);
+	if (containsCoordinates && !containsVertexColor && !containsUVCoordinates && !containsNormals)
 	{
 		return addVertex(v.x, v.y, v.z);
 	}
-	if (containsCoordinates && containsVertexColor && !containsUVCoordinates)
+	if (containsCoordinates && containsVertexColor && !containsUVCoordinates && containsNormals)
 	{
 		//printf("inserting: %f, %f, %f\n", v.x,v.y,v.z);
-		bool t= addVertex(v.x, v.y, v.z, v.r, v.g, v.b);
+		bool t= addVertex(v.x, v.y, v.z, v.r, v.g, v.b,v.nx,v.ny,v.nz);
+		
 		if (!t)
 		{
 			puts("insert failed");
 		}
 		return t;
 	}
-	if (containsCoordinates && !containsVertexColor && containsUVCoordinates)
+	if (containsCoordinates && !containsVertexColor && containsUVCoordinates && containsNormals)
 	{
-		return addVertex(v.x, v.y, v.z, v.u, v.v);
+		return addVertex(v.x, v.y, v.z, v.u, v.v, v.nx, v.ny, v.nz);
 	}
-	if (containsCoordinates && containsVertexColor && containsUVCoordinates)
+	if (containsCoordinates && containsVertexColor && containsUVCoordinates && !containsNormals)
 	{
 		return addVertex(v.x, v.y, v.z, v.r, v.g, v.b, v.u, v.v);
 	}
@@ -1231,6 +1248,10 @@ bool VertexList::getContainsVertexColor()
 bool VertexList::getContainsUVCoordinates()
 {
 	return containsUVCoordinates;
+}
+bool VertexList::getContainsNormals()
+{
+	return containsNormals;
 }
 
 Vertex::Vertex(float ix, float iy, float iz)
