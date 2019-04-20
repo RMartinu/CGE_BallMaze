@@ -153,7 +153,7 @@ Maze::Maze(ppmImage &floorplan)
  Mesh Maze::getBall()
  {
 
-	 Mesh theGlobe(ball_x, ball_y, true);
+	 Mesh theGlobe(ball_x, ball_y);
 	 return theGlobe;
  }
 
