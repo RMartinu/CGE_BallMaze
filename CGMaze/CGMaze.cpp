@@ -12,6 +12,7 @@
 #include<glm/gtc/matrix_transform.hpp>
 #include<glm/gtc/type_ptr.hpp>
 #include "inputState.h"
+#include "OBJLoad.h"
 
 
 #define mouseSpeed 0.2f
@@ -331,6 +332,9 @@ void mouse_button_callback(GLFWwindow * window, int button, int action, int modi
 int main()
 {
 	std::cout << "Hello World!\n";
+	OBJLoad ball = ("Resource\\cube.obj.txt");
+	ball.getVertexList();
+	
 VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates, 3);
 	//ppmImage thePlan("insert Path here");
 	//Maze theGame(thePlan);
