@@ -63,7 +63,7 @@ const char *fragmentShaderGradient = "#version 330 core\n"
 "uniform sampler2D ourTexture;"
 "void main(){\n"
 "vec3 ambient = ambientBrightness*lightColor;"
-"FragColor = texture(ourTexture, TexCoord)"//*vec4(ourColor*ambient, 1.0);\n"
+"FragColor = texture(ourTexture, TexCoord)*vec4(ourColor*ambient, 1.0);\n"
 
 "}";
 
