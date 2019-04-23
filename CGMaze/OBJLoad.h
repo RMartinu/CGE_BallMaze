@@ -61,7 +61,7 @@ class OBJLoad{
 	private:
 		vector<vspace> vertics;
 		vector<UV> uvCoords;
-		vector<normal> normals;
+		vector<normal> Normal;
 		vector<fullVert> fullVertices;
 		vector<triangle> tris;
 

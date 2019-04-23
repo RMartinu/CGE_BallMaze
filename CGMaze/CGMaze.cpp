@@ -386,6 +386,58 @@ VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates|normals, 3);
 	//printf("r: %d, g: %d, b: %d\n", p.r, p.g, p.b);
 
 
+
+
+	//Load Object Test
+	/**/
+OBJLoad b("Resource\\cube.obj.txt");
+printf("Obj contains %d verts\n", b.getVertexList(0,0,0).getVertexCount());
+
+float * coords, *uv, *norms;
+int size;
+
+//print coords 
+size = b.getVSetSize();
+coords = b.getVSet();
+for (int i = 0; i < size; i++)
+{
+	printf("V%d: %f %f %f\n", i, coords[i],coords[i+1],coords[i+2]);
+}
+
+puts("");
+//printf UV
+size = b.getUVSetSize();
+uv = b.getUVSet();
+for (int i = 0; i < size; i++)
+{
+	printf("UV%d: %f %f \n", i, uv[i], uv[i + 1]);
+}
+puts("");
+
+//print normals 
+size = b.getNormalSetSize();
+norms = b.getNormalSet();
+for (int i = 0; i < size; ++i)
+{
+	printf("Normals %d: %f %f %f\n", i, norms[i], norms[i+1], norms[i+2]);
+}
+
+
+//Print em all
+size = b.getInterlacedDataSize();
+float * laced = b.getInterlacedData();
+puts("All the full Verts");
+for (int i = 0; i < size; i++)
+{
+	printf("Vertex: c %f %f %f\t col %f %f %f \t uv: %f %f \t norms: %f %f %f\n", laced[i], laced[i+1], laced[i+2], laced[i+3], laced[i+4], laced[i+5], laced[i+6], laced[i+7], laced[i+8], laced[i+9], laced[i+10] );
+}
+puts("\n");
+
+puts("#########+++++++++++############");
+//b.getVertexList(0,0,0).printFullVertexList();
+puts("#########+++++++++++############");
+	/**/
+
 	//Level Load Test
 	ppmImage theLevel("Resource//minLevel.ppm");
 	Maze theGame(theLevel);

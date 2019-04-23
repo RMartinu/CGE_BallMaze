@@ -125,7 +125,9 @@ Maze::Maze(ppmImage &floorplan)
 		 
 
 	 }
-	 return V;
+
+	 OBJLoad b("Resource\\UV-sphere.obj.txt");
+	 return b.getVertexList(0,0,0);
  }
 
  VertexList Maze::getBallVertices()
@@ -967,6 +969,7 @@ bool VertexList::addVertex(float x, float y, float z, float r, float g, float b,
 {
 	if (!containsCoordinates || !containsVertexColor || !containsUVCoordinates || !containsNormals)
 	{
+		puts("***Lack of proper containment");
 		return false;
 	}
 	if (currEntries >= maxEntries)
@@ -985,6 +988,8 @@ bool VertexList::addVertex(float x, float y, float z, float r, float g, float b,
 	vertexData[currEntries*stride + 9] = ny;
 	vertexData[currEntries*stride + 10] = nz;
 	++currEntries;
+	puts("***full vertex inserted");
+	this->printFullVertexList();
 	return true;
 }
 
@@ -1029,6 +1034,7 @@ bool VertexList::addVertex(Vertex v)
 	}*/
 	if (containsCoordinates && containsVertexColor && containsUVCoordinates && containsNormals)
 	{
+		puts("Adding fully featured Vertex");
 		return addVertex(v.x, v.y, v.z, v.r, v.g, v.b, v.u, v.v, v.nx, v.ny, v.nz);
 	}
 	return false;
@@ -1059,6 +1065,7 @@ bool VertexList::extendVertexData()
 	float* newArray;
 	//printf("Vertbuffer data: %d %d\n", maxEntries, stride);
 	newArray = new float[maxEntries * stride + 3 * stride];
+	for (int i = 0; i < (maxEntries + 3)*stride; ++i) { newArray[i] = 0; };
 
 	if (newArray == nullptr)
 	{
@@ -1127,16 +1134,28 @@ bool VertexList::addTriangle(Vertex v1, Vertex v2, Vertex v3)
 	{
 		addVertex(v1);
 		vi1 = findVertex(v1);
+		if (vi1 == -1)
+		{
+			printf("!!!Vertex Insertion Failed");
+		}
 	}
 	if (vi2 == -1)
 	{
 		addVertex(v2);
 		vi2 = findVertex(v2);
+		if (vi2 == -1)
+		{
+			printf("!!!Vertex Insertion Failed");
+		}
 	}
 	if (vi3 == -1)
 	{
 		addVertex(v3);
 		vi3 = findVertex(v3);
+		if (vi3 == -1)
+		{
+			printf("!!!Vertex Insertion Failed");
+		}
 	}
 	//printf("out Verts at hand: %d, %d, %d\n", vi1, vi2, vi3);
 	if (vi1 == -1 || vi2 == -1 || vi3 == -1)
@@ -1151,12 +1170,50 @@ bool VertexList::addTriangle(Vertex v1, Vertex v2, Vertex v3)
 
 int VertexList::findVertex(Vertex v)
 {
+
+	if (containsCoordinates&&containsVertexColor&&containsUVCoordinates&&containsNormals)
+	{
+		//puts("Searching for fully featured Vertex");
+		bool c, co, u, n;
+		//scan for Vertex
+		for (int i = 0; i < maxEntries*stride; i += stride)
+		{
+			c = co = u = n=false;
+			if (abs(vertexData[i] - v.x) < epsilon_F && abs(vertexData[i + 1] - v.y) < epsilon_F && abs(vertexData[i + 2] - v.z) < epsilon_F)
+			{
+				//puts("Found the Coords"); c = true;
+				if (abs(vertexData[i+3] - v.r) < epsilon_F && abs(vertexData[i+4] - v.g) < epsilon_F && abs(vertexData[i+5] - v.b) < epsilon_F) {
+					//puts("Found the RGB"); co = true;
+					if (true) {
+						u = true;
+					//	puts("Found the UV");
+						if (true) {
+							n = true;
+				//			puts("found the normals");
+							return i / stride;
+						}
+					}
+				
+				}
+				else
+				{
+			//		printf("Missed: %f %f %f - %f %f %f", vertexData[i+3], vertexData[i + 4], vertexData[i + 5], v.r,v.g,v.b);
+				}
+			}
+		}
+		//puts("Missed fully featured Vertex");
+		return -1;
+	}
 	for (int i = 0; i < maxEntries*stride; i+=stride)
 	{
+
+
 		if (abs(vertexData[i]-v.x)<epsilon_F && abs(vertexData[i+1] - v.y)<epsilon_F && abs(vertexData[i + 2] - v.z)<epsilon_F)
 		{
 			if (containsUVCoordinates && containsVertexColor)
 			{
+
+				
 				if (abs(vertexData[i+3] - v.r) < epsilon_F && abs(vertexData[i + 4] - v.g) < epsilon_F && abs(vertexData[i + 5] - v.b) < epsilon_F && abs(vertexData[i + 6] - v.u) < epsilon_F && abs(vertexData[i + 7] - v.v) < epsilon_F)
 				{
 					return i / stride;
@@ -1247,6 +1304,31 @@ bool VertexList::getContainsNormals()
 {
 	return containsNormals;
 }
+void VertexList::printFullVertexList()
+{
+
+	for (int i = 0; i < maxEntries; ++i)
+	{
+		if (containsCoordinates)
+		{
+			printf("Coords: %f %f %f;\t", this->vertexData[i],vertexData[i+1],vertexData[i+2] );
+		}
+		if (containsVertexColor)
+		{
+			printf("Color: %f %f %f; \t", vertexData[i+3], vertexData[i+4], vertexData[i+5]);
+		}
+		if(containsUVCoordinates)
+		{
+			printf("UV: %f %f; \t", vertexData[i+6], vertexData[i+7]);
+		}
+		if (containsNormals)
+		{
+			printf("Normals: ", vertexData[i + 8],vertexData[i + 9],vertexData[i + 10]);
+		}
+		puts("");
+	}
+
+}
 Vertex::Vertex(float ix, float iy, float iz)
 {
 	x = ix;
@@ -1258,7 +1340,400 @@ Vertex::Vertex(float ix, float iy, float iz)
 	nx = ny = nz = 0;
 }
 
-Vertex::Vertex()
+//Vertex::Vertex()
+//{
+//	x = y = z = u = v = r = g = b = nx=ny=nz= 0;
+//}
+
+
+OBJLoad::OBJLoad()
 {
-	x = y = z = u = v = r = g = b = nx=ny=nz= 0;
+}
+
+OBJLoad::OBJLoad(string filename)
+{
+
+	FILE * input;
+	char rBuffer[rdBuffer];
+	input = fopen(filename.c_str(), "r");
+	if (input == nullptr)
+	{
+		printf("###Error loading : %s\n", filename.c_str());
+	}
+
+
+	while (fgets(rBuffer, rdBuffer, input) != nullptr)
+	{
+		char id[rdBuffer];
+		sscanf(rBuffer, "%s", id);
+
+		printf("ID string: %s", id);
+
+		if (id[0] == '#')
+		{
+			continue;
+		}
+		if (strncmp(id, "mtllib", 6) == 0)
+		{
+			continue;
+		}
+
+		if (strncmp(id, "o", 1) == 0)
+		{
+			continue;
+		}
+
+		if (strncmp(id, "v", 1) == 0 && strlen(id) == 1)
+		{
+			char in;
+			double x, y, z;
+			sscanf(rBuffer, "%c %lf %lf %lf", &in, &x, &y, &z);
+			printf("found VertexCoords: %f %f %f\n", x, y, z);
+			vspace v;
+			v.x = x;
+			v.y = y;
+			v.z = z;
+			this->vertics.push_back(v);
+			continue;
+		}
+		if (strncmp(id, "vt", 2) == 0)
+		{
+			char in[rdBuffer];
+			double u, v;
+			sscanf(rBuffer, "%*s %lf %lf", &u, &v);
+			printf("got UVs %lf %lf\n", u, v);
+			UV uv;
+			uv.u = u;
+			uv.v = v;
+			uvCoords.push_back(uv);
+			continue;
+		}
+		if (strncmp(id, "vn", 2) == 0)
+		{
+			char in[rdBuffer];
+			double x, y, z;
+			sscanf(rBuffer, "%*s %lf %lf %lf", &x, &y, &z);
+			printf("Found normies: %lf %lf %lf\n", x, y, z);
+			normal n;
+			n.x = x;
+			n.y = y;
+			n.z = z;
+			Normal.push_back(n);
+			continue;
+		}
+		if (strncmp(id, "usemtl", 6) == 0) {
+			continue;
+		}
+		if (strncmp(id, "s", 1) == 0) { continue; }
+		if (strncmp(id, "f", 1) == 0) {
+			int vindex, uvindex, normindex;
+			int counter = 0;
+			fullVert *vcol[4];
+
+			char *head, *tail;
+			head = tail = rBuffer + 1;
+			for (int i = 0; i < 4; i++)
+			{
+				vindex = strtol(head, &tail, 10);
+				if (head == tail) { break; }
+				head = tail + 1;
+				uvindex = strtol(head, &tail, 10);
+				head = tail + 1;
+				normindex = strtol(head, &tail, 10);
+				head = tail + 1;
+
+				printf("Got indizes: %d %d %d\n", vindex, uvindex, normindex);
+				vcol[i] = new fullVert(this, vindex, uvindex, normindex);
+				vcol[i]->r = 0;
+				vcol[i]->g = 1;
+				vcol[i]->b = 0.7;
+				counter++;
+			}
+			printf("Got %d verts for face\n", counter);
+
+			if (counter == 3)
+			{
+
+				triangle t(*vcol[0], *vcol[1], *vcol[2]);
+
+				tris.push_back(t);
+				for (int i = 0; i < 3; ++i)
+				{
+					delete vcol[i];
+
+				}
+			}
+			if (counter == 4)
+			{
+				triangle t(*vcol[0], *vcol[1], *vcol[2]);
+				tris.push_back(t);
+				triangle t1(*vcol[0], *vcol[1], *vcol[2]);
+				tris.push_back(t1);
+
+				for (int i = 0; i < 4; ++i)
+				{
+					delete vcol[i];
+
+				}
+			}
+
+		}
+	}
+
+
+}
+
+
+OBJLoad::~OBJLoad()
+{
+}
+
+float * OBJLoad::getVSet()
+{
+
+	float * buffer = new float[3*sizeof(float)*this->getVSetSize()];
+	for (int i = 0; i < getVSetSize(); i++)
+	{
+		buffer[i*3] = this->vertics.at(i).x;
+		buffer[i * 3+1] = this->vertics.at(i).y;
+		buffer[i * 3+2] = this->vertics.at(i).z;
+	}
+	return buffer;
+}
+
+float * OBJLoad::getUVSet()
+{
+
+	float *uv = new float[2 * sizeof(float)*this->getUVSetSize()];
+
+	for (int i = 0; i < getUVSetSize(); i++)
+	{
+		uv[2 * i] = this->uvCoords.at(i).u;
+		uv[2 * i+1] = this->uvCoords.at(i).v;
+	}
+	return uv;
+}
+
+float * OBJLoad::getNormalSet()
+{
+
+	float * norms = new float[3* sizeof(float)*getNormalSetSize()];
+	for (int i =0; i<getNormalSetSize(); i++)
+	{
+		norms[3 * i] = this->Normal.at(i).x;
+		norms[3 * i+1] = this->Normal.at(i).y;
+		norms[3 * i+2] = this->Normal.at(i).z;
+	}
+	return norms;
+}
+
+float * OBJLoad::getInterlacedData()
+{
+	float *laced = new float(tris.size()*sizeof(float)*11*3);
+
+	for (int i = 0; i < tris.size(); ++i)
+	{
+		triangle t = tris.at(i);
+		fullVert t1=t.a, t2=t.b, t3=t.c;
+		puts("Processing this:");
+		t1.printMe(); t2.printMe();t3.printMe();
+		puts("");
+		laced[i * 33 + 0] = t1.vx;
+		laced[i * 33 + 1] = t1.vy;
+		laced[i * 33 + 2] = t1.vz;
+
+		laced[i * 33 + 3] = t1.r;
+		laced[i * 33 + 4] = t1.g;
+		laced[i * 33 + 5] = t1.b;
+
+		laced[i * 33 + 6] = t1.U;
+		laced[i * 33 + 7] = t1.V;
+
+		laced[i * 33 + 8] = t1.nx;
+		laced[i * 33 + 9] = t1.ny;
+		laced[i * 33 + 10] = t1.nz;
+
+
+		laced[i * 33 +11] = t2.vx;
+		laced[i * 33 + 12] = t2.vy;
+		laced[i * 33 + 13] = t2.vz;
+
+		laced[i * 33 + 14] = t2.r;
+		laced[i * 33 +15] = t2.g;
+		laced[i * 33 +16] = t2.b;
+
+		laced[i * 33 + 17] = t2.U;
+		laced[i * 33 + 18] = t2.V;
+
+		laced[i * 33 + 19] = t2.nx;
+		laced[i * 33 + 20] = t2.ny;
+		laced[i * 33 + 21] = t2.nz;
+
+
+		laced[i * 33 + 22] = t3.vx;
+		laced[i * 33 + 23] = t3.vy;
+		laced[i * 33 + 24] = t3.vz;
+
+		laced[i * 33 + 25] = t3.r;
+		laced[i * 33 + 26] = t3.g;
+		laced[i * 33 + 27] = t3.b;
+
+		laced[i * 33 + 28] = t3.U;
+		laced[i * 33 + 29] = t3.V;
+
+		laced[i * 33 + 30] = t3.nx;
+		laced[i * 33 + 31] = t3.ny;
+		laced[i * 33 + 32] = t3.nz;
+
+
+	
+	}
+	return laced;
+}
+
+vspace OBJLoad::getVertex(int index)
+{
+	if (index - 1 < vertics.size())
+		return this->vertics.at(index - 1);
+
+	printf("### index %d over cap %d\d", index, vertics.size());
+}
+
+UV OBJLoad::getUv(int index)
+{
+	if (index - 1 < uvCoords.size())
+		return this->uvCoords.at(index - 1);
+	printf("### index %d over cap %d\d", index, uvCoords.size());
+
+}
+
+normal OBJLoad::getNormal(int index)
+{
+	if (index - 1 < Normal.size())
+		return this->Normal.at(index - 1);
+	printf("### index %d over cap %d\d", index, Normal.size());
+}
+
+VertexList OBJLoad::getVertexList( float x, float y, float z)
+{
+	printf("+++Object contains %d tris\n", tris.size());
+	VertexList v(vertexCoordinates | vertexColor | UVCoordinates | normals, 8);
+
+	for (triangle t : tris)
+	{
+		Vertex a;// = t.a.get();
+		Vertex b;//; = t.b.get();
+		Vertex c;// = t.c.get();
+		a.x = t.a.vx+x;
+		a.y = t.a.vy+y;
+		a.z = t.a.vz+z;
+		b.x = t.b.vx+x;
+		b.y = t.b.vy+y;
+		b.z = t.b.vz+z;
+		c.x = t.c.vx+x;
+		c.y = t.c.vy+y;
+		c.z = t.c.vz+z;
+
+		a.r = 0;// t.a.r;
+		a.g = 1;// t.a.g;
+		a.b = 0.7;// t.a.b;
+
+		b.r = t.b.r;
+		b.g = t.b.g;
+		b.b = t.b.b;
+
+		c.r = t.c.r;
+		c.g = t.c.g;
+		c.b = t.c.b;
+
+		a.u = t.a.U;
+		a.v = t.a.V;
+
+		b.u = t.b.U;
+		b.v = t.b.V;
+
+		c.u = t.b.U;
+		c.v = t.b.V;
+
+		a.nx = t.a.nx;
+		a.ny = t.a.ny;
+		a.nz = t.a.nz;
+
+		b.nx = t.b.nx;
+		b.ny = t.b.ny;
+		b.nz = t.b.nz;
+
+		c.nx = t.c.nx;
+		c.ny = t.c.ny;
+		c.nz = t.c.nz;
+
+		//v.addTriangle(a,b,c);
+	}
+	//Vertex a, b, c;
+	//a.x=b.y=c.z = 1;
+	//a.nx = b.ny = c.nz = 1;
+	//v.addTriangle(a,b,c);
+	printf("######### Vertexlist has %d indizes %d vertices\n", v.getIndexCount(),  v.getVertexCount());
+	return v;
+}
+
+fullVert::fullVert(OBJLoad *res, int vspaceIndex, int uvIndex, int normalIndex)
+{
+	this->vx = res->getVertex(vspaceIndex).x;
+	this->vy = res->getVertex(vspaceIndex).y;
+	this->vz = res->getVertex(vspaceIndex).z;
+
+	this->U = res->getUv(uvIndex).u;
+	this->V = res->getUv(uvIndex).v;
+
+	this->nx = res->getNormal(normalIndex).x;
+	this->ny = res->getNormal(normalIndex).y;
+	this->nz = res->getNormal(normalIndex).z;
+
+	printf("Arise: %f %f %f \t %f %f \t %f %f %f\n", vx,vy,vz, U,V, nx,ny,nz);
+
+
+}
+
+fullVert::fullVert(const fullVert & in)
+{
+
+	this->b = in.b;
+	this->g = in.g;
+	this->nx = in.nx;
+	this->ny = in.ny;
+	this->nz = in.nz;
+	this->r = in.r;
+	this->U = in.U;
+	this->V = in.V;
+	this->vx = in.vx;
+	this->vy = in.vy;
+	this->vz = in.vz;
+}
+
+Vertex fullVert::get()
+{
+	Vertex t;
+	t.b = 1;
+	t.g = 1;
+	t.r = 0;
+
+	t.nx = this->nx;
+	t.ny = this->ny;
+	t.nz = this->nz;
+
+	t.u = this->U;
+	t.v = this->V;
+
+	t.x = this->vx;
+	t.y = this->vy;
+	t.z = this->vz;
+	return t;
+}
+
+triangle::triangle(fullVert a, fullVert b, fullVert c)
+{
+	this->a = a;
+	this->b = b;
+	this->c = c;
 }

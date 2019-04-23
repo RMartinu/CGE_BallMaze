@@ -39,9 +39,12 @@ using namespace std;
 class Vertex
 {
 public:
-	double x, y, z, u, v, r, g, b, nx,ny,nz;
+	float x, y, z, u, v, r, g, b, nx,ny,nz;
 	Vertex(float ix, float iy, float iz);
-	Vertex();
+	Vertex()
+	{
+		x = y = z = u = v = r = g = b = nx = ny = nz = 0;
+	};
 };
 
 
@@ -93,6 +96,7 @@ public:
 	//bool addVertex(float x, float y, float z);
 	bool addVertex(float x, float y, float z, float r, float g, float b, float nx, float ny, float nz);
 	bool addVertex(float x, float y, float z, float r, float g, float b, float u, float v, float nx, float ny, float nz);
+	VertexList transformVertexList(VertexList in);
 	//bool addVertex(float x, float y, float z, float u, float v);
 	bool addVertex(Vertex v);
 	bool addIndex(int vertex1, int vertex2, int vertex3);
@@ -109,6 +113,7 @@ public:
 	bool getContainsVertexColor();
 	bool getContainsUVCoordinates();
 	bool VertexList::getContainsNormals();
+	void printFullVertexList();
 };
 
 
@@ -151,6 +156,106 @@ public: Maze(ppmImage &floorplan);
 	 int getWidth();
 	 int getHeight();
 };
+
+
+
+#define rdBuffer 4096
+using namespace std;
+
+
+class OBJLoad;
+class vspace
+{
+public:
+	double x, y, z;
+};
+
+class UV
+{
+public:
+	double u, v;
+};
+
+class normal
+{
+public:
+	double x, y, z;
+};
+
+class fullVert
+{
+
+
+public:
+	fullVert() {};
+	fullVert(OBJLoad *res, int vspaceIndex, int uvIndex, int normalIndex);
+	fullVert(const fullVert &in);
+	Vertex get();
+	void printMe() {
+		printf("V\t cord: %f, %f, %f\tcolor: %f, %f, %f\t UV: %f, %f\t Normal: %f, %f, %f\n",this->vx, vy,vz, r,g,b,U,V,nx,ny,nz);
+	};
+
+	double vx, vy, vz;
+	double nx, ny, nz;
+	double U, V;
+	double r, g, b;
+};
+
+class triangle
+{
+
+public:
+	triangle(fullVert a, fullVert b, fullVert c);
+	fullVert a, b, c;
+
+};
+
+
+
+
+
+class OBJLoad {
+
+
+private:
+	vector<vspace> vertics;
+	vector<UV> uvCoords;
+	vector<normal> Normal;
+	vector<fullVert> fullVertices;
+	vector<triangle> tris;
+	float *vSet, *UVset, *NormalSet;
+	int *indexList;
+	float xoffset, yoffset, zoffset;
+
+
+public:
+	OBJLoad();
+	OBJLoad(string filename);
+	~OBJLoad();
+	float * getVSet();
+	float *getUVSet();
+	float *getNormalSet();
+	float *getInterlacedData();
+	int getInterlacedDataSize() { return this->tris.size()*3; };
+	int *getIndexList();
+	int getVSetSize() {return this->vertics.size(); };
+	int getUVSetSize() { return this->uvCoords.size(); };
+	int getNormalSetSize() { return this->Normal.size(); };
+
+
+	int getIndexListSize() { return this->tris.size(); };
+	void setOffset(float x, float y, float z) { xoffset = x; yoffset = y; zoffset = z; };
+
+	vspace getVertex(int index);
+	UV getUv(int index);
+	normal getNormal(int index);
+
+
+
+	VertexList getVertexList(float, float, float);
+};
+
+
 
 
 

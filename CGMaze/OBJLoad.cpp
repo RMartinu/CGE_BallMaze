@@ -74,7 +74,7 @@ OBJLoad::OBJLoad(string filename)
 			n.x = x;
 			n.y = y;
 			n.z = z;
-			normals.push_back(n);
+			Normal.push_back(n);
 			continue;
 		}
 		if (strncmp(id, "usemtl", 6) == 0){
@@ -159,9 +159,9 @@ UV OBJLoad::getUv(int index)
 
 normal OBJLoad::getNormal(int index)
 {
-	if(index-1<normals.size())
-	return this->normals.at(index-1);
-	printf("### index %d over cap %d\d", index, normals.size());
+	if(index-1<Normal.size())
+	return this->Normal.at(index-1);
+	printf("### index %d over cap %d\d", index, Normal.size());
 }
 
 VertexList OBJLoad::getVertexList()
