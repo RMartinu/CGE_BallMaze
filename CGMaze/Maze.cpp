@@ -126,8 +126,8 @@ Maze::Maze(ppmImage &floorplan)
 
 	 }
 
-	 OBJLoad b("Resource\\UV-sphere.obj.txt");
-	 return b.getVertexList(0,0,0);
+	// OBJLoad b("Resource\\UV-sphere.obj.txt");
+	 return V;
  }
 
  VertexList Maze::getBallVertices()
@@ -988,8 +988,8 @@ bool VertexList::addVertex(float x, float y, float z, float r, float g, float b,
 	vertexData[currEntries*stride + 9] = ny;
 	vertexData[currEntries*stride + 10] = nz;
 	++currEntries;
-	puts("***full vertex inserted");
-	this->printFullVertexList();
+	//puts("***full vertex inserted");
+	//this->printFullVertexList();
 	return true;
 }
 
@@ -1034,7 +1034,7 @@ bool VertexList::addVertex(Vertex v)
 	}*/
 	if (containsCoordinates && containsVertexColor && containsUVCoordinates && containsNormals)
 	{
-		puts("Adding fully featured Vertex");
+		//puts("Adding fully featured Vertex");
 		return addVertex(v.x, v.y, v.z, v.r, v.g, v.b, v.u, v.v, v.nx, v.ny, v.nz);
 	}
 	return false;
@@ -1306,6 +1306,7 @@ bool VertexList::getContainsNormals()
 }
 void VertexList::printFullVertexList()
 {
+	return;
 
 	for (int i = 0; i < maxEntries; ++i)
 	{
@@ -1530,6 +1531,7 @@ float * OBJLoad::getNormalSet()
 float * OBJLoad::getInterlacedData()
 {
 	float *laced = new float(tris.size()*sizeof(float)*11*3);
+	memset(laced, 0, tris.size() * sizeof(float) * 11 * 3);
 
 	for (int i = 0; i < tris.size(); ++i)
 	{
@@ -1591,6 +1593,18 @@ float * OBJLoad::getInterlacedData()
 	return laced;
 }
 
+int * OBJLoad::getIndexList()
+{
+	if (indexList != nullptr) { delete indexList; indexList == nullptr; }
+	 indexList= new int[tris.size()*3];
+	memset(indexList, 0, tris.size()*3*sizeof(int));
+	//gets more complex if a more space efficient representation of the loaded model is used
+	for (int i = 0; i < tris.size()*3; ++i) {
+		indexList[i] = i;
+	}
+	return indexList;
+}
+
 vspace OBJLoad::getVertex(int index)
 {
 	if (index - 1 < vertics.size())
@@ -1624,48 +1638,7 @@ VertexList OBJLoad::getVertexList( float x, float y, float z)
 		Vertex a;// = t.a.get();
 		Vertex b;//; = t.b.get();
 		Vertex c;// = t.c.get();
-		a.x = t.a.vx+x;
-		a.y = t.a.vy+y;
-		a.z = t.a.vz+z;
-		b.x = t.b.vx+x;
-		b.y = t.b.vy+y;
-		b.z = t.b.vz+z;
-		c.x = t.c.vx+x;
-		c.y = t.c.vy+y;
-		c.z = t.c.vz+z;
-
-		a.r = 0;// t.a.r;
-		a.g = 1;// t.a.g;
-		a.b = 0.7;// t.a.b;
-
-		b.r = t.b.r;
-		b.g = t.b.g;
-		b.b = t.b.b;
-
-		c.r = t.c.r;
-		c.g = t.c.g;
-		c.b = t.c.b;
-
-		a.u = t.a.U;
-		a.v = t.a.V;
-
-		b.u = t.b.U;
-		b.v = t.b.V;
-
-		c.u = t.b.U;
-		c.v = t.b.V;
-
-		a.nx = t.a.nx;
-		a.ny = t.a.ny;
-		a.nz = t.a.nz;
-
-		b.nx = t.b.nx;
-		b.ny = t.b.ny;
-		b.nz = t.b.nz;
-
-		c.nx = t.c.nx;
-		c.ny = t.c.ny;
-		c.nz = t.c.nz;
+		
 
 		//v.addTriangle(a,b,c);
 	}

@@ -236,8 +236,9 @@ public:
 	float *getUVSet();
 	float *getNormalSet();
 	float *getInterlacedData();
-	int getInterlacedDataSize() { return this->tris.size()*3; };
+	int getInterlacedDataSize() { return (this->tris.size()*3); };
 	int *getIndexList();
+	int getStride() { return 11; }
 	int getVSetSize() {return this->vertics.size(); };
 	int getUVSetSize() { return this->uvCoords.size(); };
 	int getNormalSetSize() { return this->Normal.size(); };

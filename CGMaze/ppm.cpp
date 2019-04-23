@@ -84,9 +84,10 @@ ppmImage::ppmImage(string fileName)
 	{
 		//throw if so inclined
 	}
-	//puts("should be done");
+	
 
 	fclose(fp);
+	puts("should be done");
 
 }
 ppmImage::~ppmImage()
