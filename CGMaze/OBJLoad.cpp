@@ -1,6 +1,6 @@
 #include "OBJLoad.h"
-
-
+#include"Maze.h"
+#include "defines.h"
 
 OBJLoad::OBJLoad()
 {
@@ -74,7 +74,7 @@ OBJLoad::OBJLoad(string filename)
 			n.x = x;
 			n.y = y;
 			n.z = z;
-			normals.push_back(n);
+			normalList.push_back(n);
 			continue;
 		}
 		if (strncmp(id, "usemtl", 6) == 0){
@@ -146,7 +146,7 @@ vspace OBJLoad::getVertex(int index)
 	if(index-1<vertics.size())
 	return this->vertics.at(index-1);
 
-	printf("### index %d over cap %d\d", index, vertics.size());
+	printf("### index %d over cap %d\n", index, vertics.size());
 }
 
 UV OBJLoad::getUv(int index)
@@ -159,15 +159,25 @@ UV OBJLoad::getUv(int index)
 
 normal OBJLoad::getNormal(int index)
 {
-	if(index-1<normals.size())
-	return this->normals.at(index-1);
-	printf("### index %d over cap %d\d", index, normals.size());
+	if(index-1<normalList.size())
+	return this->normalList.at(index-1);
+	printf("### index %d over cap %d\d", index, normalList.size());
 }
 
 VertexList OBJLoad::getVertexList()
 {
 	printf("+++Object contains %d tris\n",tris.size() );
-	return VertexList(vertexCoordinates,8);
+	VertexList VL(vertexCoordinates|vertexColor|UVCoordinates|normals,8);
+
+	for each(triangle t in this->tris)
+	{
+
+		;
+
+		VL.addTriangle(t.a.get(),t.b.get(),t.c.get());
+	}
+
+	return VL;
 }
 
 fullVert::fullVert( OBJLoad *res, int vspaceIndex, int uvIndex, int normalIndex)
@@ -200,6 +210,24 @@ fullVert::fullVert(const fullVert & in)
 	this->vx = in.vx;
 	this->vy = in.vy;
 	this->vz = in.vz;
+}
+
+Vertex fullVert::get()
+{
+	Vertex x;
+	x.b = this->b;
+	x.g = this->g;
+	x.nx = this->nx;
+	x.ny = ny;
+	x.nz = nz;
+	x.r = r;
+	x.u = this->U;
+	x.v = this->V;
+	this->vx = vx;
+	this->vy = vy;
+	this->vz = vz;
+
+	return x;
 }
 
 triangle::triangle(fullVert a, fullVert b, fullVert c)

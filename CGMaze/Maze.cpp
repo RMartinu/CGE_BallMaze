@@ -1,6 +1,9 @@
 #include "Maze.h"
 #include <glm\ext\scalar_constants.hpp>
 #include "ppm.h"
+
+#include "OBJLoad.h"
+#include "defines.h"
 /**
  This file contains the main game board and game logic
  */
@@ -11,6 +14,8 @@
 
 Maze::Maze(ppmImage &floorplan)
 {
+
+	//theBall =  new OBJLoad("Resource\\UV-sphere.obj.txt");
 	if (floorplan.getWidth() == 0 || floorplan.getHeight() == 0)
 	{
 
@@ -31,8 +36,8 @@ Maze::Maze(ppmImage &floorplan)
 	//printf("Vertexcount in mazefloor %d while the mesh has %d vertices \n", floor.getVertices().size(), floor.getVertexCount());
 
 	
-
-	if (floorplan.getWidth() != 0 || floorplan.getHeight() != 0)
+	
+	if ((floorplan.getWidth() != 0 || floorplan.getHeight() != 0))
 	{
 		for (int h = 0; h < height; ++h)
 		{
@@ -54,7 +59,7 @@ Maze::Maze(ppmImage &floorplan)
 
 					newWall.beepMe(w,h);
 					//printf("new mesh actual: %d, %d, %d \n", newWall.getVertices().at(0).x, newWall.getVertices().at(1).x, newWall.getVertices().at(2).x);
-					meshes.push_back(newWall);
+					//meshes.push_back(newWall);
 					//printf("x: %d, y: %d, type: wall\n", w, h);
 					continue;
 				}
@@ -70,7 +75,7 @@ Maze::Maze(ppmImage &floorplan)
 				{
 					mazeGrid[h*width + w] = finish;
 					Mesh newFinish(w, h, 1, 1, 0.1);
-					meshes.push_back(newFinish);
+					//meshes.push_back(newFinish);
 					//printf("x: %d, y: %d, type: finish\n", w, h);
 					continue;
 				}
@@ -92,6 +97,7 @@ Maze::Maze(ppmImage &floorplan)
  Maze::~Maze()
 {
 	 delete[] mazeGrid;
+	 //delete theBall;
 }
 
  vector<Mesh> Maze::getMeshes()
@@ -132,21 +138,24 @@ Maze::Maze(ppmImage &floorplan)
  {
 	 VertexList V(vertexCoordinates|vertexColor|normals,8);
 
-	 Mesh BallMesh = getBall();
+	 //Mesh BallMesh = getBall();
 
-	 vector<Vertex> mverts = BallMesh.getVertices();
-	 for (int i = 0; i < mverts.size(); i += 3)
-	 {
-		 //printf("Adding triangle no %d:  %f %f %f\n",i, mverts.at(i).x, mverts.at(i + 1).x, mverts.at(i + 2).x);
+	 //vector<Vertex> mverts = BallMesh.getVertices();
+	 //for (int i = 0; i < mverts.size(); i += 3)
+	 //{
+		// //printf("Adding triangle no %d:  %f %f %f\n",i, mverts.at(i).x, mverts.at(i + 1).x, mverts.at(i + 2).x);
 
-		 Vertex a, b, c;
-		 a = mverts.at(i);
-		 b = mverts.at(i + 1);
-		 c = mverts.at(i + 2);
-		 a.r = b.g = c.b = 0.5;
-		 V.addTriangle(a, b, c);
-	 }
+		// Vertex a, b, c;
+		// a = mverts.at(i);
+		// b = mverts.at(i + 1);
+		// c = mverts.at(i + 2);
+		// a.r = b.g = c.b = 0.5;
+		// V.addTriangle(a, b, c);
+	 //}
+	 
 
+	 //VertexList v = theBall->getVertexList();
+	 V.shiftAllVertices(ball_x, ball_y,3);
 	 return V;
  }
 
@@ -633,284 +642,6 @@ int Maze::getHeight()
 	return this->height;
 }
 
-vector<Vertex> Mesh::getVertices()
-{
-	return this->vertList;
-}
-
-int Mesh::getVertexCount()
-{
-	return this->vertList.size();
-}
-
-Mesh::Mesh()
-{
-	//Creates a blank Mesh; used for arbitrary geometry, needs to set all parameters post construction
-	
-}
-
-Mesh::Mesh(double pos_x, double pos_y, double width, double depth, double height)
-{
-	//Creates a cubical Mesh with specified dimensions; used to create the floor plate
-	Vertex v[12];
-	v[0].x = pos_x; v[0].y = pos_y; v[0].z = 0; v[0].u = 0.5; v[0].v = 0.5; //bottom, left, back
-	v[1].x = pos_x + width; v[1].y = pos_y; v[1].z = 0; v[1].u = 0.5; v[1].v = 0; //bottom, right, back
-	v[2].x = pos_x; v[2].y = pos_y + depth; v[2].z = 0; v[2].u = 0.5; v[2].v = 0; //bottom, left, front
-	v[3].x = pos_x; v[3].y = pos_y; v[3].z = height; v[3].u = 1; v[3].v = 0.5; //top, left, back
-	v[4].x = pos_x + width; v[4].y = pos_y + depth; v[4].z = 0; v[4].u = 0.5; v[4].v = 0.5; //bottom, right, front
-	v[5].x = pos_x + width; v[5].y = pos_y; v[5].z = height; v[5].u = 1; v[5].v = 0; //top, right, back
-	v[6].x = pos_x; v[6].y = pos_y + depth; v[6].z = height; v[6].u = 1; v[6].v = 0; //top, left, front
-	v[7].x = pos_x + width; v[7].y = pos_y + depth; v[7].z = height; v[7].u = 1; v[7].v = 0.5; //top, right, front
-
-	v[8].x = pos_x; v[8].y = pos_y; v[8].z = 0; v[8].u = 1; v[8].v = 0.5; //2 bottom, left, back
-	v[9].x = pos_x + width; v[9].y = pos_y; v[9].z = 0; v[9].u = 1; v[9].v = 1; //2 bottom, right, back
-	v[10].x = pos_x; v[10].y = pos_y + depth; v[10].z = 0; v[10].u = 0.5; v[10].v = 0.5; //2 bottom, left, front
-	v[11].x = pos_x + width; v[11].y = pos_y + depth; v[11].z = 0; v[11].u = 0.5; v[11].v = 1; //2 bottom, right, front
-
-
-
-	//printf("%d %d %d %d %d", pos_x, pos_y, width, depth, height);
-	//printf("%d %d %d %d %d %d %d", v[0].y, v[1].y, v[2].y, v[3].y, v[4].y, v[5].y, v[6].y);
-	//first triangle, bottom lower
-	vertList.push_back(v[8]);
-	vertList.push_back(v[9]);
-	vertList.push_back(v[10]);
-
-	//second triangle, bottom upper
-	vertList.push_back(v[9]);
-	vertList.push_back(v[10]);
-	vertList.push_back(v[11]);
-
-	//third triangle left lower
-	vertList.push_back(v[0]);
-	vertList.push_back(v[2]);
-	vertList.push_back(v[3]);
-
-
-	//forth triangle left upper
-	vertList.push_back(v[2]);
-	vertList.push_back(v[3]);
-	vertList.push_back(v[6]);
-
-
-	//fifth triangle right lower
-	vertList.push_back(v[1]);
-	vertList.push_back(v[4]);
-	vertList.push_back(v[5]);
-
-	//sixt triagle right upper
-	vertList.push_back(v[4]);
-	vertList.push_back(v[5]);
-	vertList.push_back(v[7]);
-
-	//seventh triangle top upper
-	vertList.push_back(v[3]);
-	vertList.push_back(v[5]);
-	vertList.push_back(v[6]);
-
-
-	//eigth triangle top lower
-	vertList.push_back(v[5]);
-	vertList.push_back(v[6]);
-	vertList.push_back(v[7]);
-
-	//nineth tri back lower
-	vertList.push_back(v[0]);
-	vertList.push_back(v[1]);
-	vertList.push_back(v[3]);
-
-	//tenth tri back upper
-	vertList.push_back(v[1]);
-	vertList.push_back(v[3]);
-	vertList.push_back(v[5]);
-
-	//eleventh front upper
-	vertList.push_back(v[4]);
-	vertList.push_back(v[6]);
-	vertList.push_back(v[7]);
-
-	//twelfth front lower
-	vertList.push_back(v[2]);
-	vertList.push_back(v[4]);
-	vertList.push_back(v[6]);
-
-
-	//printf("Vertex data: %d %d %d", v[0].x, v[0].y, v[0].z);
-	//printf("This mesh consists of %d vertices\n", vertList.size());
-
-}
-
-Mesh::Mesh(double pos_x, double pos_y)
-{
-	//printf("Building at: %f %f\n", pos_x, pos_y);
-	//creates a unity cube at the specified xy-coordinates and at height zero
-	Vertex v[12];
-	v[0].x = pos_x; v[0].y = pos_y; v[0].z = 0; v[0].u = 0; v[0].v = 0.5; //bottom, left, back
-	v[1].x = pos_x+1; v[1].y = pos_y; v[1].z = 0; v[1].u = 0; v[1].v = 0; //bottom, right, back
-	v[2].x = pos_x; v[2].y = pos_y+1; v[2].z = 0; v[2].u = 0; v[2].v = 0; //bottom, left, front
-	v[3].x = pos_x; v[3].y = pos_y; v[3].z = 3; v[3].u = 0.5; v[3].v = 0.5; //top, left, back
-	v[4].x = pos_x+1; v[4].y = pos_y+1; v[4].z = 0; v[4].u = 0; v[4].v =0.5; //bottom, right, front
-	v[5].x = pos_x+1; v[5].y = pos_y; v[5].z = 3; v[5].u = 0.5; v[5].v = 0; //top, right, back
-	v[6].x = pos_x; v[6].y = pos_y+1; v[6].z = 3; v[6].u = 0.5; v[6].v = 0; //top, left, front
-	v[7].x = pos_x+1; v[7].y = pos_y+1; v[7].z = 3; v[7].u = 0.5; v[7].v =0.5; //top, right, front
-
-	v[8].x = pos_x; v[8].y = pos_y; v[8].z = 3; v[8].u = 0.5; v[8].v = 0.5; //v[8].nx = 0; v[8].ny = 0; v[8].nz = 1; //2 top, left, back	
-	v[9].x = pos_x+1; v[9].y = pos_y; v[9].z = 3; v[9].u = 0.5; v[9].v = 1; //v[9].nx = 0; v[9].ny = 0; v[9].nz = 1; //2 top, right, back
-	v[10].x = pos_x; v[10].y = pos_y + 1; v[10].z = 3; v[10].u = 0; v[10].v = 0.5; //v[10].nx = 0; v[10].ny = 0; v[10].nz = 1;//2 top, left, front
-	v[11].x = pos_x + 1; v[11].y = pos_y + 1; v[11].z = 3; v[11].u = 0; v[11].v = 1; //v[11].nx = 0; v[11].ny = 0; v[11].nz = 1;//2 top, right, front
-
-	//first triangle, bottom lower
-	vertList.push_back(v[0]);
-	vertList.push_back(v[1]);
-	vertList.push_back(v[2]);
-
-	//second triangle, bottom upper
-	vertList.push_back(v[1]);
-	vertList.push_back(v[2]);
-	vertList.push_back(v[4]);
-
-	//third triangle left lower
-	vertList.push_back(v[0]);
-	vertList.push_back(v[2]);
-	vertList.push_back(v[3]);
-
-
-	//forth triangle left upper
-	vertList.push_back(v[2]);
-	vertList.push_back(v[3]);
-	vertList.push_back(v[6]);
-
-
-	//fifth triangle right lower
-	vertList.push_back(v[1]);
-	vertList.push_back(v[4]);
-	vertList.push_back(v[5]);
-
-	//sixt triagle right upper
-	vertList.push_back(v[4]);
-	vertList.push_back(v[5]);
-	vertList.push_back(v[7]);
-
-	//seventh triangle top upper
-	vertList.push_back(v[8]);
-	vertList.push_back(v[9]);
-	vertList.push_back(v[10]);
-
-
-	//eigth triangle top lower
-	vertList.push_back(v[9]);
-	vertList.push_back(v[10]);
-	vertList.push_back(v[11]);
-
-	//nineth tri back lower
-	vertList.push_back(v[0]);
-	vertList.push_back(v[1]);
-	vertList.push_back(v[3]);
-
-	//tenth tri back upper
-	vertList.push_back(v[1]);
-	vertList.push_back(v[3]);
-	vertList.push_back(v[5]);
-
-	//eleventh front upper
-	vertList.push_back(v[4]);
-	vertList.push_back(v[6]);
-	vertList.push_back(v[7]);
-
-	//twelfth front lower
-	vertList.push_back(v[2]);
-	vertList.push_back(v[4]);
-	vertList.push_back(v[6]);
-
-
-	//printf("first vertex: %f %f %f", vertList.at(0).x, vertList.at(0).y, vertList.at(0).z);
-
-
-}
-
-Mesh::Mesh(double pos_x, double pos_y, bool isSphere)
-{
-	const float r = 0;
-	const float g = 132;
-	const float b = 255;
-
-	Vertex v[19];
-	v[0].x = 0.000000, v[0].y = 0.707107, v[0].z = -0.707107, v[0].r = r, v[0].g = g, v[0].b = b;
-
-}
-
-void Mesh::beepMe(int pos_x, int pos_y)
-{
-	//printf("reached me: %d %d", pos_x, pos_y);
-}
-
-Mesh::~Mesh()
-{
-}
-
-VertexList::VertexList(int formatDescriptor)
-{
-	VertexList(formatDescriptor, 8);
-}
-
-VertexList::VertexList(int formatDescriptor, int numberOfEntries)
-{
-	//printf("My format: %d \n", formatDescriptor);
-	vertexData = nullptr;
-	currEntries = 0;
-	indizes = nullptr;
-	currEdges = 0;
-	this->containsCoordinates = (formatDescriptor & (vertexCoordinates))!=0;
-	/*if (this->containsCoordinates);
-	{
-		puts("Contains Coords");
-	}*/
-	this->containsVertexColor = (formatDescriptor & (vertexColor)) != 0;
-	//if (this->containsVertexColor) { puts("containes VColor"); }
-	this->containsUVCoordinates = (formatDescriptor & (UVCoordinates)) != 0;
-	//if (this->containsUVCoordinates) { puts("contains UVs"); }
-	this->containsNormals = (formatDescriptor & (normals)) != 0;
-	maxEntries = numberOfEntries;
-	currEntries = 0;
-	currEdges = 0;
-	maxEdges = maxEntries * 1.5;
-	indizes = new unsigned int[maxEdges];
-	stride = 0;
-	if (this->containsCoordinates == true)
-	{
-		stride += 3;
-	}
-	if (this->containsVertexColor == true)
-	{
-		stride += 3;
-	}
-
-	if (this->containsUVCoordinates == true)
-	{
-		stride += 2;
-	}
-	if (this->containsNormals == true)
-	{
-		stride += 3;
-	}
-	//printf("striding: %d", stride);
-	//!!Change Back!!
-	//stride = 3;
-	//printf("allocate: %d\n", maxEntries*stride);
-	vertexData = new float[maxEntries*stride];
-}
-
-VertexList::~VertexList()
-{
-	//TODO: fix crash on cleanUp!!!
-	//if(indizes!=nullptr){ delete []indizes; }
-
-	
-	//
-	if (vertexData != nullptr) {
-		/*delete  []vertexData;*/
-	}
-}
 
 //bool VertexList::addVertex(float x, float y, float z)
 //{
@@ -935,330 +666,3 @@ VertexList::~VertexList()
 //	return true;
 //}
 
-bool VertexList::addVertex(float x, float y, float z, float r, float g, float b, float nx, float ny, float nz)
-{
-	if (!containsCoordinates || !containsVertexColor || containsUVCoordinates || !containsNormals)
-	{
-		//puts("\n##refusing");
-		return false;
-	}
-	if (currEntries+3 > maxEntries)
-	{
-		//puts("extend vertex");
-		extendVertexData();
-	}
-	vertexData[currEntries*stride] = x;
-	vertexData[currEntries*stride + 1] = y;
-	vertexData[currEntries*stride + 2] = z;
-	vertexData[currEntries*stride + 3] = r;
-	vertexData[currEntries*stride + 4] = g;
-	vertexData[currEntries*stride + 5] = b;
-	vertexData[currEntries*stride + 6] = nx;
-	vertexData[currEntries*stride + 7] = ny;
-	vertexData[currEntries*stride + 8] = nz;
-	//printf("indizes pre entry: %d\n", currEntries);
-	++currEntries;
-
-
-	return true;
-}
-
-bool VertexList::addVertex(float x, float y, float z, float r, float g, float b, float u, float v, float nx, float ny, float nz)
-{
-	if (!containsCoordinates || !containsVertexColor || !containsUVCoordinates || !containsNormals)
-	{
-		return false;
-	}
-	if (currEntries >= maxEntries)
-	{
-		extendVertexData();
-	}
-	vertexData[currEntries*stride] = x;
-	vertexData[currEntries*stride + 1] = y;
-	vertexData[currEntries*stride + 2] = z;
-	vertexData[currEntries*stride + 3] = r;
-	vertexData[currEntries*stride + 4] = g;
-	vertexData[currEntries*stride + 5] = b;
-	vertexData[currEntries*stride + 6] = u;
-	vertexData[currEntries*stride + 7] = v;
-	vertexData[currEntries*stride + 8] = nx;
-	vertexData[currEntries*stride + 9] = ny;
-	vertexData[currEntries*stride + 10] = nz;
-	++currEntries;
-	return true;
-}
-
-//bool VertexList::addVertex(float x, float y, float z, float u, float v)
-//{
-//	if (!containsCoordinates || containsVertexColor || !containsUVCoordinates || containsNormals)
-//	{
-//		return false;
-//	}
-//	if (currEntries >= maxEntries)
-//	{
-//		extendVertexData();
-//	}
-//	vertexData[currEntries*stride] = x;
-//	vertexData[currEntries*stride + 1] = y;
-//	vertexData[currEntries*stride + 2] = z;
-//	vertexData[currEntries*stride + 3] = u;
-//	vertexData[currEntries*stride + 4] = v;
-//	++currEntries;
-//	return true;
-//}
-
-bool VertexList::addVertex(Vertex v)
-{
-	/*if (containsCoordinates && !containsVertexColor && !containsUVCoordinates && !containsNormals)
-	{
-		return addVertex(v.x, v.y, v.z);
-	}*/
-	if (containsCoordinates && containsVertexColor && !containsUVCoordinates && containsNormals)
-	{
-		//printf("inserting: %f, %f, %f\n", v.x,v.y,v.z);
-		bool t= addVertex(v.x, v.y, v.z, v.r, v.g, v.b, v.nx, v.ny, v.nz);
-		if (!t)
-		{
-			puts("insert failed");
-		}
-		return t;
-	}
-	/*if (containsCoordinates && !containsVertexColor && containsUVCoordinates && !containsNormals)
-	{
-		return addVertex(v.x, v.y, v.z, v.u, v.v);
-	}*/
-	if (containsCoordinates && containsVertexColor && containsUVCoordinates && containsNormals)
-	{
-		return addVertex(v.x, v.y, v.z, v.r, v.g, v.b, v.u, v.v, v.nx, v.ny, v.nz);
-	}
-	return false;
-}
-bool VertexList::addIndex(int vertex1, int vertex2, int vertex3)
-{
-	if (currEdges+3>maxEdges)
-	{
-		if (!extendIndizes())
-		{
-			puts("Extending indizes failed");
-			return false;
-		}
-	}
-	//printf("triangle: %d, %d, %d", vertex1, vertex2, vertex3);
-	indizes[currEdges] = vertex1;
-	indizes[currEdges + 1] = vertex2;
-	indizes[currEdges + 2] = vertex3;
-	currEdges += 3;
-	return true;
-}
-
-bool VertexList::extendVertexData()
-{
-
-	//puts("####Extending VBuffer");
-	//printf("the vertex pointer before: %p\n", vertexData);
-	float* newArray;
-	//printf("Vertbuffer data: %d %d\n", maxEntries, stride);
-	newArray = new float[maxEntries * stride + 3 * stride];
-
-	if (newArray == nullptr)
-	{
-		printf("Error: allocation failed.");
-		return false;
-	}
-	//printf("the actual pointer: %p\n", vertexData);
-	//puts("copy now");
-	//printf("processing %d * %d entries\n", currEntries, stride);
-	for (int i = 0; currEntries*stride>i; ++i)
-	{
-		//printf("copying index %d \n", i);
-		//printf("the value to copy: %f", vertexData[i]);
-		newArray[i] = vertexData[i];
-	}
-
-	delete[] vertexData;
-	vertexData = nullptr;
-	vertexData = newArray;
-	//printf("the vertexpointer after: %p\n", vertexData);
-	maxEntries += 3;
-	extendIndizes();
-	return true;
-}
-
-bool VertexList::extendIndizes()
-{
-	//puts("extend index list");
-	//printf("index pointer: %p\n", indizes);
-	if (currEdges+10 < maxEdges)
-	{
-		//printf("%d values are sufficient for %d entries\n", maxEdges, currEdges);
-		return true;
-	}
-
-	unsigned int* newArray;
-	newArray = new unsigned int[maxEdges + 10];
-	if (newArray == nullptr)
-	{
-		printf("Error: allocation failed.");
-		return false;
-	}
-	for (int i = 0; currEdges > i; ++i)
-	{
-		newArray[i] = indizes[i];
-	}
-	//puts("copy successful");
-	delete []indizes;
-	//printf("new array for index pointer: %p\n", newArray);
-	indizes = nullptr;
-	indizes = newArray;
-	//printf("new index pointer: %p\n", indizes);
-	maxEdges += 10;
-	return true;
-}
-
-bool VertexList::addTriangle(Vertex v1, Vertex v2, Vertex v3)
-{
-	int vi1 = findVertex(v1);
-	int vi2 = findVertex(v2);
-	int vi3 = findVertex(v3);
-
-	//printf("in Verts at hand: %d, %d, %d", vi1, vi2,vi3);
-
-	if (vi1 == -1)
-	{
-		addVertex(v1);
-		vi1 = findVertex(v1);
-	}
-	if (vi2 == -1)
-	{
-		addVertex(v2);
-		vi2 = findVertex(v2);
-	}
-	if (vi3 == -1)
-	{
-		addVertex(v3);
-		vi3 = findVertex(v3);
-	}
-	//printf("out Verts at hand: %d, %d, %d\n", vi1, vi2, vi3);
-	if (vi1 == -1 || vi2 == -1 || vi3 == -1)
-	{
-		//printf("vertex %d, %d, %d not inserted\n", vi1, vi2, vi3);
-		return false;
-	}
-
-	return addIndex(vi1, vi2, vi3);
-	
-}
-
-int VertexList::findVertex(Vertex v)
-{
-	for (int i = 0; i < maxEntries*stride; i+=stride)
-	{
-		if (abs(vertexData[i]-v.x)<epsilon_F && abs(vertexData[i+1] - v.y)<epsilon_F && abs(vertexData[i + 2] - v.z)<epsilon_F)
-		{
-			if (containsUVCoordinates && containsVertexColor)
-			{
-				if (abs(vertexData[i+3] - v.r) < epsilon_F && abs(vertexData[i + 4] - v.g) < epsilon_F && abs(vertexData[i + 5] - v.b) < epsilon_F && abs(vertexData[i + 6] - v.u) < epsilon_F && abs(vertexData[i + 7] - v.v) < epsilon_F)
-				{
-					return i / stride;
-				}
-				else
-				{
-					continue;
-				}
-			}
-			else if (containsUVCoordinates && !containsVertexColor)
-			{
-				if (abs(vertexData[i + 3] - v.u) < epsilon_F && abs(vertexData[i + 4] - v.v) < epsilon_F)
-				{
-					return i / stride;
-				}
-				else
-				{
-					continue;
-				}
-			}
-			else if (!containsUVCoordinates && containsVertexColor)
-			{
-				if (abs(vertexData[i + 3] - v.r) < epsilon_F && abs(vertexData[i + 4] - v.g) < epsilon_F && abs(vertexData[i + 5] - v.b) < epsilon_F)
-				{
-					return i / stride;
-				}
-				else
-				{
-					continue;
-				}
-			}
-			else
-			{
-				return i / stride;
-			}
-		}
-	}
-	return -1;
-}
-
-unsigned int * VertexList::getIndizes()
-{
-
-	/*puts("Im returning the following indizes: \n");
-	for (int i = 0; i < currEdges; ++i)
-	{
-		printf("%d ", this->indizes[i]);
-	}
-	puts("\n\n");*/
-	return indizes;
-}
-
-int VertexList::getIndexCount()
-{
-	return currEdges;
-}
-
-int VertexList::getStride()
-{
-	return stride;
-}
-
-float * VertexList::getVertexData()
-{
-	return vertexData;
-}
-
-int VertexList::getVertexCount()
-{
-	return currEntries;
-}
-
-bool VertexList::getContainsCoordinates()
-{
-	return containsCoordinates;
-}
-
-bool VertexList::getContainsVertexColor()
-{
-	return containsVertexColor;
-}
-
-bool VertexList::getContainsUVCoordinates()
-{
-	return containsUVCoordinates;
-}
-bool VertexList::getContainsNormals()
-{
-	return containsNormals;
-}
-Vertex::Vertex(float ix, float iy, float iz)
-{
-	x = ix;
-	y = iy;
-	z = iz;
-	u = 0;
-	v = 0;
-	r = g = b = 0;
-	nx = ny = nz = 0;
-}
-
-Vertex::Vertex()
-{
-	x = y = z = u = v = r = g = b = nx=ny=nz= 0;
-}

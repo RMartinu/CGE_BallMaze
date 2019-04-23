@@ -2,7 +2,9 @@
 
 #include <string>
 #include<vector>
-#include "Maze.h"
+//#include "Maze.h"
+#include "Vertex.h"
+#include "VertexList.h"
 
 #define rdBuffer 4096
 using namespace std;
@@ -32,9 +34,10 @@ class fullVert
 
 
 public:
-	fullVert() {};
+	fullVert() { r = 0; g = b = 1; };
 	fullVert( OBJLoad *res, int vspaceIndex, int uvIndex, int normalIndex);
 	fullVert(const fullVert &in);
+	Vertex get();
 
 	double vx, vy, vz;
 	double nx, ny, nz;
@@ -61,7 +64,7 @@ class OBJLoad{
 	private:
 		vector<vspace> vertics;
 		vector<UV> uvCoords;
-		vector<normal> normals;
+		vector<normal> normalList;
 		vector<fullVert> fullVertices;
 		vector<triangle> tris;
 

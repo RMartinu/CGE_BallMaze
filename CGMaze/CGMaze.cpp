@@ -12,6 +12,9 @@
 #include<glm/gtc/matrix_transform.hpp>
 #include<glm/gtc/type_ptr.hpp>
 #include "inputState.h"
+#include "defines.h"
+
+#include "OBJLoad.h"
 
 
 #define mouseSpeed 0.2f
@@ -332,6 +335,9 @@ int main()
 {
 	std::cout << "Hello World!\n";
 VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates|normals, 3);
+
+//OBJLoad theObject("Resource\\UV-sphere.obj.txt");
+//theObject.getVertexList();
 	//ppmImage thePlan("insert Path here");
 	//Maze theGame(thePlan);
 
@@ -503,7 +509,7 @@ VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates|normals, 3);
 
 	//simple Vertex Shader
 	unsigned int vertexShader;
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+ 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &vertexShaderGradient, NULL);
 	glCompileShader(vertexShader);
 
