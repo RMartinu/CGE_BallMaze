@@ -331,7 +331,7 @@ void mouse_button_callback(GLFWwindow * window, int button, int action, int modi
 int main()
 {
 	std::cout << "Hello World!\n";
-VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates|normals, 3);
+	VertexList Vlist(vertexCoordinates | vertexColor | UVCoordinates | normals, 3);
 	//ppmImage thePlan("insert Path here");
 	//Maze theGame(thePlan);
 
@@ -339,21 +339,21 @@ VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates|normals, 3);
 	pixel p = myImage.getPixel(155, 190);
 */
 
-	//Vertex a, b, c, d, e, f;
-	//a.x = -0.5; a.y = -0.5; a.z = 0; a.r = 1; a.b = 0; a.g = 0;
-	//b.x = 0.5; b.y = -0.5; b.z = 0; b.r = 0; b.b = 1; b.g = 0;
-	//c.x = 0; c.y = 0.5; c.z = 0; c.r = 0; c.b = 0; c.g = 1;
-	//d.x = 0.65; d.y = 0.75; d.z = -0.5; d.r = 1; d.g = 1; d.b = 0;
-	//e.x = -0.75; e.y = 0.75; e.z = 0; e.r = 0; e.b = 1; e.g = 1;
-	//f.x = 0.65; f.y = 0.9; f.z = 0; f.r = 1; f.b = 1; f.g = 0;
+//Vertex a, b, c, d, e, f;
+//a.x = -0.5; a.y = -0.5; a.z = 0; a.r = 1; a.b = 0; a.g = 0;
+//b.x = 0.5; b.y = -0.5; b.z = 0; b.r = 0; b.b = 1; b.g = 0;
+//c.x = 0; c.y = 0.5; c.z = 0; c.r = 0; c.b = 0; c.g = 1;
+//d.x = 0.65; d.y = 0.75; d.z = -0.5; d.r = 1; d.g = 1; d.b = 0;
+//e.x = -0.75; e.y = 0.75; e.z = 0; e.r = 0; e.b = 1; e.g = 1;
+//f.x = 0.65; f.y = 0.9; f.z = 0; f.r = 1; f.b = 1; f.g = 0;
 
-	//
-	//bool successful =
-	//	successful = Vlist.addTriangle(d, e, f);
-	//successful = Vlist.addTriangle(a, b, c);
-	//Vlist.addTriangle(c, e, f); Vlist.addTriangle(a, f, c); successful = Vlist.addTriangle(a, c, e);
+//
+//bool successful =
+//	successful = Vlist.addTriangle(d, e, f);
+//successful = Vlist.addTriangle(a, b, c);
+//Vlist.addTriangle(c, e, f); Vlist.addTriangle(a, f, c); successful = Vlist.addTriangle(a, c, e);
 
-	//VertexList Vlist(vertexCoordinates,8);
+//VertexList Vlist(vertexCoordinates,8);
 
 
 //if (successful)
@@ -387,52 +387,54 @@ VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates|normals, 3);
 
 
 
-
+	if(true){
 	//Load Object Test
 	/**/
-OBJLoad b("Resource\\cube.obj.txt");
-printf("Obj contains %d verts\n", b.getVertexList(0,0,0).getVertexCount());
+	OBJLoad b("Resource\\cube.obj.txt");
+	printf("Obj contains %d verts\n", b.getVertexList(0, 0, 0).getVertexCount());
+	if (false) {
+		float * coords, *uv, *norms;
+		int size;
 
-float * coords, *uv, *norms;
-int size;
+		//print coords 
+		size = b.getVSetSize();
+		coords = b.getVSet();
+		for (int i = 0; i < size; i++)
+		{
+			printf("V%d: %f %f %f\n", i, coords[i], coords[i + 1], coords[i + 2]);
+		}
 
-//print coords 
-size = b.getVSetSize();
-coords = b.getVSet();
-for (int i = 0; i < size; i++)
-{
-	printf("V%d: %f %f %f\n", i, coords[i],coords[i+1],coords[i+2]);
-}
+		puts("");
+		//printf UV
+		size = b.getUVSetSize();
+		uv = b.getUVSet();
+		for (int i = 0; i < size; i++)
+		{
+			printf("UV%d: %f %f \n", i, uv[i], uv[i + 1]);
+		}
+		puts("");
 
-puts("");
-//printf UV
-size = b.getUVSetSize();
-uv = b.getUVSet();
-for (int i = 0; i < size; i++)
-{
-	printf("UV%d: %f %f \n", i, uv[i], uv[i + 1]);
-}
-puts("");
-
-//print normals 
-size = b.getNormalSetSize();
-norms = b.getNormalSet();
-for (int i = 0; i < size; ++i)
-{
-	printf("Normals %d: %f %f %f\n", i, norms[i], norms[i+1], norms[i+2]);
-}
+		//print normals 
+		size = b.getNormalSetSize();
+		norms = b.getNormalSet();
+		for (int i = 0; i < size; ++i)
+		{
+			printf("Normals %d: %f %f %f\n", i, norms[i], norms[i + 1], norms[i + 2]);
+		}
 
 
-//Print em all
-size = b.getInterlacedDataSize();
-printf("Setsize: %d\n", size);
-float * laced = b.getInterlacedData();
-puts("All the full Verts");
-for (int i = 0; i < size*11; i+=11)
-{
-	printf("Vertex: c %f %f %f\t col %f %f %f \t uv: %f %f \t norms: %f %f %f\n", laced[i], laced[i+1], laced[i+2], laced[i+3], laced[i+4], laced[i+5], laced[i+6], laced[i+7], laced[i+8], laced[i+9], laced[i+10] );
-}
-puts("\n");
+		//Print em all
+		size = b.getInterlacedDataSize();
+		printf("Setsize: %d\n", size);
+		float * laced = b.getInterlacedData();
+		puts("All the full Verts");
+		for (int i = 0; i < size * 11; i += 11)
+		{
+			printf("Vertex: c %f %f %f\t col %f %f %f \t uv: %f %f \t norms: %f %f %f\n", laced[i], laced[i + 1], laced[i + 2], laced[i + 3], laced[i + 4], laced[i + 5], laced[i + 6], laced[i + 7], laced[i + 8], laced[i + 9], laced[i + 10]);
+		}
+		puts("\n");
+	}
+
 
 puts("#########+++++++++++############");
 //b.getVertexList(0,0,0).printFullVertexList();
@@ -454,7 +456,7 @@ puts("#########+++++++++++############");
 
 
 VertexList nVl(b.getInterlacedData(), b.getInterlacedDataSize(), b.getIndexList(),b.getIndexListSize(), vertexCoordinates|vertexColor|UVCoordinates|normals);
-puts("Vertex List created");
+puts("Vertex List created");}
 	/**/
 
 	//Level Load Test
@@ -467,43 +469,19 @@ puts("Vertex List created");
 	puts("level loaded");
 
 	Vlist = theGame.getVertexList();
+	//Vlist = nVl;
 
-	//puts("triangle generated successfully");
+	puts("triangle generated successfully");
 	int icount = Vlist.getIndexCount();
 	int vcount = Vlist.getVertexCount();
-	//printf("IndexCount: %d, VertexCount: %d", icount, vcount);
+	printf("IndexCount: %d, VertexCount: %d", icount, vcount);
 
 	float* tverts = Vlist.getVertexData();
 	unsigned int *tindices = Vlist.getIndizes();
 
 	//done
 
-	//get a vertex buffer
-	//VertexList VL(vertexCoordinates | UVCoordinates | vertexColor, 12);
-	////puts("Vertex list built");
-
-	//VertexList VL1(vertexCoordinates | UVCoordinates, 12);
-	////puts("Vertex list built");
-
-	//VertexList VL2(vertexCoordinates | vertexColor, 12);
-	//puts("Vertex list built");
-	//VL.addVertex(4, 5, 6);
-	//VL.extendVertexData();
-	//VL.addVertex(1,2,3);
-	//float *t = VL.getVertexData();
-	//int vcount = VL.getVertexCount();
-	//printf("Our list has %d elements\n",vcount);
-	//for (int i = 0; i < VL.getStride()*VL.getVertexCount(); ++i)
-	//{
-	//	printf("val: %f, ", t[i]);
-	//}
-	//puts("");
-
-
-	//get list from game
-
-	//VertexList gvl = theGame.getVertexList();
-	//printf("+++Our list has %d elements\n", gvl.getVertexCount());
+	
 
 	/*Vector Excersise here; remove at appropriete time*/
 	glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
@@ -512,6 +490,8 @@ puts("Vertex List created");
 	vec = trans * vec;
 	//std::cout << vec.x <<" "<< vec.y <<" "<< vec.z << std::endl;
 	/**/
+
+	puts("init opeGL subsystem");
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);

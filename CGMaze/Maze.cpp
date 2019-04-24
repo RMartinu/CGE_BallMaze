@@ -1296,9 +1296,9 @@ OBJLoad::OBJLoad(string filename)
 {
 
 	this->indexList = nullptr;
-	
+	this->laced = nullptr;
 
-	FILE * input;
+	FILE * input=nullptr;
 	char rBuffer[rdBuffer];
 	input = fopen(filename.c_str(), "r");
 	if (input == nullptr)
@@ -1333,7 +1333,7 @@ OBJLoad::OBJLoad(string filename)
 			char in;
 			double x, y, z;
 			sscanf(rBuffer, "%c %lf %lf %lf", &in, &x, &y, &z);
-			printf("found VertexCoords: %f %f %f\n", x, y, z);
+			//printf("found VertexCoords: %f %f %f\n", x, y, z);
 			vspace v;
 			v.x = x;
 			v.y = y;
@@ -1341,12 +1341,13 @@ OBJLoad::OBJLoad(string filename)
 			this->vertics.push_back(v);
 			continue;
 		}
+		
 		if (strncmp(id, "vt", 2) == 0)
 		{
 			char in[rdBuffer];
 			double u, v;
 			sscanf(rBuffer, "%*s %lf %lf", &u, &v);
-			printf("got UVs %lf %lf\n", u, v);
+			//printf("got UVs %lf %lf\n", u, v);
 			UV uv;
 			uv.u = u;
 			uv.v = v;
@@ -1358,7 +1359,7 @@ OBJLoad::OBJLoad(string filename)
 			char in[rdBuffer];
 			double x, y, z;
 			sscanf(rBuffer, "%*s %lf %lf %lf", &x, &y, &z);
-			printf("Found normies: %lf %lf %lf\n", x, y, z);
+			//printf("Found normies: %lf %lf %lf\n", x, y, z);
 			normal n;
 			n.x = x;
 			n.y = y;
@@ -1370,7 +1371,9 @@ OBJLoad::OBJLoad(string filename)
 			continue;
 		}
 		if (strncmp(id, "s", 1) == 0) { continue; }
-		if (strncmp(id, "f", 1) == 0) {
+	
+		if (strncmp(id, "f", 1 && true) == 0) {
+			
 			int vindex, uvindex, normindex;
 			int counter = 0;
 			fullVert *vcol[4];
@@ -1394,14 +1397,24 @@ OBJLoad::OBJLoad(string filename)
 				vcol[i]->b = 0.7;
 				counter++;
 			}
+			
 			printf("Got %d verts for face\n", counter);
 
 			if (counter == 3)
 			{
 
-				triangle t(*vcol[0], *vcol[1], *vcol[2]);
+				triangle t(*(vcol[0]), *(vcol[1]), *(vcol[2]));
 
-				tris.push_back(t);
+				fullVertices.push_back(*(vcol[0]));
+				indeX.push_back(fullVertices.size());
+				fullVertices.push_back(*(vcol[1]));
+				indeX.push_back(fullVertices.size());
+				indeX.push_back(fullVertices.size());
+				fullVertices.push_back(*(vcol[2]));
+				
+
+				/*tris.push_back(t);
+				puts("Pushed a single tri");*/
 				for (int i = 0; i < 3; ++i)
 				{
 					delete vcol[i];
@@ -1410,10 +1423,22 @@ OBJLoad::OBJLoad(string filename)
 			}
 			if (counter == 4)
 			{
-				triangle t(*vcol[0], *vcol[1], *vcol[2]);
-				tris.push_back(t);
-				triangle t1(*vcol[0], *vcol[1], *vcol[2]);
-				tris.push_back(t1);
+				triangle t(*(vcol[0]), *(vcol[1]), *(vcol[2]));
+				//tris.push_back(t);
+				fullVertices.push_back(*(vcol[0]));
+				indeX.push_back(fullVertices.size());
+				fullVertices.push_back(*(vcol[1]));
+				indeX.push_back(fullVertices.size());
+				indeX.push_back(fullVertices.size());
+				fullVertices.push_back(*(vcol[2]));
+				triangle t1(*(vcol[0]), *(vcol[1]), *(vcol[2]));
+				//tris.push_back(t1);
+				fullVertices.push_back(*(vcol[1]));
+				indeX.push_back(fullVertices.size());
+				fullVertices.push_back(*(vcol[2]));
+				indeX.push_back(fullVertices.size());
+				indeX.push_back(fullVertices.size());
+				fullVertices.push_back(*(vcol[3]));
 
 				for (int i = 0; i < 4; ++i)
 				{
@@ -1424,6 +1449,8 @@ OBJLoad::OBJLoad(string filename)
 
 		}
 	}
+
+	fclose(input);
 
 
 }
@@ -1474,7 +1501,11 @@ float * OBJLoad::getNormalSet()
 
 float * OBJLoad::getInterlacedData()
 {
-	float *laced = new float(tris.size()*sizeof(float)*11*3);
+	if (laced != nullptr)
+	{
+		return laced;
+	}
+	laced = new float(tris.size()*sizeof(float)*11*3);
 	memset(laced, 0, tris.size() * sizeof(float) * 11 * 3);
 
 	for (int i = 0; i < tris.size(); ++i)
@@ -1539,7 +1570,7 @@ float * OBJLoad::getInterlacedData()
 
 int * OBJLoad::getIndexList()
 {
-	if (indexList != nullptr) { delete indexList; indexList == nullptr; }
+	if (indexList != nullptr) { return indexList; }
 	 indexList= new int[tris.size()*3];
 	memset(indexList, 0, tris.size()*3*sizeof(int));
 	//gets more complex if a more space efficient representation of the loaded model is used
@@ -1576,7 +1607,7 @@ normal OBJLoad::getNormal(int index)
 VertexList OBJLoad::getVertexList( float x, float y, float z)
 {
 	printf("+++Object contains %d tris\n", tris.size());
-	VertexList v(vertexCoordinates | vertexColor | UVCoordinates | normals, 8);
+	VertexList v(vertexCoordinates | vertexColor | UVCoordinates | normals,8);
 
 	for (triangle t : tris)
 	{

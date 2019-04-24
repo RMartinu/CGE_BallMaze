@@ -221,9 +221,11 @@ private:
 	vector<UV> uvCoords;
 	vector<normal> Normal;
 	vector<fullVert> fullVertices;
+	vector<unsigned int> indeX;
 	vector<triangle> tris;
 	float *vSet, *UVset, *NormalSet;
 	int *indexList;
+	float *laced;
 	float xoffset, yoffset, zoffset;
 
 
