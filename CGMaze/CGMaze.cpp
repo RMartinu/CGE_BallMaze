@@ -12,6 +12,7 @@
 #include<glm/gtc/matrix_transform.hpp>
 #include<glm/gtc/type_ptr.hpp>
 #include "inputState.h"
+//#include "OBJLoad.h"
 
 
 #define mouseSpeed 0.2f
@@ -64,7 +65,7 @@ const char *fragmentShaderGradient = "#version 330 core\n"
 "uniform sampler2D ourTexture;"
 "void main(){\n"
 "vec3 ambient = ambientBrightness*lightColor;"
-"FragColor = texture(ourTexture, TexCoord)*vec4(ourColor*ambient, 1.0);\n"
+"FragColor = texture(ourTexture, TexCoord)*vec4(ambient, 1.0);\n"
 
 "}";
 
@@ -331,7 +332,14 @@ void mouse_button_callback(GLFWwindow * window, int button, int action, int modi
 int main()
 {
 	std::cout << "Hello World!\n";
+
 VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates|normals, 3);
+
+	//OBJLoad ball = ("Resource\\cube.obj.txt");
+	//ball.getVertexList();
+
+
+
 	//ppmImage thePlan("insert Path here");
 	//Maze theGame(thePlan);
 
@@ -473,7 +481,7 @@ VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates|normals, 3);
 	/*Lets put our OGL stuff btween here*/
 
 		//load texture
-	ppmImage theTexture("Resource/texAtlas.ppm");
+	ppmImage theTexture("Resource/textures.ppm");
 
 	unsigned char * probe = theTexture.imageDataAsCharArray()
 		;
@@ -719,10 +727,10 @@ VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates|normals, 3);
 		glUniform1f(myFaktor, 0.75f);
 
 		unsigned int ambientBright = glGetUniformLocation(shaderProgram, "ambientBrightness");
-		glUniform1f(ambientBright, 0.75f);
+		glUniform1f(ambientBright, 1.0f);//#####ambient
 
 
-		glm::vec3 ambCol = glm::vec3(0.9, 0.7, 0.8);
+		glm::vec3 ambCol = glm::vec3(1, 1, 1);
 
 		unsigned int lightColor = glGetUniformLocation(shaderProgram, "lightColor");
 		glUniform3fv(lightColor, 1, glm::value_ptr(ambCol));
