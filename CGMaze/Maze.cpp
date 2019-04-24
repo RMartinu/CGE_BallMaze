@@ -862,7 +862,7 @@ VertexList::VertexList(int formatDescriptor, int numberOfEntries)
 	currEntries = 0;
 	indizes = nullptr;
 	currEdges = 0;
-	this->containsCoordinates = (formatDescriptor & (vertexCoordinates))!=0;
+	this->containsCoordinates = (formatDescriptor & (vertexCoordinates)) != 0;
 	/*if (this->containsCoordinates);
 	{
 		puts("Contains Coords");
@@ -902,12 +902,34 @@ VertexList::VertexList(int formatDescriptor, int numberOfEntries)
 	vertexData = new float[maxEntries*stride];
 }
 
+VertexList::VertexList(float * vData,int vCount, int * iData,int dCount, int formatDescriptor)
+{
+	//todo: adapt stride
+	//this->stride = 11; // because thats what the loader puts out
+	//this->maxEdges=this->currEdges = dCount;
+	//this->maxEntries=this->currEntries = vCount;
+	//this->vertexData = new float[vCount*stride];
+	//this->indizes = new unsigned int[dCount];
+	//this->containsCoordinates = true;
+	//this->containsNormals = true;
+	//this->containsUVCoordinates = true;
+	//this->containsVertexColor = true;
+
+	//for (int i = 0; i < vCount*stride; i++)
+	//{
+	//	vertexData[i] = vData[i];
+	//}
+	//for (int i = 0; i < dCount;i++) {
+	//	indizes[i] = iData[i];
+	//}
+}
+
 VertexList::~VertexList()
 {
 	//TODO: fix crash on cleanUp!!!
 	//if(indizes!=nullptr){ delete []indizes; }
 
-	
+
 	//
 	if (vertexData != nullptr) {
 		/*delete  []vertexData;*/
@@ -944,7 +966,7 @@ bool VertexList::addVertex(float x, float y, float z, float r, float g, float b,
 		//puts("\n##refusing");
 		return false;
 	}
-	if (currEntries+3 > maxEntries)
+	if (currEntries + 3 > maxEntries)
 	{
 		//puts("extend vertex");
 		extendVertexData();
@@ -969,7 +991,6 @@ bool VertexList::addVertex(float x, float y, float z, float r, float g, float b,
 {
 	if (!containsCoordinates || !containsVertexColor || !containsUVCoordinates || !containsNormals)
 	{
-		puts("***Lack of proper containment");
 		return false;
 	}
 	if (currEntries >= maxEntries)
@@ -988,8 +1009,6 @@ bool VertexList::addVertex(float x, float y, float z, float r, float g, float b,
 	vertexData[currEntries*stride + 9] = ny;
 	vertexData[currEntries*stride + 10] = nz;
 	++currEntries;
-	//puts("***full vertex inserted");
-	//this->printFullVertexList();
 	return true;
 }
 
@@ -1021,7 +1040,7 @@ bool VertexList::addVertex(Vertex v)
 	if (containsCoordinates && containsVertexColor && !containsUVCoordinates && containsNormals)
 	{
 		//printf("inserting: %f, %f, %f\n", v.x,v.y,v.z);
-		bool t= addVertex(v.x, v.y, v.z, v.r, v.g, v.b, v.nx, v.ny, v.nz);
+		bool t = addVertex(v.x, v.y, v.z, v.r, v.g, v.b, v.nx, v.ny, v.nz);
 		if (!t)
 		{
 			puts("insert failed");
@@ -1034,14 +1053,13 @@ bool VertexList::addVertex(Vertex v)
 	}*/
 	if (containsCoordinates && containsVertexColor && containsUVCoordinates && containsNormals)
 	{
-		//puts("Adding fully featured Vertex");
 		return addVertex(v.x, v.y, v.z, v.r, v.g, v.b, v.u, v.v, v.nx, v.ny, v.nz);
 	}
 	return false;
 }
 bool VertexList::addIndex(int vertex1, int vertex2, int vertex3)
 {
-	if (currEdges+3>maxEdges)
+	if (currEdges + 3 > maxEdges)
 	{
 		if (!extendIndizes())
 		{
@@ -1065,7 +1083,6 @@ bool VertexList::extendVertexData()
 	float* newArray;
 	//printf("Vertbuffer data: %d %d\n", maxEntries, stride);
 	newArray = new float[maxEntries * stride + 3 * stride];
-	for (int i = 0; i < (maxEntries + 3)*stride; ++i) { newArray[i] = 0; };
 
 	if (newArray == nullptr)
 	{
@@ -1075,7 +1092,7 @@ bool VertexList::extendVertexData()
 	//printf("the actual pointer: %p\n", vertexData);
 	//puts("copy now");
 	//printf("processing %d * %d entries\n", currEntries, stride);
-	for (int i = 0; currEntries*stride>i; ++i)
+	for (int i = 0; currEntries*stride > i; ++i)
 	{
 		//printf("copying index %d \n", i);
 		//printf("the value to copy: %f", vertexData[i]);
@@ -1095,7 +1112,7 @@ bool VertexList::extendIndizes()
 {
 	//puts("extend index list");
 	//printf("index pointer: %p\n", indizes);
-	if (currEdges+10 < maxEdges)
+	if (currEdges + 10 < maxEdges)
 	{
 		//printf("%d values are sufficient for %d entries\n", maxEdges, currEdges);
 		return true;
@@ -1113,7 +1130,7 @@ bool VertexList::extendIndizes()
 		newArray[i] = indizes[i];
 	}
 	//puts("copy successful");
-	delete []indizes;
+	delete[]indizes;
 	//printf("new array for index pointer: %p\n", newArray);
 	indizes = nullptr;
 	indizes = newArray;
@@ -1134,28 +1151,16 @@ bool VertexList::addTriangle(Vertex v1, Vertex v2, Vertex v3)
 	{
 		addVertex(v1);
 		vi1 = findVertex(v1);
-		if (vi1 == -1)
-		{
-			printf("!!!Vertex Insertion Failed");
-		}
 	}
 	if (vi2 == -1)
 	{
 		addVertex(v2);
 		vi2 = findVertex(v2);
-		if (vi2 == -1)
-		{
-			printf("!!!Vertex Insertion Failed");
-		}
 	}
 	if (vi3 == -1)
 	{
 		addVertex(v3);
 		vi3 = findVertex(v3);
-		if (vi3 == -1)
-		{
-			printf("!!!Vertex Insertion Failed");
-		}
 	}
 	//printf("out Verts at hand: %d, %d, %d\n", vi1, vi2, vi3);
 	if (vi1 == -1 || vi2 == -1 || vi3 == -1)
@@ -1165,56 +1170,18 @@ bool VertexList::addTriangle(Vertex v1, Vertex v2, Vertex v3)
 	}
 
 	return addIndex(vi1, vi2, vi3);
-	
+
 }
 
 int VertexList::findVertex(Vertex v)
 {
-
-	if (containsCoordinates&&containsVertexColor&&containsUVCoordinates&&containsNormals)
+	for (int i = 0; i < maxEntries*stride; i += stride)
 	{
-		//puts("Searching for fully featured Vertex");
-		bool c, co, u, n;
-		//scan for Vertex
-		for (int i = 0; i < maxEntries*stride; i += stride)
-		{
-			c = co = u = n=false;
-			if (abs(vertexData[i] - v.x) < epsilon_F && abs(vertexData[i + 1] - v.y) < epsilon_F && abs(vertexData[i + 2] - v.z) < epsilon_F)
-			{
-				//puts("Found the Coords"); c = true;
-				if (abs(vertexData[i+3] - v.r) < epsilon_F && abs(vertexData[i+4] - v.g) < epsilon_F && abs(vertexData[i+5] - v.b) < epsilon_F) {
-					//puts("Found the RGB"); co = true;
-					if (true) {
-						u = true;
-					//	puts("Found the UV");
-						if (true) {
-							n = true;
-				//			puts("found the normals");
-							return i / stride;
-						}
-					}
-				
-				}
-				else
-				{
-			//		printf("Missed: %f %f %f - %f %f %f", vertexData[i+3], vertexData[i + 4], vertexData[i + 5], v.r,v.g,v.b);
-				}
-			}
-		}
-		//puts("Missed fully featured Vertex");
-		return -1;
-	}
-	for (int i = 0; i < maxEntries*stride; i+=stride)
-	{
-
-
-		if (abs(vertexData[i]-v.x)<epsilon_F && abs(vertexData[i+1] - v.y)<epsilon_F && abs(vertexData[i + 2] - v.z)<epsilon_F)
+		if (abs(vertexData[i] - v.x) < epsilon_F && abs(vertexData[i + 1] - v.y) < epsilon_F && abs(vertexData[i + 2] - v.z) < epsilon_F)
 		{
 			if (containsUVCoordinates && containsVertexColor)
 			{
-
-				
-				if (abs(vertexData[i+3] - v.r) < epsilon_F && abs(vertexData[i + 4] - v.g) < epsilon_F && abs(vertexData[i + 5] - v.b) < epsilon_F && abs(vertexData[i + 6] - v.u) < epsilon_F && abs(vertexData[i + 7] - v.v) < epsilon_F)
+				if (abs(vertexData[i + 3] - v.r) < epsilon_F && abs(vertexData[i + 4] - v.g) < epsilon_F && abs(vertexData[i + 5] - v.b) < epsilon_F && abs(vertexData[i + 6] - v.u) < epsilon_F && abs(vertexData[i + 7] - v.v) < epsilon_F)
 				{
 					return i / stride;
 				}
@@ -1304,32 +1271,6 @@ bool VertexList::getContainsNormals()
 {
 	return containsNormals;
 }
-void VertexList::printFullVertexList()
-{
-	return;
-
-	for (int i = 0; i < maxEntries; ++i)
-	{
-		if (containsCoordinates)
-		{
-			printf("Coords: %f %f %f;\t", this->vertexData[i],vertexData[i+1],vertexData[i+2] );
-		}
-		if (containsVertexColor)
-		{
-			printf("Color: %f %f %f; \t", vertexData[i+3], vertexData[i+4], vertexData[i+5]);
-		}
-		if(containsUVCoordinates)
-		{
-			printf("UV: %f %f; \t", vertexData[i+6], vertexData[i+7]);
-		}
-		if (containsNormals)
-		{
-			printf("Normals: ", vertexData[i + 8],vertexData[i + 9],vertexData[i + 10]);
-		}
-		puts("");
-	}
-
-}
 Vertex::Vertex(float ix, float iy, float iz)
 {
 	x = ix;
@@ -1353,6 +1294,9 @@ OBJLoad::OBJLoad()
 
 OBJLoad::OBJLoad(string filename)
 {
+
+	this->indexList = nullptr;
+	
 
 	FILE * input;
 	char rBuffer[rdBuffer];
@@ -1601,6 +1545,7 @@ int * OBJLoad::getIndexList()
 	//gets more complex if a more space efficient representation of the loaded model is used
 	for (int i = 0; i < tris.size()*3; ++i) {
 		indexList[i] = i;
+		printf("Added index %d ", i );
 	}
 	return indexList;
 }

@@ -88,15 +88,15 @@ private:
 	bool containsUVCoordinates;
 	bool containsNormals;
 
-public:	
+public:
 
 	VertexList(int formatDescriptor);
 	VertexList(int formatDescriptor, int numberOfEntries);
+	VertexList(float * vData, int vCount, int * iData, int dCount, int formatDescriptor);
 	~VertexList();
 	//bool addVertex(float x, float y, float z);
 	bool addVertex(float x, float y, float z, float r, float g, float b, float nx, float ny, float nz);
 	bool addVertex(float x, float y, float z, float r, float g, float b, float u, float v, float nx, float ny, float nz);
-	VertexList transformVertexList(VertexList in);
 	//bool addVertex(float x, float y, float z, float u, float v);
 	bool addVertex(Vertex v);
 	bool addIndex(int vertex1, int vertex2, int vertex3);
@@ -113,7 +113,6 @@ public:
 	bool getContainsVertexColor();
 	bool getContainsUVCoordinates();
 	bool VertexList::getContainsNormals();
-	void printFullVertexList();
 };
 
 
