@@ -232,6 +232,51 @@ void key_Callback(GLFWwindow * window, int key, int scanCode, int action, int mo
 		printf("Key pressed: %d\n", key);
 	}
 
+	//Key Lights
+	if (key == GLFW_KEY_L && action == GLFW_PRESS)
+	{
+		gameState.brightness += 0.1f;
+		if (gameState.brightness>1.0f)
+		{
+			gameState.brightness = 1.0f;
+		}
+		printf("Key pressed: %d\n", key);
+	}
+	if (key == GLFW_KEY_K && action == GLFW_PRESS)
+	{
+		gameState.brightness -= 0.1f;
+		if (gameState.brightness < 0.0f)
+		{
+			gameState.brightness = 0.0f;
+		}
+		printf("Key pressed: %d\n", key);
+	}
+
+	//Key Zoom
+	if (key == GLFW_KEY_I && action == GLFW_PRESS)
+	{
+		gameState.camera_zoom -= 0.05f;
+		if (gameState.camera_zoom < 0.1)
+		{
+			gameState.camera_zoom = 0.1;
+		}
+		
+		printf("zoom: %d\n", gameState.camera_zoom);
+	
+		printf("Key pressed: %d\n", key);
+	}
+	if (key == GLFW_KEY_O && action == GLFW_PRESS)
+	{
+		gameState.camera_zoom += 0.05f;
+		if (gameState.camera_zoom > 0.7)
+		{
+			gameState.camera_zoom = 0.7;
+		}
+
+		printf("zoom: %d\n", gameState.camera_zoom);
+
+		printf("Key pressed: %d\n", key);
+	}
 }
 
 static void cursor_position_callback(GLFWwindow *window, double xpos, double ypos)
@@ -287,9 +332,9 @@ void scroll_wheel_callback(GLFWwindow * window, double xoffset, double yoffset)
 	{
 		gameState.camera_zoom = 0.1;
 	}
-	if (gameState.camera_zoom > 2)
+	if (gameState.camera_zoom > 0.7)
 	{
-		gameState.camera_zoom = 2;
+		gameState.camera_zoom = 0.7;
 	}
 
 	printf("mouse wheel: x: %f y: %f\n", xoffset, yoffset);
@@ -395,7 +440,9 @@ VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates|normals, 3);
 
 
 	//Level Load Test
-	ppmImage theLevel("Resource//minLevel.ppm");
+
+	ppmImage theLevel("Resource//MazeMiniature.ppm");
+//ppmImage theLevel("Resource//minLevel.ppm");
 	Maze theGame(theLevel);
 
 	VertexList VxXx = theGame.getVertexList();
@@ -679,7 +726,12 @@ VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates|normals, 3);
 
 	while (!glfwWindowShouldClose(window) && !gameState.quitGame)
 	{
-
+		//printf("%d", theGame.gameState);
+		if (theGame.gameState == gameFinished)
+		{
+	
+			gameState.resetGame = true;
+		}
 		previousTime = time;
 		time = glfwGetTime();
 		deltaTime = time - previousTime;	glm::mat4 projectionMatrix = glm::mat4(1.0f);
@@ -700,7 +752,7 @@ VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates|normals, 3);
 
 
 		//printf("game dimensions: w: %d, h: %d", theGame.getWidth(), theGame.getHeight());
-		model = glm::translate(model, glm::vec3(-0.33, -0.35, 0));
+		model = glm::translate(model, glm::vec3(-0.9, -0.9, 0));
 		model = glm::scale(model, glm::vec3(0.05f, 0.05f, -0.05f));
 
 		//printf("Current time: %f, deltatime: %f\n", time,deltaTime);
@@ -727,7 +779,7 @@ VertexList Vlist(vertexCoordinates|vertexColor|UVCoordinates|normals, 3);
 		glUniform1f(myFaktor, 0.75f);
 
 		unsigned int ambientBright = glGetUniformLocation(shaderProgram, "ambientBrightness");
-		glUniform1f(ambientBright, 1.0f);//#####ambient
+		glUniform1f(ambientBright, gameState.brightness);//#####ambient
 
 
 		glm::vec3 ambCol = glm::vec3(1, 1, 1);

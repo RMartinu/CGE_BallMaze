@@ -124,7 +124,7 @@ private:
 	double ballVelocity_x, ballVelocity_y, ballVelocity_z;
 	vector<Mesh> meshes;
 	int *mazeGrid;
-	int gameState;
+	
 
 public: Maze(ppmImage &floorplan);
 	 ~Maze();
@@ -150,6 +150,7 @@ public: Maze(ppmImage &floorplan);
 	 int getFloorAt(double width, double height);
 	 int getWidth();
 	 int getHeight();
+	 int gameState;
 };
 
 
